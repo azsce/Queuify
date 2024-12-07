@@ -39,7 +39,10 @@
         "./src/lib/*"
       ]
     },
-    "types": ["jest"]
+    "types": [
+      "jest"
+    ],
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "next-env.d.ts",

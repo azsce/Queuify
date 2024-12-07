@@ -1,4 +1,3 @@
-
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 
@@ -7,7 +6,7 @@ export default function ServiceProcess({ setServiceProcess }) {
     <div>
       <Label>Service Process</Label>
       <RadioGroup
-        defaultValue="M"
+        defaultValue="D"
         onValueChange={(value) => setServiceProcess(value)}
         className="flex space-x-2"
       >

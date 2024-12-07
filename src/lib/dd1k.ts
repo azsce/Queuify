@@ -13,7 +13,8 @@
  * Step 1: Define System Parameters
  * Given:
  * λ = Arrival rate
- * μ = Service rate
+ * μ = Service rate.
+ * 
  * k = Total queue capacity
  * t_i = Time of first balk (time when queue is full)
  *
@@ -131,11 +132,12 @@ export function dd1k(arrivalRate: number, serviceRate: number, capacity: number)
  * @returns The first time the system reaches capacity.
  */
 function findFirstBalkTime(arrivalRate: number, serviceRate: number, capacity: number): number {
-  let t1 = capacity / arrivalRate;
+  let n = 1;
   while (true) {
+    const t1 = n / arrivalRate;
     const testK = Math.floor(arrivalRate * t1) - Math.floor(serviceRate * t1 - serviceRate / arrivalRate);
     if (testK === capacity) return t1;
-    t1 += testK < capacity ? 0.01 : -0.01;
+    n++;
   }
 }
 
