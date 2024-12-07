@@ -1,5 +1,4 @@
-import { dd1 } from '@/lib/dd1';
-import { dd1k } from '@/lib/dd1k';
+import { dd1k } from '../lib/dd1k';
 
 test('calculate first balk time correctly', () => {
   const arrivalRate = 4;

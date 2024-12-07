@@ -132,12 +132,11 @@ export function dd1k(arrivalRate: number, serviceRate: number, capacity: number)
  * @returns The first time the system reaches capacity.
  */
 function findFirstBalkTime(arrivalRate: number, serviceRate: number, capacity: number): number {
-  let n = 1;
+  let t1 = 0;
   while (true) {
-    const t1 = n / arrivalRate;
+    t1 += 1 / arrivalRate;
     const testK = Math.floor(arrivalRate * t1) - Math.floor(serviceRate * t1 - serviceRate / arrivalRate);
-    if (testK === capacity) return t1;
-    n++;
+    if (testK >= capacity) return t1;
   }
 }
 
