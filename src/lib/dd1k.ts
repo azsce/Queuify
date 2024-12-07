@@ -23,7 +23,7 @@
  * and new arrivals will be rejected once the queue reaches capacity.
  *
  * Step 2: Calculate the time of first balk (t_i)
- * 1. t_i = n * (1/λ), where n is a positive integer.
+ * 1. k = ⌊λ * t_i⌋ - ⌊μ * t_i - μ / λ⌋
  *
  * Step 3: Check for queue saturation (trial and error)
  * 2. Calculate n(t) using the equation: n(t) = ⌊λ * t⌋ - ⌊μ * t - μ / λ⌋
@@ -55,22 +55,7 @@
  * The key part of this system is finding the time t_i, the time of the first balk when the queue reaches capacity k.
  * This requires trial and error to find the smallest t_i that satisfies the equation.
  *
- * Step 1: Initialize t_i as a Multiple of Arrival Time
- * 1. Set t_i = n * (1/λ), where n is an integer (start with n = 1).
- * 2. Increment n until you find the smallest t_i that satisfies the equation.
- *
- * Equation to solve:
- * k = ⌊λ * t_i⌋ - ⌊μ * t_i - μ / λ⌋
- *
- * Step 2: Iteratively Solve for t_i
- * 1. Start with n = 1, calculate t_i = n * (1/λ).
- * 2. Calculate n(t) using:
- *    n(t) = ⌊λ * t_i⌋ - ⌊μ * t_i - μ / λ⌋
- * 3. If n(t) = k, check if reducing t_i by (1/λ) still satisfies the equation.
- * 4. If the reduced t_i satisfies the equation, update t_i to the smaller value.
- * 5. If not, keep increasing n until the equation holds true.
- *
- * Repeat the process to get the smallest t_i that satisfies the equation.
+ * 1. Solve the equation: k = ⌊λ * t_i⌋ - ⌊μ * t_i - μ / λ⌋
  */
 
 
@@ -132,11 +117,16 @@ export function dd1k(arrivalRate: number, serviceRate: number, capacity: number)
  * @returns The first time the system reaches capacity.
  */
 function findFirstBalkTime(arrivalRate: number, serviceRate: number, capacity: number): number {
+  console.log(`Finding t_i for λ=${arrivalRate}, μ=${serviceRate}, k=${capacity}`);
   let t1 = 0;
+  const epsilon = 1e-6; // Tolerance for floating-point comparison
   while (true) {
-    t1 += 1 / arrivalRate;
-    const testK = Math.floor(arrivalRate * t1) - Math.floor(serviceRate * t1 - serviceRate / arrivalRate);
-    if (testK >= capacity) return t1;
+    t1 += 1 / arrivalRate; // Increment by inter-arrival time
+    const lambdaTi = Math.floor(arrivalRate * t1);
+    const muCalculation = (serviceRate * t1) - (serviceRate / arrivalRate);
+    const muTi = Math.floor(muCalculation + epsilon); // Add epsilon to handle floating-point precision
+    console.log(`t1=${t1}, lambdaTi=${lambdaTi}, muTi=${muTi}, difference=${lambdaTi - muTi}`);
+    if ((lambdaTi - muTi) >= capacity) return t1;
   }
 }
 
