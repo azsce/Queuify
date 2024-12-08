@@ -19,6 +19,7 @@ import { DD1KCharacteristics } from "@/types/dd1k";
 import { InfoIcon } from "lucide-react";
 import { Card, CardHeader, CardContent, Typography } from "@mui/material";
 import { Process } from "@/types/queue";
+import Grid from "@mui/material/Grid2";
 
 export default function QueuingTheoryCalculator() {
   const [queueType, setQueueType] = useState<Process>("D/D");
@@ -130,61 +131,71 @@ export default function QueuingTheoryCalculator() {
   };
 
   return (
-      <div className="container mx-auto p-4 text-sm sm:text-base">
-        <Card>
-          <CardHeader>
-            <Typography variant="h5">Queuing Theory Calculator</Typography>
-            <Typography variant="body2">
-              Calculate key performance metrics for various queuing systems
-            </Typography>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4">
-              <ProcessTypeSelector setProcessType={setQueueType} />
-              <SystemParameters
-                setServers={setServers}
-                setCapacity={setCapacity}
-                servers={servers}
-                capacity={capacity}
-                processType={queueType}
-              />
-              <InputParameters
-                setArrivalRate={setArrivalRate}
-                setServiceRate={setServiceRate}
-                arrivalRate={arrivalRate}
-                serviceRate={serviceRate}
-                setArrivalTime={setArrivalTime}
-                setServiceTime={setServiceTime}
-                arrivalTime={arrivalTime}
-                serviceTime={serviceTime}
-              />
-              <Button variant="contained" onClick={handleCalculate}>
-                Calculate
-              </Button>
-            </div>
+    <div className="container mx-auto p-4 text-sm sm:text-base">
+      <Card>
+        <CardHeader>
+          <Typography variant="h5">Queuing Theory Calculator</Typography>
+          <Typography variant="body2">
+            Calculate key performance metrics for various queuing systems
+          </Typography>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4">
+            <ProcessTypeSelector setProcessType={setQueueType} />
+            <SystemParameters
+              setServers={setServers}
+              setCapacity={setCapacity}
+              servers={servers}
+              capacity={capacity}
+              processType={queueType}
+            />
+            <InputParameters
+              setArrivalRate={setArrivalRate}
+              setServiceRate={setServiceRate}
+              arrivalRate={arrivalRate}
+              serviceRate={serviceRate}
+              setArrivalTime={setArrivalTime}
+              setServiceTime={setServiceTime}
+              arrivalTime={arrivalTime}
+              serviceTime={serviceTime}
+            />
+            <Grid size={12} container spacing={0} alignItems="start">
+              {/* Empty Column */}
+              <Grid size={1} />
+              <Grid size={11} container justifyContent='center'>
+                <Button
+                  variant="contained"
+                  onClick={handleCalculate}
+                  sx={{ width: "80%" }}
+                >
+                  Calculate
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
 
-            <div className="mt-8">
-              {error && (
-                <Alert severity="error" className="mb-6">
-                  <AlertTitle>Error</AlertTitle>
-                  {error}
-                </Alert>
-              )}
-
-              {results}
-
-              <Alert severity="info" className="mt-6">
-                <InfoIcon className="h-4 w-4" />
-                <AlertTitle>Note</AlertTitle>
-                <span className="ml-2 mt-1">
-                  For D/D/1 and D/D/1/(k-1) models, the Time (t) field is used
-                  for transient analysis. For unstable systems (λ {">"} μ),
-                  results may be limited or require additional explanation.
-                </span>
+          <div className="mt-8">
+            {error && (
+              <Alert severity="error" className="mb-6">
+                <AlertTitle>Error</AlertTitle>
+                {error}
               </Alert>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            )}
+
+            {results}
+
+            {/* <Alert severity="info" className="mt-6">
+              <InfoIcon className="h-4 w-4" />
+              <AlertTitle>Note</AlertTitle>
+              <span className="ml-2 mt-1">
+                For D/D/1 and D/D/1/(k-1) models, the Time (t) field is used for
+                transient analysis. For unstable systems (λ {">"} μ), results
+                may be limited or require additional explanation.
+              </span>
+            </Alert> */}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
