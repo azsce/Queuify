@@ -114,10 +114,10 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
           <LineChart
             data={dataWithCustomers}
             margin={{
-              top: 40, // Increased top margin for top axis
-              right: 30,
-              left: isMobile ? 20 : 90,
-              bottom: 60, // Increased bottom margin
+              top: 20,
+              right: 0,
+              left: isMobile ? 0 : 90,
+              bottom: isMobile ? 30 : 50,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
@@ -146,7 +146,15 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
               height={40} // Add height for better visibility
               tick={{ dy: 10 }} // Move ticks down
             />
-            <YAxis hide={true} />
+            <YAxis 
+              label={{
+                value: "Arrival Times",
+                angle: -90,
+                position: "insideLeft",
+                dx: isMobile ? 10 : -20,
+                dy: isMobile ? 90 : 90,
+              }}
+            />
             <Tooltip />
             {dataWithCustomers.map((entry, index) => (
               <ReferenceLine
