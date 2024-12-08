@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { computeNOfT } from "@/lib/dd1k";
+import { DD1KType } from "@/types/dd1k";
 
 interface NumberOfCustomersGraphProps {
   arrivalRate: number;
@@ -29,8 +30,8 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
 }) => {
   const generateData = () => {
     const data = [];
-    const maxTime = 50;
-    const timeStep = 4;
+    const maxTime = 100;
+    const timeStep = 1;
 
     for (let t = 0; t <= maxTime; t += timeStep) {
       const customers = computeNOfT(

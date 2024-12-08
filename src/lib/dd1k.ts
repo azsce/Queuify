@@ -243,12 +243,24 @@ export function computeNOfT(
       return capacity - 1;
     } else {
       // n(t) alternates between capacity - 1 and capacity - 2
-      const serviceTime = 1 / serviceRate;
-      const cyclesSinceTi = Math.floor((t - t_i) / serviceTime);
-      if (cyclesSinceTi % 2 === 0) {
-        return capacity - 1;
+      // const serviceTime = 1 / serviceRate;
+      // const cyclesSinceTi = Math.floor((t - t_i) / serviceTime);
+      // if (cyclesSinceTi % 2 === 0) {
+      //   return capacity - 1;
+      // } else {
+      //   return capacity - 2;
+      // }
+      const lambdaT = Math.floor(arrivalRate * t);
+      const muCalculation = serviceRate * t - serviceRate / arrivalRate;
+      const muT = Math.floor(muCalculation + EPSILON);
+
+      // Determine if n(t) is k-1 or k-2
+      const remainder = (lambdaT - muT) % 2; // Modulo 2 to alternate
+
+      if (remainder === 0) {
+        return capacity - 2; // k-2
       } else {
-        return capacity - 2;
+        return capacity - 1; // k-1
       }
     }
   }
