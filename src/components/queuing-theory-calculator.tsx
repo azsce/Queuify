@@ -22,6 +22,7 @@ import DD1Results from "@/components/results/DD1Results";
 import DD1KResults from "@/components/results/DD1KResults";
 import QueueType from "@/components/queuing/QueueType";
 import { MathJaxContext } from "better-react-mathjax";
+import { DD1KCharacteristics } from "@/types/dd1k";
 
 export default function QueuingTheoryCalculator() {
   const [queueType, setQueueType] = useState("D/D");
@@ -66,66 +67,63 @@ export default function QueuingTheoryCalculator() {
     }
 
     try {
-      let results;
-      if (
-        queueType === "M/M" &&
-        servers === "1" &&
-        capacity === "∞"
-      ) {
-        results = mm1(parseFloat(arrivalRate), parseFloat(serviceRate));
-        setResults(<MM1Results results={results} />);
-      } else if (
-        queueType === "M/M" &&
-        servers === "1" &&
-        capacity !== "∞"
-      ) {
-        results = mm1k(
+      let characteristics: DD1KCharacteristics;
+      // if (
+      //   queueType === "M/M" &&
+      //   servers === "1" &&
+      //   capacity === "∞"
+      // ) {
+      //   results = mm1(parseFloat(arrivalRate), parseFloat(serviceRate));
+      //   setResults(<MM1Results results={results} />);
+      // } else if (
+      //   queueType === "M/M" &&
+      //   servers === "1" &&
+      //   capacity !== "∞"
+      // ) {
+      //   results = mm1k(
+      //     parseFloat(arrivalRate),
+      //     parseFloat(serviceRate),
+      //     parseInt(capacity)
+      //   );
+      //   setResults(<MM1KResults results={results} />);
+      // } else if (
+      //   queueType === "M/M" &&
+      //   servers !== "1" &&
+      //   capacity === "∞"
+      // ) {
+      //   results = mmc(
+      //     parseFloat(arrivalRate),
+      //     parseFloat(serviceRate),
+      //     parseInt(servers)
+      //   );
+      //   setResults(<MMCResults results={results} />);
+      // } else if (
+      //   queueType === "M/M" &&
+      //   servers !== "1" &&
+      //   capacity !== "∞"
+      // ) {
+      //   results = mmck(
+      //     parseFloat(arrivalRate),
+      //     parseFloat(serviceRate),
+      //     parseInt(servers),
+      //     parseInt(capacity)
+      //   );
+      //   setResults(<MMCKResults results={results} />);
+      // } else if (
+      //   queueType === "D/D" &&
+      //   servers === "1" &&
+      //   capacity === "∞"
+      // ) {
+      //   results = dd1(parseFloat(arrivalRate), parseFloat(serviceRate));
+      //   setResults(<DD1Results results={results} />);
+      // } else
+      if (queueType === "D/D" && servers === "1" && capacity !== "∞") {
+        characteristics = dd1k(
           parseFloat(arrivalRate),
           parseFloat(serviceRate),
           parseInt(capacity)
         );
-        setResults(<MM1KResults results={results} />);
-      } else if (
-        queueType === "M/M" &&
-        servers !== "1" &&
-        capacity === "∞"
-      ) {
-        results = mmc(
-          parseFloat(arrivalRate),
-          parseFloat(serviceRate),
-          parseInt(servers)
-        );
-        setResults(<MMCResults results={results} />);
-      } else if (
-        queueType === "M/M" &&
-        servers !== "1" &&
-        capacity !== "∞"
-      ) {
-        results = mmck(
-          parseFloat(arrivalRate),
-          parseFloat(serviceRate),
-          parseInt(servers),
-          parseInt(capacity)
-        );
-        setResults(<MMCKResults results={results} />);
-      } else if (
-        queueType === "D/D" &&
-        servers === "1" &&
-        capacity === "∞"
-      ) {
-        results = dd1(parseFloat(arrivalRate), parseFloat(serviceRate));
-        setResults(<DD1Results results={results} />);
-      } else if (
-        queueType === "D/D" &&
-        servers === "1" &&
-        capacity !== "∞"
-      ) {
-        results = dd1k(
-          parseFloat(arrivalRate),
-          parseFloat(serviceRate),
-          parseInt(capacity)
-        );
-        setResults(<DD1KResults results={results} />);
+        setResults(<DD1KResults characteristics={characteristics} />);
       } else {
         setError("Unsupported queue configuration.");
         return;

@@ -1,40 +1,31 @@
+import { Fraction } from "./math";
 
-export interface DD1KResults {
-  n_t: {
-    tLessThan1OverLambda: string;
-    tBetween1OverLambdaAndTi: string;
-    tGreaterThanOrEqualTi: string;
-  };
-  Wq_n: {
-    n0: string;
-    nLessThanLambdaTi: string;
-    nGreaterThanOrEqualLambdaTi: string;
-  };
-  t1: number;
-  blockingProbability?: number;
-  case: string;
+export type DD1KCharacteristics = {
+  type: DD1KType;
   arrivalRate: number;
   serviceRate: number;
   capacity: number;
+  arrivalRateFraction: Fraction;
+  serviceRateFraction: Fraction;
+  t_i: number;
+};
+
+export type DD1KType = "λ > μ" | "(λ > μ) && λ%μ = 0";
+
+export type N_Of_T = {
+  t_lessThan_arrivalTime: string; // t < 1/λ
+  t_between_arrivalTime_and_ti: string; // 1/λ ≤ t < t_i
+  t_greaterOrEqual_ti: string; // t ≥ t_i
+};
+
+export type Wq_Of_N = {
+  n0: string; // n = 0
+  n_LessThan_LambdaTi: string; // n < λ*t_i
+  nGreaterThanOrEqualLambdaTi: string; // n ≥ λ*t_i
+};
+
+
+enum WhichCase {
+  LAMBDA_GT_MU = "λ > μ",
+  LAMBDA_GT_MU_DIVISIBLE = "(λ > μ) && λ%μ = 0",
 }
-
-// I want  the first two graphs 
-// Number of Customers vs Time Graph (n(t))
-// Shows the step-wise progression of customers in the system over time
-// Clear visualization of when the queue reaches capacity (k)
-// Demonstrates the cyclic pattern after t_i (first balk time)
-// Different patterns for λ > μ and λ ≤ μ cases
-// Waiting Time Graph (Wq(n))
-// Shows waiting time for each customer number
-// Linear increase until queue reaches capacity
-// After t_i, alternates between two values
-// Different patterns for stable vs unstable cases
-// and 
-// Customer Flow Diagram
-// Visual representation of arrivals and departures
-// Shows blocked customers after queue reaches capacity
-// Timing diagram style with arrival and service completions
-
-// and let's start by implementing the first one only for now 
-
-// using rechart library

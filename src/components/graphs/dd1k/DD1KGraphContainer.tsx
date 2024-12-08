@@ -20,11 +20,12 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({
 }) => {
   return (
     <div className="space-y-6">
-      <NumberOfCustomersGraph
+      {/* <NumberOfCustomersGraph
         arrivalRate={arrivalRate}
         serviceRate={serviceRate}
         capacity={capacity}
-      />
+      /> */}
+      <h1>DD1KGraphContainer</h1>
     </div>
   );
 };
