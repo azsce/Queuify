@@ -9,6 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
 import { computeNOfT } from "@/lib/dd1k";
 import { DD1KType } from "@/types/dd1k";
@@ -119,6 +120,16 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
               name="Customers in System"
               dot={false}
               strokeWidth={2}
+            />
+            <ReferenceLine
+              x={t_i}
+              stroke={theme.palette.warning.main}
+              label={{
+                value: `t = t_i`,
+                position: "top",
+                fill: theme.palette.warning.main,
+                fontSize: 12,
+              }}
             />
           </LineChart>
         </ResponsiveContainer>
