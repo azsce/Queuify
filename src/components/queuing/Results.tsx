@@ -1,19 +1,19 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, List, ListItem } from "@mui/material";
+import Typography from "@mui/material/Typography";
 
 export default function Results({ results }) {
   return (
-    <Card className="mt-4">
-      <CardHeader>
-        <CardTitle>Results</CardTitle>
-      </CardHeader>
+    <Card sx={{ mt: 2 }}>
+      <CardHeader title={<Typography variant="h6">Results</Typography>} />
       <CardContent>
-        <ul className="list-disc pl-5">
+        <List sx={{ listStyleType: "disc", pl: 2 }}>
           {results.map((result, index) => (
-            <li key={index}>{result}</li>
+            <ListItem key={index} sx={{ display: "list-item" }}>
+              {result}
+            </ListItem>
           ))}
-        </ul>
+        </List>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
-import { Separator } from "@/components/ui/separator";
+import { Divider } from "@mui/material";
 import DD1KGraphContainer from "../graphs/dd1k/DD1KGraphContainer";
 import { DD1KCharacteristics, N_Of_T } from "@/types/dd1k";
 
@@ -77,7 +77,7 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
           </h2>
         </div>
 
-        <Separator />
+        <Divider />
 
         {/* Section for displaying λ, μ, and system capacity (K) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -99,7 +99,7 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
           </div>
         </div>
 
-        <Separator />
+        <Divider />
 
         {/* Section for displaying t_i and case */}
         <div className="space-y-4">
@@ -116,7 +116,7 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
           </div>
         </div>
 
-        <Separator />
+        <Divider />
 
         {/* Section for displaying n(t) */}
         <div className="space-y-8">
@@ -152,7 +152,7 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
           </div>
         </div>
 
-        <Separator />
+        <Divider />
 
         {/* Section for displaying Wq(n) */}
         <div className="space-y-8">

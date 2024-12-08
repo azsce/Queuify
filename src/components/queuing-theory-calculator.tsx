@@ -13,16 +13,17 @@ import MMCResults from "@/components/results/MMCResults";
 import MMCKResults from "@/components/results/MMCKResults";
 import DD1Results from "@/components/results/DD1Results";
 import DD1KResults from "@/components/results/DD1KResults";
-import QueueType from "@/components/queuing/QueueType";
+import ProcessTypeSelector from "@/components/queuing/ProcessTypeSelector";
 import { MathJaxContext } from "better-react-mathjax";
 import { DD1KCharacteristics } from "@/types/dd1k";
 import { InfoIcon } from "lucide-react";
 import { Card, CardHeader, CardContent, Typography } from "@mui/material";
+import { Process } from "@/types/queue";
 
 export default function QueuingTheoryCalculator() {
-  const [queueType, setQueueType] = useState("D/D");
-  const [servers, setServers] = useState("1");
-  const [capacity, setCapacity] = useState("∞");
+  const [queueType, setQueueType] = useState<Process>("D/D");
+  const [servers, setServers] = useState<number | undefined>(1);
+  const [capacity, setCapacity] = useState<number | undefined>();
   const [arrivalRate, setArrivalRate] = useState("");
   const [serviceRate, setServiceRate] = useState("");
   const [arrivalTime, setArrivalTime] = useState("");
@@ -42,7 +43,7 @@ export default function QueuingTheoryCalculator() {
     }
 
     // Check for valid combinations
-    if (queueType === "D/D" && servers !== "1") {
+    if (queueType === "D/D" && servers !== 1) {
       setError(
         "Current implementation only handles D/D/1 and D/D/1/(k-1) – single server deterministic queues."
       );
@@ -51,8 +52,8 @@ export default function QueuingTheoryCalculator() {
 
     if (
       queueType === "D/D" &&
-      servers === "1" &&
-      capacity === "∞" &&
+      servers === 1 &&
+      capacity === undefined &&
       parseFloat(arrivalRate) > parseFloat(serviceRate)
     ) {
       setError(
@@ -112,11 +113,11 @@ export default function QueuingTheoryCalculator() {
       //   results = dd1(parseFloat(arrivalRate), parseFloat(serviceRate));
       //   setResults(<DD1Results results={results} />);
       // } else
-      if (queueType === "D/D" && servers === "1" && capacity !== "∞") {
+      if (queueType === "D/D" && servers === 1 && capacity !== undefined) {
         characteristics = dd1k(
           parseFloat(arrivalRate),
           parseFloat(serviceRate),
-          parseInt(capacity)
+          capacity
         );
         setResults(<DD1KResults characteristics={characteristics} />);
       } else {
@@ -140,7 +141,7 @@ export default function QueuingTheoryCalculator() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-4">
-              <QueueType setQueueType={setQueueType} />
+              <ProcessTypeSelector setProcessType={setQueueType} />
               <SystemParameters
                 setServers={setServers}
                 setCapacity={setCapacity}
