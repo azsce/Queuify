@@ -22,7 +22,19 @@ const DD1KResults: React.FC<DD1KResultsProps> = ({ characteristics }) => {
     window.MathJax && window.MathJax.typeset();
   }, [characteristics]);
 
-  return <ArrivalBiggerThanservice {...characteristics} />;
+  return (
+    <>
+      <ArrivalBiggerThanservice {...characteristics} />
+      <Divider />
+      <DD1KGraphContainer
+        arrivalRate={characteristics.arrivalRate}
+        serviceRate={characteristics.serviceRate}
+        capacity={characteristics.capacity}
+        t_i={characteristics.t_i}
+        systemType={characteristics.type}
+      />
+    </>
+  );
 };
 
 const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({

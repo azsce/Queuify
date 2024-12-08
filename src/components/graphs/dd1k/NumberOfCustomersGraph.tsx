@@ -10,35 +10,42 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { computeNOfT } from "@/lib/dd1k";
 
 interface NumberOfCustomersGraphProps {
   arrivalRate: number;
   serviceRate: number;
   capacity: number;
+  t_i: number;
+  systemType: DD1KType;
 }
 
 const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
   arrivalRate,
   serviceRate,
   capacity,
+  t_i,
+  systemType,
 }) => {
   const generateData = () => {
     const data = [];
     const maxTime = 50;
-    const timeStep = 0.5;
+    const timeStep = 4;
 
     for (let t = 0; t <= maxTime; t += timeStep) {
-      const arrivals = Math.floor(arrivalRate * t);
-      const departures = Math.floor(
-        serviceRate * t - serviceRate / arrivalRate
+      const customers = computeNOfT(
+        t,
+        arrivalRate,
+        serviceRate,
+        t_i,
+        capacity,
+        systemType
       );
-      let customers = Math.max(0, arrivals - departures);
-      customers = Math.min(customers, capacity);
-
       data.push({
         time: t,
         customers: customers,
       });
+      console.log("number of customers at time", t, "is", customers);
     }
     return data;
   };

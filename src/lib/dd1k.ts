@@ -86,6 +86,8 @@
 import { DD1KCharacteristics, DD1KType } from "@/types/dd1k";
 import { Fraction } from "@/types/math";
 
+const EPSILON = 1e-6; // Tolerance for floating-point comparison
+
 /**
  * Calculates the performance metrics for a D/D/1/K queue.
  * @param arrivalRate - The rate at which customers arrive.
@@ -175,17 +177,16 @@ function findFirstBalkTime(
   console.log(
     `Finding t_i for λ=${arrivalRate}, μ=${serviceRate}, k=${capacity}`
   );
-  let t1 = 0;
-  const epsilon = 1e-6; // Tolerance for floating-point comparison
+  let t_i = 0;
   while (true) {
-    t1 += 1 / arrivalRate; // Increment by inter-arrival time
-    const lambdaTi = Math.floor(arrivalRate * t1);
-    const muCalculation = serviceRate * t1 - serviceRate / arrivalRate;
-    const muTi = Math.floor(muCalculation + epsilon); // Add epsilon to handle floating-point precision
+    t_i += 1 / arrivalRate; // Increment by inter-arrival time
+    const lambdaTi = Math.floor(arrivalRate * t_i);
+    const muCalculation = serviceRate * t_i - serviceRate / arrivalRate;
+    const muTi = Math.floor(muCalculation + EPSILON); // Add epsilon to handle floating-point precision
     console.log(
-      `t1=${t1}, lambdaTi=${lambdaTi}, muTi=${muTi}, difference=${lambdaTi - muTi}`
+      `t1=${t_i}, lambdaTi=${lambdaTi}, muTi=${muTi}, difference=${lambdaTi - muTi}`
     );
-    if (lambdaTi - muTi >= capacity) return t1;
+    if (lambdaTi - muTi >= capacity) return t_i;
   }
 }
 
@@ -213,4 +214,42 @@ function toProperFraction(decimal: number): Fraction {
   } while (Math.abs(decimal - h1 / k1) > decimal * tolerance);
 
   return { numerator: h1, denominator: k1 };
+}
+
+export function computeNOfT(
+  t: number,
+  arrivalRate: number,
+  serviceRate: number,
+  t_i: number,
+  capacity: number,
+  systemType: DD1KType
+): number {
+  if (t < 1 / arrivalRate) {
+    // State 1: t < 1/λ
+    return 0;
+  } else if (t >= 1 / arrivalRate && t < t_i) {
+    console.log("State 2: t > 1/λ and t < t_i, vars: ", t, arrivalRate, t_i);
+    // State 2: 1/λ < t < t_i
+    const lambdaT = Math.floor(arrivalRate * t);
+    const muCalculation = serviceRate * t - serviceRate / arrivalRate;
+    const muT = Math.floor(muCalculation + EPSILON); // Add epsilon to handle floating-point precision
+
+    const n = lambdaT - muT;
+    return n;
+  } else {
+    // State 3: t ≥ t_i
+    if (systemType === "(λ > μ) && λ%μ = 0") {
+      // Special case: n(t) remains constant at capacity - 1
+      return capacity - 1;
+    } else {
+      // n(t) alternates between capacity - 1 and capacity - 2
+      const serviceTime = 1 / serviceRate;
+      const cyclesSinceTi = Math.floor((t - t_i) / serviceTime);
+      if (cyclesSinceTi % 2 === 0) {
+        return capacity - 1;
+      } else {
+        return capacity - 2;
+      }
+    }
+  }
 }
