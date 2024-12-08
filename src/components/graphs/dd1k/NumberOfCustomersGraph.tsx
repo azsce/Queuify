@@ -48,7 +48,6 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
         time: t,
         customers: customers,
       });
-      console.log("number of customers at time", t, "is", customers);
     }
     return data;
   };

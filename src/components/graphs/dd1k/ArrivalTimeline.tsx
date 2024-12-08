@@ -24,13 +24,13 @@ interface ArrivalTimelineProps {
 }
 
 const colors = [
-  "#FF5733", // Red
-  "#33FF57", // Green
-  "#3357FF", // Blue
-  "#FF33A1", // Pink
-  "#FF8C33", // Orange
-  "#8C33FF", // Purple
-  "#33FFF5", // Cyan
+  "#4287f5", // Blue
+  "#42f5b3", // Turquoise
+  "#8442f5", // Purple
+  "#42d4f5", // Sky Blue
+  "#42f578", // Green
+  "#b942f5", // Violet
+  "#42f5e9", // Cyan
 ];
 
 const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
@@ -98,9 +98,9 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
               label={{
                 value: "Time (t)",
                 position: "insideTop",
-                offset: -20,
+                offset: -25, // Increased from -20
               }}
-              // Remove tickFormatter since we're using whole numbers now
+              tick={{ dy: -10 }} // Add this line to move ticks up
             />
             {/* Bottom customer index axis */}
             <XAxis
@@ -123,11 +123,11 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
                 key={index}
                 x={entry.time}
                 xAxisId={0} // Explicitly use top axis
-                stroke={entry.blocked ? "red" : colors[index % colors.length]}
+                stroke={entry.time === "0" ? "transparent" : entry.blocked ? "red" : colors[index % colors.length]}
                 label={{
                   value: entry.blocked ? `⊗` : `${entry.arrival}`,
                   position: "top",
-                  fill: entry.blocked ? "red" : colors[index % colors.length],
+                  fill: entry.time === "0" ? "#000" : entry.blocked ? "red" : colors[index % colors.length],
                   fontSize: 12,
                 }}
               />

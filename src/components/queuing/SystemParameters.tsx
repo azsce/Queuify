@@ -219,7 +219,6 @@ const InputWithInfinity: React.FC<InputWithInfinityProps> = ({
   const [error, setError] = useState(false);
 
   const handleBlur = () => {
-    console.log("handleBlur: ", value);
     setError(required && isNaN(value));
     if (onBlur) {
       onBlur();

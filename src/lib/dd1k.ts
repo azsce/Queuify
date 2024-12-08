@@ -176,18 +176,13 @@ namespace DD1K {
     serviceRate: number,
     capacity: number
   ): number {
-    console.log(
-      `Finding t_i for λ=${arrivalRate}, μ=${serviceRate}, k=${capacity}`
-    );
     let t_i = 0;
     while (true) {
       t_i += 1 / arrivalRate; // Increment by inter-arrival time
       const lambdaTi = Math.floor(arrivalRate * t_i);
       const muCalculation = serviceRate * t_i - serviceRate / arrivalRate;
       const muTi = Math.floor(muCalculation + EPSILON); // Add epsilon to handle floating-point precision
-      console.log(
-        `t1=${t_i}, lambdaTi=${lambdaTi}, muTi=${muTi}, difference=${lambdaTi - muTi}`
-      );
+
       if (lambdaTi - muTi >= capacity) return t_i;
     }
   }
@@ -230,7 +225,6 @@ namespace DD1K {
       // State 1: t < 1/λ
       return 0;
     } else if (t >= 1 / arrivalRate && t < t_i) {
-      console.log("State 2: t > 1/λ and t < t_i, vars: ", t, arrivalRate, t_i);
       // State 2: 1/λ < t < t_i
       const lambdaT = Math.floor(arrivalRate * t);
       const muCalculation = serviceRate * t - serviceRate / arrivalRate;
@@ -293,14 +287,23 @@ namespace DD1K {
   }
 
   /**
-   * Checks if a customer arriving at time t would be blocked
-   * @param t - The arrival time
-   * @param arrivalRate - The rate at which customers arrive
-   * @param serviceRate - The rate at which customers are served
-   * @param capacity - The maximum number of customers the system can hold
-   * @param t_i - The time of first balk
-   * @param systemType - The type of the system
-   * @returns True if the customer would be blocked, false otherwise
+   * Checks if a service completion occurs at time t
+   * @param t - The current time
+   * @param serviceRate - The service rate
+   * @returns True if a service completion occurs at time t
+   */
+  function isServiceCompletion(t: number, serviceRate: number): boolean {
+    // Service completions occur at multiples of service time (1/μ)
+    const serviceTime = 1/serviceRate;
+    // Check if t is a multiple of service time (within floating point precision)
+    return Math.abs(t % serviceTime) < EPSILON;
+  }
+
+  /**
+   * Checks if a customer arriving at time t would be blocked.
+   * A customer is blocked if:
+   * 1. Current queue state is at capacity (k-1) AND no service completion occurs at time t
+   * 2. Current queue state is at capacity (k)
    */
   export function isCustomerBlocked(
     t: number,
@@ -310,7 +313,7 @@ namespace DD1K {
     t_i: number,
     systemType: DD1KType
   ): boolean {
-    const systemState = computeNOfT(
+    const currentState = computeNOfT(
       t,
       arrivalRate,
       serviceRate,
@@ -318,7 +321,19 @@ namespace DD1K {
       capacity,
       systemType
     );
-    return systemState >= capacity - 1;
+
+    // If system is not at or near capacity, customer is not blocked
+    if (currentState < capacity - 1) {
+      return false;
+    }
+
+    // If system is at capacity - 1, check if there's a service completion
+    if (currentState === capacity - 1) {
+      return !isServiceCompletion(t, serviceRate);
+    }
+
+    // If current state is >= k, customer is blocked
+    return true;
   }
 
   /**
