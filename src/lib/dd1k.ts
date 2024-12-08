@@ -292,9 +292,9 @@ namespace DD1K {
    * @param serviceRate - The service rate
    * @returns True if a service completion occurs at time t
    */
-  function isServiceCompletion(t: number, serviceRate: number): boolean {
+  export function isServiceCompletion(t: number, serviceRate: number): boolean {
     // Service completions occur at multiples of service time (1/μ)
-    const serviceTime = 1/serviceRate;
+    const serviceTime = 1 / serviceRate;
     // Check if t is a multiple of service time (within floating point precision)
     return Math.abs(t % serviceTime) < EPSILON;
   }

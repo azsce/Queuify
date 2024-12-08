@@ -7,6 +7,7 @@ import { DD1KType } from "@/types/dd1k";
 import { Box } from "@mui/material";
 import CustomerFlowDiagram from "./CustomerFlowDiagram";
 import ArrivalTimeline from "./ArrivalTimeline";
+import ServiceTimeline from "./ServiceTimeline";
 
 interface DD1KGraphContainerProps {
   width?: number | string;
@@ -49,6 +50,13 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({
         systemType={systemType}
       />
       <ArrivalTimeline
+        arrivalRate={arrivalRate}
+        serviceRate={serviceRate}
+        capacity={capacity}
+        t_i={t_i}
+        systemType={systemType}
+      />
+      <ServiceTimeline
         arrivalRate={arrivalRate}
         serviceRate={serviceRate}
         capacity={capacity}

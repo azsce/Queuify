@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from "react";
@@ -11,12 +12,11 @@ import {
   YAxis,
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-
 import { DD1KType } from "@/types/dd1k";
 import DD1K from "@/lib/dd1k";
 import { colors } from "@/constants";
 
-interface ArrivalTimelineProps {
+interface ServiceTimelineProps {
   arrivalRate: number;
   serviceRate: number;
   capacity: number;
@@ -24,71 +24,60 @@ interface ArrivalTimelineProps {
   systemType: DD1KType;
 }
 
-const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
+const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
   arrivalRate,
   serviceRate,
   capacity,
   t_i,
   systemType,
 }) => {
-  const generateData: () => Array<{
-    time: string;
-    arrival: number;
-    blocked: boolean;
-  }> = () => {
+  const generateData = () => {
     const data = [];
     const maxTime = DD1K.graphMaxTime(t_i);
-    const timeStep = 1 / arrivalRate;
+    const timeStep = 1 / serviceRate; // Use service rate for time steps
 
     // Start with t=0 for initial state
     data.push({
       time: "0",
-      arrival: 0,
-      blocked: false,
+      service: 0,
+      customerIndex: "",
     });
 
-    // Generate rest of the timeline
+    let currentCustomer = 1;
+    // Generate service completion times
     for (let t = timeStep; t <= maxTime; t += timeStep) {
-      const arrivals = Math.floor(t * arrivalRate);
-      const blocked = DD1K.isCustomerBlocked(
-        t,
-        arrivalRate,
-        serviceRate,
-        capacity,
-        t_i,
-        systemType
-      );
-      data.push({
-        time: Math.round(t).toString(), // Round time to whole numbers
-        arrival: arrivals,
-        blocked: blocked,
-      });
+      const n = DD1K.computeNOfT(t, arrivalRate, serviceRate, t_i, capacity, systemType);
+      
+      // A service completion occurs at this time
+      if (DD1K.isServiceCompletion(t, serviceRate)) {
+        // Only increment customer if there were customers to serve
+        if (n > 0 || t >= 1/arrivalRate) {
+          data.push({
+            time: t.toFixed(2),
+            service: currentCustomer,
+            customerIndex: `C${currentCustomer}`,
+          });
+          currentCustomer++;
+        } else {
+          data.push({
+            time: t.toFixed(2),
+            service: 0,
+            customerIndex: "",
+          });
+        }
+      }
     }
     return data;
   };
 
   const data = generateData();
-
-  // Add customer indices to data
-  const dataWithCustomers = data.map((point, index) => ({
-    ...point,
-    customerIndex: index > 0 ? `C${index}` : "", // First index is empty
-  }));
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        mt: 2,
-      }}
-    >
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
       <Typography variant="h6" component="h3">
-        Arrival Timeline
+        Service Timeline
       </Typography>
       <Box
         sx={{
@@ -103,7 +92,7 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
       >
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={dataWithCustomers}
+            data={data}
             margin={{
               top: 20,
               right: 0,
@@ -112,34 +101,32 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            {/* Top time axis */}
             <XAxis
               dataKey="time"
               orientation="top"
               label={{
                 value: "Time (t)",
                 position: "insideTop",
-                offset: -25, // Increased from -20
+                offset: -25,
               }}
-              tick={{ dy: -10 }} // Add this line to move ticks up
+              tick={{ dy: -10 }}
             />
-            {/* Bottom customer index axis */}
             <XAxis
               xAxisId="customer"
               dataKey="customerIndex"
               orientation="bottom"
               label={{
-                value: "Customer Index",
+                value: "Customer Served",
                 position: "insideBottom",
                 offset: -10,
                 dy: 10,
               }}
-              height={40} // Add height for better visibility
-              tick={{ dy: 10 }} // Move ticks down
+              height={40}
+              tick={{ dy: 10 }}
             />
             <YAxis
               label={{
-                value: "Arrival Times",
+                value: "Service Times",
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
@@ -147,41 +134,32 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
               }}
             />
             <Tooltip />
-            {dataWithCustomers.map((entry, index) => (
+            {data.map((entry, index) => (
               <ReferenceLine
                 key={index}
                 x={entry.time}
-                xAxisId={0} // Explicitly use top axis
+                xAxisId={0}
                 stroke={
-                  entry.time === "0"
+                  entry.customerIndex === ""
                     ? "transparent"
-                    : entry.blocked
-                      ? "red"
-                      : colors[index % colors.length]
+                    : colors[parseInt(entry.customerIndex.slice(1)) % colors.length]
                 }
-                label={
-                  entry.blocked
-                    ? {
-                        value: "⊗",
-                        position: "top",
-                        fill: "red",
-                        fontSize: 12,
-                      }
-                    : undefined
-                }
+                label={{
+                  value: "◆",
+                  position: "top",
+                  fill: colors[parseInt(entry.customerIndex.slice(1)) % colors.length],
+                  fontSize: 12,
+                }}
               />
             ))}
           </LineChart>
         </ResponsiveContainer>
       </Box>
-      <Typography
-        variant="caption"
-        sx={{ color: "red", mt: 1, textAlign: "center" }}
-      >
-        ⊗ Red lines indicate blocked customers
+      <Typography variant="caption" sx={{ mt: 1, textAlign: "center" }}>
+        ◆ Indicates service completion times
       </Typography>
     </Box>
   );
 };
 
-export default ArrivalTimeline;
+export default ServiceTimeline;
