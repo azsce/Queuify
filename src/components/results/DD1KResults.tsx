@@ -191,7 +191,7 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
             {/* Wq(n): n ≥ λt_i */}
             <div>
               <MathJax>{`\\( \\text{For }n \\geq \\lambda t_i:\\)`}</MathJax>
-              <div className="ml-6 mt-4">
+              <div className="ml-6 mt-4 mb-4">
                 <MathJax
                   inline
                 >{`\\(Wq(n) ${wqOfN.nGreaterThanOrEqualLambdaTi}\\)`}</MathJax>
