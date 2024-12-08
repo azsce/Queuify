@@ -1,15 +1,16 @@
-import { TextField, IconButton } from "@mui/material";
+import { TextField, IconButton, Box } from "@mui/material";
 import { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import { styled } from "@mui/system";
-import { InfinityIcon } from "lucide-react";
+import { InfinityIcon, LinkIcon } from "lucide-react";
+import { Process } from "@/types/queue";
 
 type SystemParametersProps = {
   setServers: (servers: number | undefined) => void;
   setCapacity: (capacity: number | undefined) => void;
   servers: number | undefined;
   capacity: number | undefined;
-  queueType: string;
+  processType: Process;
 };
 
 const SystemParameters: React.FC<SystemParametersProps> = ({
@@ -17,7 +18,7 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
   setCapacity,
   servers,
   capacity,
-  queueType,
+  processType,
 }) => {
   const [capacityMinusOne, setCapacityMinusOne] = useState<number | undefined>(
     capacity - 1
@@ -53,28 +54,49 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
           autoComplete="servers"
         />
       </Grid>
-      {queueType === "D/D" ? (
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12 }}>
-              <InputWithInfinity
-                id="capacityMinusOne"
-                label="System Capacity - 1 (K-1)"
-                value={capacityMinusOne}
-                onChange={handleInputChange(setCapacityMinusOne)}
-                onInfinityClick={() => handleInfinityClick(setCapacityMinusOne)}
-                autoComplete="capacity - 1"
-              />
-            </Grid>
-            <Grid size={{ xs: 12 }}>
-              <InputWithInfinity
-                id="capacity"
-                label="System Capacity (K)"
-                value={capacity}
-                onChange={handleInputChange(setCapacity)}
-                onInfinityClick={() => handleInfinityClick(setCapacity)}
-                autoComplete="capacity"
-              />
+      {processType === "D/D" ? (
+        <Grid container spacing={2} alignItems="center">
+          <Grid
+            size={{ xs: 1 }}
+            sx={{ display: "flex", justifyContent: "center" }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                height: "100%",
+                justifyContent: "center",
+                color: "gray",
+              }}
+            >
+              <LinkIcon size={20} />
+            </Box>
+          </Grid>
+          <Grid size={{ xs: 11 }}>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12 }}>
+                <InputWithInfinity
+                  id="capacityMinusOne"
+                  label="System Capacity - 1 (K-1)"
+                  value={capacityMinusOne}
+                  onChange={handleInputChange(setCapacityMinusOne)}
+                  onInfinityClick={() =>
+                    handleInfinityClick(setCapacityMinusOne)
+                  }
+                  autoComplete="capacity - 1"
+                />
+              </Grid>
+              <Grid size={{ xs: 12 }}>
+                <InputWithInfinity
+                  id="capacity"
+                  label="System Capacity (K)"
+                  value={capacity}
+                  onChange={handleInputChange(setCapacity)}
+                  onInfinityClick={() => handleInfinityClick(setCapacity)}
+                  autoComplete="capacity"
+                />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
@@ -108,10 +130,11 @@ const NoNumberArrowsTextField = styled(TextField)({
   "& input[type=number]": {
     MozAppearance: "textfield",
   },
-  "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
-    WebkitAppearance: "none",
-    margin: 0,
-  },
+  "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button":
+    {
+      WebkitAppearance: "none",
+      margin: 0,
+    },
 });
 
 const InputWithInfinity: React.FC<InputWithInfinityProps> = ({

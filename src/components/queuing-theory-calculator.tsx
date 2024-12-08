@@ -147,7 +147,7 @@ export default function QueuingTheoryCalculator() {
                 setCapacity={setCapacity}
                 servers={servers}
                 capacity={capacity}
-                queueType={queueType}
+                processType={queueType}
               />
               <InputParameters
                 setArrivalRate={setArrivalRate}
