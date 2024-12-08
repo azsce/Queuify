@@ -135,7 +135,7 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
               <Grid size={{ xs: 12 }}>
                 <InputWithInfinity
                   id="capacityMinusOne"
-                  label="System Capacity - 1 (K-1)"
+                  label="K-1"
                   value={capacityMinusOne}
                   onChange={onCapacityMinusOneChange}
                   showInfinity={infinitableCapacity}
@@ -148,7 +148,7 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
               <Grid size={{ xs: 12 }}>
                 <InputWithInfinity
                   id="capacity"
-                  label="System Capacity (K)"
+                  label="K (System Capacity)"
                   value={capacity}
                   onChange={onCapacityChange}
                   showInfinity={infinitableCapacity}
@@ -229,9 +229,8 @@ const InputWithInfinity: React.FC<InputWithInfinityProps> = ({
 
   return (
     <NoNumberArrowsTextField
-      key={value} // Add key prop here
       id={id}
-      value={isNaN(value) ? "" : value}
+      value={isNaN(value) ? "" : value.toString()}
       placeholder="∞"
       label={label}
       type="number"
