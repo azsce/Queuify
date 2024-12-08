@@ -61,7 +61,7 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
   if (type === "λ > μ") {
     caseOutput = "\\lambda > \\mu";
   } else if (type === "(λ > μ) && λ%μ = 0") {
-    caseOutput = "(\\lambda > \\mu) \\text{ and } \\lambda \\bmod \\mu = 0";
+    caseOutput = "(\\lambda > \\mu) \\text{ and } (\\lambda \\% \\mu = 0)";
   }
 
   return (
@@ -172,11 +172,11 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
             {/* Wq(n): n ≥ λt_i */}
             <p>
               <MathJax>{`\\( \\text{For }n \\geq \\lambda t_i:\\)`}</MathJax>
-              <span className="ml-6">
+              <div className="ml-6 mt-4">
                 <MathJax
                   inline
                 >{`\\(Wq(n) ${wqOfN.nGreaterThanOrEqualLambdaTi}\\)`}</MathJax>
-              </span>
+              </div>
             </p>
           </div>
         </div>
