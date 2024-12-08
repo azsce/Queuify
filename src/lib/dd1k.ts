@@ -336,52 +336,6 @@ namespace DD1K {
     return true;
   }
 
-  /**
-   * Generates data for the arrival timeline graph.
-   * @param arrivalRate - The rate at which customers arrive.
-   * @param serviceRate - The service rate
-   * @param capacity - The maximum number of customers the system can hold.
-   * @param t_i - Time of first balk
-   * @param systemType - Type of the system
-   * @returns An array of objects containing time, arrival, and blocked status.
-   */
-  export function generateArrivalTimelineData(
-    arrivalRate: number,
-    serviceRate: number,
-    capacity: number,
-    t_i: number,
-    systemType: DD1KType
-  ): Array<{ time: string; arrival: number; blocked: boolean }> {
-    const data = [];
-    const maxTime = graphMaxTime(t_i);
-    const timeStep = 1 / arrivalRate;
-
-    // Start with t=0 for initial state
-    data.push({
-      time: "0",
-      arrival: 0,
-      blocked: false,
-    });
-
-    // Generate rest of the timeline
-    for (let t = timeStep; t <= maxTime; t += timeStep) {
-      const arrivals = Math.floor(t * arrivalRate);
-      const blocked = isCustomerBlocked(
-        t,
-        arrivalRate,
-        serviceRate,
-        capacity,
-        t_i,
-        systemType
-      );
-      data.push({
-        time: Math.round(t).toString(), // Round time to whole numbers
-        arrival: arrivals,
-        blocked: blocked,
-      });
-    }
-    return data;
-  }
 
   export function graphMaxTime(t_i: number): number {
     return Math.ceil(Math.max(t_i * 2, 10)); // Round up max time

@@ -40,13 +40,43 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
   t_i,
   systemType,
 }) => {
-  const data = DD1K.generateArrivalTimelineData(
-    arrivalRate,
-    serviceRate,
-    capacity,
-    t_i,
-    systemType
-  );
+  const generateData: () => Array<{
+    time: string;
+    arrival: number;
+    blocked: boolean;
+  }> = () => {
+    const data = [];
+    const maxTime = DD1K.graphMaxTime(t_i);
+    const timeStep = 1 / arrivalRate;
+
+    // Start with t=0 for initial state
+    data.push({
+      time: "0",
+      arrival: 0,
+      blocked: false,
+    });
+
+    // Generate rest of the timeline
+    for (let t = timeStep; t <= maxTime; t += timeStep) {
+      const arrivals = Math.floor(t * arrivalRate);
+      const blocked = DD1K.isCustomerBlocked(
+        t,
+        arrivalRate,
+        serviceRate,
+        capacity,
+        t_i,
+        systemType
+      );
+      data.push({
+        time: Math.round(t).toString(), // Round time to whole numbers
+        arrival: arrivals,
+        blocked: blocked,
+      });
+    }
+    return data;
+  };
+
+  const data = generateData();
 
   // Add customer indices to data
   const dataWithCustomers = data.map((point, index) => ({
@@ -123,11 +153,22 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
                 key={index}
                 x={entry.time}
                 xAxisId={0} // Explicitly use top axis
-                stroke={entry.time === "0" ? "transparent" : entry.blocked ? "red" : colors[index % colors.length]}
+                stroke={
+                  entry.time === "0"
+                    ? "transparent"
+                    : entry.blocked
+                      ? "red"
+                      : colors[index % colors.length]
+                }
                 label={{
                   value: entry.blocked ? `⊗` : `${entry.arrival}`,
                   position: "top",
-                  fill: entry.time === "0" ? "#000" : entry.blocked ? "red" : colors[index % colors.length],
+                  fill:
+                    entry.time === "0"
+                      ? "#000"
+                      : entry.blocked
+                        ? "red"
+                        : colors[index % colors.length],
                   fontSize: 12,
                 }}
               />
@@ -135,7 +176,10 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
           </LineChart>
         </ResponsiveContainer>
       </Box>
-      <Typography variant="caption" sx={{ color: 'red', mt: 1, textAlign: 'center' }}>
+      <Typography
+        variant="caption"
+        sx={{ color: "red", mt: 1, textAlign: "center" }}
+      >
         ⊗ Red lines indicate blocked customers
       </Typography>
     </Box>
