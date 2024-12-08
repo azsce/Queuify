@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React from "react";
 import {
   LineChart,
   Line,
@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { computeNOfT } from "@/lib/dd1k";
 import { DD1KType } from "@/types/dd1k";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 
 interface NumberOfCustomersGraphProps {
   arrivalRate: number;
@@ -53,14 +54,41 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
 
   const data = generateData();
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Number of Customers vs Time</h3>
-      <div className="w-full h-[500px] rounded-lg border bg-card p-8">
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        mt: 2,
+      }}
+    >
+      <Typography variant="h6" component="h3">
+        Number of Customers vs Time
+      </Typography>
+      <Box
+        sx={{
+          width: "100%",
+          height: isMobile ? 400 : 500,
+          borderRadius: 2,
+          border: 1,
+          borderColor: "divider",
+          backgroundColor: "background.paper",
+          p: { xs: 0, sm: 4 },
+        }}
+      >
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={data}
-            margin={{ top: 20, right: 30, left: 90, bottom: 50 }}
+            margin={{
+              top: 20,
+              right: 0,
+              left: isMobile ? 0 : 90,
+              bottom: isMobile ? 30 : 50,
+            }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
@@ -77,8 +105,8 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
                 value: "Number of Customers n(t)",
                 angle: -90,
                 position: "insideLeft",
-                dx: -20,
-                dy: 90,
+                dx: isMobile ? 10 : -20,
+                dy: isMobile ? 90 : 90,
               }}
               allowDecimals={false}
               domain={[0, capacity]}
@@ -94,8 +122,8 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
             />
           </LineChart>
         </ResponsiveContainer>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

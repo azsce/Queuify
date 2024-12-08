@@ -83,10 +83,9 @@
  * 1. Solve the equation: k = ⌊λ * t_i⌋ - ⌊μ * t_i - μ / λ⌋
  */
 
+import { EPSILON } from "@/constants";
 import { DD1KCharacteristics, DD1KType } from "@/types/dd1k";
 import { Fraction } from "@/types/math";
-
-const EPSILON = 1e-6; // Tolerance for floating-point comparison
 
 /**
  * Calculates the performance metrics for a D/D/1/K queue.
@@ -242,14 +241,6 @@ export function computeNOfT(
       // Special case: n(t) remains constant at capacity - 1
       return capacity - 1;
     } else {
-      // n(t) alternates between capacity - 1 and capacity - 2
-      // const serviceTime = 1 / serviceRate;
-      // const cyclesSinceTi = Math.floor((t - t_i) / serviceTime);
-      // if (cyclesSinceTi % 2 === 0) {
-      //   return capacity - 1;
-      // } else {
-      //   return capacity - 2;
-      // }
       const lambdaT = Math.floor(arrivalRate * t);
       const muCalculation = serviceRate * t - serviceRate / arrivalRate;
       const muT = Math.floor(muCalculation + EPSILON);

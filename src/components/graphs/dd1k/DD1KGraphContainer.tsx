@@ -3,6 +3,7 @@
 import React from "react";
 import NumberOfCustomersGraph from "./NumberOfCustomersGraph";
 import { DD1KType } from "@/types/dd1k";
+import { Box } from "@mui/material";
 
 interface DD1KGraphContainerProps {
   width?: number | string;
@@ -24,7 +25,7 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({
   systemType,
 }) => {
   return (
-    <div className="space-y-6">
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       <NumberOfCustomersGraph
         arrivalRate={arrivalRate}
         serviceRate={serviceRate}
@@ -32,7 +33,7 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({
         t_i={t_i}
         systemType={systemType}
       />
-    </div>
+    </Box>
   );
 };
 
