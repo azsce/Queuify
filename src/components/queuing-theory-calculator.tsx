@@ -135,7 +135,7 @@ export default function QueuingTheoryCalculator() {
 
   return (
     <MathJaxContext>
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-4 text-sm sm:text-base">
         <Card>
           <CardHeader>
             <CardTitle>Queuing Theory Calculator</CardTitle>

@@ -33,7 +33,7 @@ export default function SystemParameters({
   };
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm sm:text-base">
       <div>
         <Label htmlFor="servers">Number of Servers (c)</Label>
         <div className="flex">

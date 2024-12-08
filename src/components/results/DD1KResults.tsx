@@ -69,10 +69,10 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
 
   return (
     <MathJaxContext>
-      <div className="space-y-6">
+      <div className="space-y-6 text-sm md:text-base">
         {/* Main header with title */}
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-xl md:text-2xl font-bold">
             <MathJax inline>{`\\(D/D/1/(k-1)\\)`}</MathJax> Queue Results
           </h2>
         </div>
@@ -120,7 +120,7 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
 
         {/* Section for displaying n(t) */}
         <div className="space-y-8">
-          <h3 className="text-xl font-semibold">
+          <h3 className="text-lg md:text-xl font-semibold">
             <MathJax inline>{`\\(n(t)\\)`}</MathJax> (Number of Customers)
           </h3>
           <div className="ml-4 space-y-8">
@@ -156,7 +156,7 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
 
         {/* Section for displaying Wq(n) */}
         <div className="space-y-8">
-          <h3 className="text-xl font-semibold">
+          <h3 className="text-lg md:text-xl font-semibold">
             <MathJax inline>{`\\(Wq(n)\\)`}</MathJax> (Waiting Times)
           </h3>
           <div className="ml-4 space-y-8">
