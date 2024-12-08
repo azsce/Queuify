@@ -1,16 +1,9 @@
 "use client";
 
 import { JSX, useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { InfoIcon } from "lucide-react";
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 import { mm1, mm1k, mmc, mmck, dd1, dd1k } from "@/lib";
 import SystemParameters from "@/components/queuing/SystemParameters";
 import InputParameters from "@/components/queuing/InputParameters";
@@ -23,6 +16,8 @@ import DD1KResults from "@/components/results/DD1KResults";
 import QueueType from "@/components/queuing/QueueType";
 import { MathJaxContext } from "better-react-mathjax";
 import { DD1KCharacteristics } from "@/types/dd1k";
+import { InfoIcon } from "lucide-react";
+import { Card, CardHeader, CardContent, Typography } from "@mui/material";
 
 export default function QueuingTheoryCalculator() {
   const [queueType, setQueueType] = useState("D/D");
@@ -138,10 +133,10 @@ export default function QueuingTheoryCalculator() {
       <div className="container mx-auto p-4 text-sm sm:text-base">
         <Card>
           <CardHeader>
-            <CardTitle>Queuing Theory Calculator</CardTitle>
-            <CardDescription>
+            <Typography variant="h5">Queuing Theory Calculator</Typography>
+            <Typography variant="body2">
               Calculate key performance metrics for various queuing systems
-            </CardDescription>
+            </Typography>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4">
@@ -163,29 +158,29 @@ export default function QueuingTheoryCalculator() {
                 arrivalTime={arrivalTime}
                 serviceTime={serviceTime}
               />
-              <Button onClick={handleCalculate}>Calculate</Button>
+              <Button variant="contained" onClick={handleCalculate}>
+                Calculate
+              </Button>
             </div>
 
             <div className="mt-8">
               {error && (
-                <Alert variant="destructive" className="mb-6">
+                <Alert severity="error" className="mb-6">
                   <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
+                  {error}
                 </Alert>
               )}
 
               {results}
 
-              <Alert className="mt-6">
+              <Alert severity="info" className="mt-6">
                 <InfoIcon className="h-4 w-4" />
                 <AlertTitle>Note</AlertTitle>
-                <AlertDescription>
-                  <span className="ml-2 mt-1">
-                    For D/D/1 and D/D/1/(k-1) models, the Time (t) field is used
-                    for transient analysis. For unstable systems (λ {">"} μ),
-                    results may be limited or require additional explanation.
-                  </span>
-                </AlertDescription>
+                <span className="ml-2 mt-1">
+                  For D/D/1 and D/D/1/(k-1) models, the Time (t) field is used
+                  for transient analysis. For unstable systems (λ {">"} μ),
+                  results may be limited or require additional explanation.
+                </span>
               </Alert>
             </div>
           </CardContent>
