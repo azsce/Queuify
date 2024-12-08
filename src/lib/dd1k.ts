@@ -292,11 +292,23 @@ namespace DD1K {
    * @param serviceRate - The service rate
    * @returns True if a service completion occurs at time t
    */
-  export function isServiceCompletion(t: number, serviceRate: number): boolean {
-    // Service completions occur at multiples of service time (1/μ)
+  export function isServiceCompletion(
+    t: number,
+    serviceRate: number,
+    arrivalRate: number
+  ): boolean {
     const serviceTime = 1 / serviceRate;
-    // Check if t is a multiple of service time (within floating point precision)
-    return Math.abs(t % serviceTime) < EPSILON;
+
+    // Check if time t is a service completion time by seeing if (t - 1/λ) is a multiple of service time
+    const timeFromFirstService = t - 1 / arrivalRate;
+
+    // Using Math.round to handle floating point precision
+    return (
+      Math.abs(
+        Math.round(timeFromFirstService / serviceTime) -
+          timeFromFirstService / serviceTime
+      ) < EPSILON
+    );
   }
 
   /**
@@ -335,7 +347,7 @@ namespace DD1K {
     }
 
     if (currentState === capacity - 1) {
-      return isServiceCompletion(t, serviceRate);
+      return !isServiceCompletion(t, serviceRate, arrivalRate);
     }
 
     return true;

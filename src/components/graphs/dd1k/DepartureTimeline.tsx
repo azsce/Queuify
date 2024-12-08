@@ -16,7 +16,7 @@ import DD1K from "@/lib/dd1k";
 import { colors } from "@/constants";
 import { getTimeAxisTicks } from "@/utils/graph";
 
-interface ServiceTimelineProps {
+interface DepartureTimelineProps {
   arrivalRate: number;
   serviceRate: number;
   capacity: number;
@@ -24,7 +24,7 @@ interface ServiceTimelineProps {
   systemType: DD1KType;
 }
 
-const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
+const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
   arrivalRate,
   serviceRate,
   capacity,
@@ -36,12 +36,12 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
     const maxTime = DD1K.graphMaxTime(t_i);
     const timeStep = 1 / arrivalRate;  // Match arrival timeline step
     const serviceTime = 1 / serviceRate;
-    const firstServiceTime = 1 / arrivalRate;
+    const firstDepartureTime = 1 / arrivalRate + serviceTime;
 
     // Start with t=0 for initial state
     data.push({
       time: "0",
-      service: 0,
+      departure: 0,
       customerIndex: "",
     });
 
@@ -50,7 +50,7 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
     // Generate data points for each time step
     for (let t = timeStep; t <= maxTime; t += timeStep) {
       const roundedTime = Math.round(t).toString();
-      if (t >= firstServiceTime && (t - firstServiceTime) % serviceTime < timeStep) {
+      if (t >= firstDepartureTime && (t - firstDepartureTime) % serviceTime < timeStep) {
         data.push({
           time: roundedTime,
           service: currentCustomer,
@@ -76,7 +76,7 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
       <Typography variant="h6" component="h3">
-        Service Timeline
+        Departure Timeline
       </Typography>
       <Box
         sx={{
@@ -115,7 +115,7 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
               dataKey="customerIndex"
               orientation="bottom"
               label={{
-                value: "Customer Served",
+                value: "Customer Departed",
                 position: "insideBottom",
                 offset: -10,
                 dy: 10,
@@ -125,7 +125,7 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
             />
             <YAxis
               label={{
-                value: "Service Times",
+                value: "Departure Times",
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
@@ -159,10 +159,10 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
         </ResponsiveContainer>
       </Box>
       <Typography variant="caption" sx={{ mt: 1, textAlign: "center" }}>
-        ◆ Indicates service completion times
+        ◆ Indicates departure times
       </Typography>
     </Box>
   );
 };
 
-export default ServiceTimeline;
+export default DepartureTimeline;

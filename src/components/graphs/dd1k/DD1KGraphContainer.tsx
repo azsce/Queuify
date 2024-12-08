@@ -8,6 +8,7 @@ import { Box } from "@mui/material";
 import CustomerFlowDiagram from "./CustomerFlowDiagram";
 import ArrivalTimeline from "./ArrivalTimeline";
 import ServiceTimeline from "./ServiceTimeline";
+import DepartureTimeline from "./DepartureTimeline";
 
 interface DD1KGraphContainerProps {
   width?: number | string;
@@ -57,6 +58,13 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({
         systemType={systemType}
       />
       <ServiceTimeline
+        arrivalRate={arrivalRate}
+        serviceRate={serviceRate}
+        capacity={capacity}
+        t_i={t_i}
+        systemType={systemType}
+      />
+      <DepartureTimeline
         arrivalRate={arrivalRate}
         serviceRate={serviceRate}
         capacity={capacity}
