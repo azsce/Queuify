@@ -1,7 +1,8 @@
-
 "use client";
 
 import React from "react";
+import DD1K from "@/lib/dd1k";
+import { DD1KType } from "@/types/dd1k";
 import {
   LineChart,
   Line,
@@ -19,6 +20,7 @@ interface CustomerFlowDiagramProps {
   serviceRate: number;
   capacity: number;
   t_i: number;
+  systemType: DD1KType;
 }
 
 const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
@@ -26,21 +28,35 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
   serviceRate,
   capacity,
   t_i,
+  systemType,
 }) => {
   const generateData = () => {
     const data = [];
-    const maxTime = 100;
-    const timeStep = 1;
+    const maxTime = DD1K.graphMaxTime(t_i);
+    const timeStep = 1 / Math.max(arrivalRate, serviceRate); // More precise step size
+    let totalBlocked = 0;
 
     for (let t = 0; t <= maxTime; t += timeStep) {
       const arrivals = Math.floor(t * arrivalRate);
       const departures = Math.floor(t * serviceRate);
-      const blocked = arrivals > capacity ? arrivals - capacity : 0;
+      const isBlocked = DD1K.isCustomerBlocked(
+        t,
+        arrivalRate,
+        serviceRate,
+        capacity,
+        t_i,
+        systemType
+      );
+      
+      if (isBlocked) {
+        totalBlocked++;
+      }
+
       data.push({
         time: t,
         arrivals: arrivals,
         departures: departures,
-        blocked: blocked,
+        blocked: totalBlocked,
       });
     }
     return data;

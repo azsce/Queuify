@@ -46,6 +46,7 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({
         serviceRate={serviceRate}
         capacity={capacity}
         t_i={t_i}
+        systemType={systemType}
       />
       <ArrivalTimeline
         arrivalRate={arrivalRate}

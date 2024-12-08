@@ -14,6 +14,7 @@ import {
 import { DD1KType } from "@/types/dd1k";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import DD1K from "@/lib/dd1k";
+import { getCustomerAxisTicks } from "@/utils/graph";
 
 interface WaitingTimeGraphProps {
   arrivalRate: number;
@@ -54,6 +55,7 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const maxCustomers = 100;
 
   return (
     <Box
@@ -97,6 +99,7 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                 offset: -10,
                 dy: 10,
               }}
+              ticks={getCustomerAxisTicks(maxCustomers, arrivalRate)}
             />
             <YAxis
               label={{

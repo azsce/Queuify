@@ -160,17 +160,16 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
                       ? "red"
                       : colors[index % colors.length]
                 }
-                label={{
-                  value: entry.blocked ? `⊗` : `${entry.arrival}`,
-                  position: "top",
-                  fill:
-                    entry.time === "0"
-                      ? "#000"
-                      : entry.blocked
-                        ? "red"
-                        : colors[index % colors.length],
-                  fontSize: 12,
-                }}
+                label={
+                  entry.blocked
+                    ? {
+                        value: '⊗',
+                        position: "top",
+                        fill: "red",
+                        fontSize: 12,
+                      }
+                    : undefined
+                }
               />
             ))}
           </LineChart>

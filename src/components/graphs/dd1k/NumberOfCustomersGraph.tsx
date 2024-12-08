@@ -14,6 +14,7 @@ import {
 import DD1K from "@/lib/dd1k";
 import { DD1KType } from "@/types/dd1k";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { getTimeAxisTicks } from "@/utils/graph";
 
 interface NumberOfCustomersGraphProps {
   arrivalRate: number;
@@ -56,6 +57,7 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const maxTime = DD1K.graphMaxTime(t_i);
 
   return (
     <Box
@@ -99,6 +101,7 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
                 offset: -10,
                 dy: 10,
               }}
+              ticks={getTimeAxisTicks(maxTime, arrivalRate)}
             />
             <YAxis
               label={{
