@@ -1,5 +1,5 @@
 import { TextField, IconButton, Box } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useMemo, Dispatch, SetStateAction } from "react";
 import Grid from "@mui/material/Grid2";
 import { styled } from "@mui/system";
 import { InfinityIcon } from "lucide-react";
@@ -7,10 +7,10 @@ import { Process } from "@/types/queue";
 import InfinityLinkIndicator from "../InfinityLinkIndicator";
 
 type SystemParametersProps = {
-  setServers: (servers: number | undefined) => void;
-  setCapacity: (capacity: number | undefined) => void;
-  servers: number | undefined;
-  capacity: number | undefined;
+  setServers: Dispatch<SetStateAction<number>>;
+  setCapacity: Dispatch<SetStateAction<number>>;
+  servers: number;
+  capacity: number;
   processType: Process;
 };
 
@@ -21,26 +21,60 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
   capacity,
   processType,
 }) => {
-  const [capacityMinusOne, setCapacityMinusOne] = useState<number | undefined>(
+  const requiredServers = useMemo(() => processType === "D/D", [processType]);
+  const requiredCapacity = useMemo(() => processType === "D/D", [processType]);
+
+  const infinitableCapacity = useMemo(
+    () => processType !== "D/D",
+    [processType]
+  );
+  const infintableServers = useMemo(() => processType !== "D/D", [processType]);
+  const [capacityMinusOne, setCapacityMinusOne] = useState<number>(
     capacity - 1
   );
 
-  useEffect(() => {
-    setCapacityMinusOne(capacity - 1);
-  }, [capacity]);
+  const onCapacityChange = (value: number) => {
+    setCapacity(value);
+    if (processType === "D/D") {
+      if (isNaN(value)) {
+        setCapacityMinusOne(undefined);
+      }
 
-  useEffect(() => {
-    setCapacity(capacityMinusOne + 1);
-  }, [capacityMinusOne, setCapacity]);
-
-  const handleInfinityClick = (setter) => {
-    console.log("infinity clicked");
-    setter(undefined);
+      if (!isNaN(value) && value > 1) {
+        setCapacityMinusOne(value - 1);
+      }
+    }
   };
 
-  const handleInputChange = (setter) => (e) => {
-    const value = e.target.value;
-    setter(value === "" ? "∞" : parseInt(value));
+  const onCapacityMinusOneChange = (value: number) => {
+    setCapacityMinusOne(value);
+    if (processType === "D/D") {
+      if (isNaN(value)) {
+        setCapacity(undefined);
+      }
+
+      if (!isNaN(value) && value >= 0) {
+        setCapacity(value + 1);
+      }
+    }
+  };
+
+  const handleServersInfinityClick = () => {
+    if (infintableServers) {
+      setServers(null);
+    }
+  };
+
+  const handleCapacityInfinityClick = () => {
+    if (infinitableCapacity) {
+      setCapacity(null);
+    }
+  };
+
+  const handleCapacityMinusOneInfinityClick = () => {
+    if (infinitableCapacity) {
+      setCapacityMinusOne(null);
+    }
   };
 
   return (
@@ -54,9 +88,11 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
             id="servers"
             label="Number of Servers (C)"
             value={servers}
-            onChange={handleInputChange(setServers)}
-            onInfinityClick={() => handleInfinityClick(setServers)}
+            onChange={setServers}
+            showInfinity={infintableServers}
+            onInfinityClick={handleServersInfinityClick}
             autoComplete="servers"
+            required={requiredServers}
           />
         </Grid>
       </Grid>
@@ -101,11 +137,11 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
                   id="capacityMinusOne"
                   label="System Capacity - 1 (K-1)"
                   value={capacityMinusOne}
-                  onChange={handleInputChange(setCapacityMinusOne)}
-                  onInfinityClick={() =>
-                    handleInfinityClick(setCapacityMinusOne)
-                  }
+                  onChange={onCapacityMinusOneChange}
+                  showInfinity={infinitableCapacity}
+                  onInfinityClick={handleCapacityMinusOneInfinityClick}
                   autoComplete="capacity - 1"
+                  required={requiredCapacity}
                 />
               </Grid>
               {/* System Capacity */}
@@ -114,9 +150,11 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
                   id="capacity"
                   label="System Capacity (K)"
                   value={capacity}
-                  onChange={handleInputChange(setCapacity)}
-                  onInfinityClick={() => handleInfinityClick(setCapacity)}
+                  onChange={onCapacityChange}
+                  showInfinity={infinitableCapacity}
+                  onInfinityClick={handleCapacityInfinityClick}
                   autoComplete="capacity"
+                  required={requiredCapacity}
                 />
               </Grid>
             </Grid>
@@ -128,9 +166,11 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
             id="capacity"
             label="System Capacity (K)"
             value={capacity}
-            onChange={handleInputChange(setCapacity)}
-            onInfinityClick={() => handleInfinityClick(setCapacity)}
+            onChange={onCapacityChange}
+            showInfinity={infinitableCapacity}
+            onInfinityClick={handleCapacityInfinityClick}
             autoComplete="capacity"
+            required={requiredCapacity}
           />
         </Grid>
       )}
@@ -141,11 +181,13 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
 type InputWithInfinityProps = {
   id: string;
   label: string;
-  value: number | string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value: number;
+  onChange: (value: number) => void;
+  showInfinity?: boolean;
   onInfinityClick?: () => void;
   required?: boolean;
   autoComplete?: string;
+  onBlur?: () => void;
 };
 
 const NoNumberArrowsTextField = styled(TextField)({
@@ -164,35 +206,57 @@ const InputWithInfinity: React.FC<InputWithInfinityProps> = ({
   label,
   value,
   onChange,
+  showInfinity = true,
   onInfinityClick = () => {},
   required = false,
   autoComplete,
-}) => (
-  <NoNumberArrowsTextField
-    id={id}
-    value={value === undefined ? "" : value}
-    onChange={onChange}
-    placeholder="∞"
-    label={label}
-    type="number"
-    fullWidth
-    required={required}
-    autoComplete={autoComplete}
-    size="small"
-    slotProps={{
-      input: {
-        endAdornment: (
-          <IconButton
-            color="primary"
-            onClick={onInfinityClick}
-            sx={{ minWidth: "40px" }}
-          >
-            <InfinityIcon />
-          </IconButton>
-        ),
-      },
-    }}
-  />
-);
+  onBlur,
+}) => {
+  const [error, setError] = useState(false);
+
+  const handleBlur = () => {
+    console.log("handleBlur: ", value);
+    setError(required && isNaN(value));
+    if (onBlur) {
+      onBlur();
+    }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = parseInt(event.target.value);
+    onChange(newValue);
+  };
+
+  return (
+    <NoNumberArrowsTextField
+      key={value} // Add key prop here
+      id={id}
+      value={isNaN(value) ? "" : value}
+      placeholder="∞"
+      label={label}
+      type="number"
+      fullWidth
+      required={required}
+      autoComplete={autoComplete}
+      onChange={handleChange}
+      size="small"
+      error={error}
+      onBlur={handleBlur}
+      slotProps={{
+        input: {
+          endAdornment: showInfinity && (
+            <IconButton
+              color="primary"
+              onClick={onInfinityClick}
+              sx={{ minWidth: "40px" }}
+            >
+              <InfinityIcon />
+            </IconButton>
+          ),
+        },
+      }}
+    />
+  );
+};
 
 export default SystemParameters;

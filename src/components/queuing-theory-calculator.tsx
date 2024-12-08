@@ -53,7 +53,7 @@ export default function QueuingTheoryCalculator() {
     if (
       queueType === "D/D" &&
       servers === 1 &&
-      capacity === undefined &&
+      isNaN(capacity) &&
       parseFloat(arrivalRate) > parseFloat(serviceRate)
     ) {
       setError(
@@ -113,7 +113,7 @@ export default function QueuingTheoryCalculator() {
       //   results = dd1(parseFloat(arrivalRate), parseFloat(serviceRate));
       //   setResults(<DD1Results results={results} />);
       // } else
-      if (queueType === "D/D" && servers === 1 && capacity !== undefined) {
+      if (queueType === "D/D" && servers === 1 && capacity !== null) {
         characteristics = dd1k(
           parseFloat(arrivalRate),
           parseFloat(serviceRate),
@@ -130,7 +130,6 @@ export default function QueuingTheoryCalculator() {
   };
 
   return (
-    <MathJaxContext>
       <div className="container mx-auto p-4 text-sm sm:text-base">
         <Card>
           <CardHeader>
@@ -187,6 +186,5 @@ export default function QueuingTheoryCalculator() {
           </CardContent>
         </Card>
       </div>
-    </MathJaxContext>
   );
 }
