@@ -161,17 +161,21 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
           </Grid>
         </Grid>
       ) : (
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <InputWithInfinity
-            id="capacity"
-            label="System Capacity (K)"
-            value={capacity}
-            onChange={onCapacityChange}
-            showInfinity={infinitableCapacity}
-            onInfinityClick={handleCapacityInfinityClick}
-            autoComplete="capacity"
-            required={requiredCapacity}
-          />
+        <Grid size={{ xs: 12, sm: 6 }} container spacing={0} alignItems="start">
+          {/* Empty Column */}
+          <Grid size={1} />
+          <Grid size={11}>
+            <InputWithInfinity
+              id="capacity"
+              label="System Capacity (K)"
+              value={capacity}
+              onChange={onCapacityChange}
+              showInfinity={infinitableCapacity}
+              onInfinityClick={handleCapacityInfinityClick}
+              autoComplete="capacity"
+              required={requiredCapacity}
+            />
+          </Grid>
         </Grid>
       )}
     </Grid>
