@@ -44,16 +44,19 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
     t_greaterOrEqual_ti: t_greaterOrEqual_ti,
   };
 
+  const service_minus_arrival_time =
+    serviceRateFraction.denominator - arrivalRateFraction.denominator;
+
   let nGreaterThanOrEqualLambdaTi = "";
   if (type === "λ > μ") {
-    nGreaterThanOrEqualLambdaTi = `\\text{ alternates between } (1/${serviceRateFraction.denominator} - 1/${arrivalRateFraction.denominator})(\\lambda t_i - 2) \\text{ and } (1/${serviceRateFraction.denominator} - 1/${arrivalRateFraction.denominator})(\\lambda t_i - 3)`;
+    nGreaterThanOrEqualLambdaTi = `\\text{ alternates between } ${service_minus_arrival_time}(\\lambda t_i - 2) \\text{ and } ${service_minus_arrival_time}(\\lambda t_i - 3)`;
   } else if (type === "(λ > μ) && λ%μ = 0") {
-    nGreaterThanOrEqualLambdaTi = `\\text{ = } (1/${serviceRateFraction.denominator} - 1/${arrivalRateFraction.denominator})(\\lambda t_i - 2)`;
+    nGreaterThanOrEqualLambdaTi = `\\text{ = } ${service_minus_arrival_time}(\\lambda t_i - 2)`;
   }
 
   const wqOfN: Wq_Of_N = {
     n0: "0",
-    n_LessThan_LambdaTi: `(1/${serviceRateFraction.denominator} - 1/${arrivalRateFraction.denominator})(n - 1)`,
+    n_LessThan_LambdaTi: `${service_minus_arrival_time}(n - 1)`,
     nGreaterThanOrEqualLambdaTi: nGreaterThanOrEqualLambdaTi,
   };
 
@@ -80,11 +83,15 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center gap-2">
             <strong>Arrival Rate (λ):</strong>
-            <MathJax inline>{`\\(\\lambda = ${arrivalRateFraction.numerator}/${arrivalRateFraction.denominator}\\)`}</MathJax>
+            <MathJax
+              inline
+            >{`\\(\\lambda = ${arrivalRateFraction.numerator}/${arrivalRateFraction.denominator}\\)`}</MathJax>
           </div>
           <div className="flex items-center gap-2">
             <strong>Service Rate (μ):</strong>
-            <MathJax inline>{`\\(\\mu = ${serviceRateFraction.numerator}/${serviceRateFraction.denominator}\\)`}</MathJax>
+            <MathJax
+              inline
+            >{`\\(\\mu = ${serviceRateFraction.numerator}/${serviceRateFraction.denominator}\\)`}</MathJax>
           </div>
           <div className="flex items-center gap-2">
             <strong>System Capacity (K):</strong>
@@ -96,17 +103,17 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
 
         {/* Section for displaying t_i and case */}
         <div className="space-y-4">
-          <p className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <strong>
               <MathJax inline>{`\\(t_i\\)`}</MathJax> (Time of First Balk):
             </strong>
             <MathJax inline>{`\\(t_i = ${t_i.toFixed(2)}\\)`}</MathJax>
-          </p>
+          </div>
 
-          <p className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <strong>Case:</strong>
             <MathJax inline>{`\\(${caseOutput}\\)`}</MathJax>
-          </p>
+          </div>
         </div>
 
         <Separator />
@@ -118,30 +125,30 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
           </h3>
           <div className="ml-4 space-y-8">
             {/* n(t): t < 1/λ */}
-            <p>
+            <div>
               <MathJax>{`\\( \\text{For }t < \\frac{1}{\\lambda}:\\)`}</MathJax>
               <div className="ml-6 mt-4">
                 <MathJax
                   inline
                 >{`\\(n(t) = ${n_t.t_lessThan_arrivalTime}\\)`}</MathJax>
               </div>
-            </p>
+            </div>
 
             {/* n(t): 1/λ ≤ t < t_i */}
-            <p>
+            <div>
               <MathJax>{`\\( \\text{For } 1/\\lambda \\leq t < t_i:\\)`}</MathJax>
               <div className="ml-6 mt-4">
                 <MathJax>{`\\(n(t) = ${n_t.t_between_arrivalTime_and_ti}\\)`}</MathJax>
               </div>
-            </p>
+            </div>
 
             {/* n(t): t ≥ t_i */}
-            <p>
+            <div>
               <MathJax>{`\\( \\text{For }t \\geq t_i:\\)`}</MathJax>
               <div className="ml-6 mt-4">
                 <MathJax>{`\\(n(t) ${n_t.t_greaterOrEqual_ti}\\)`}</MathJax>
               </div>
-            </p>
+            </div>
           </div>
         </div>
 
@@ -154,30 +161,30 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
           </h3>
           <div className="ml-4 space-y-8">
             {/* Wq(n): n = 0 */}
-            <p>
+            <div>
               <MathJax>{`\\( \\text{For }n = 0:\\)`}</MathJax>
               <div className="ml-6 mt-4">
                 <MathJax inline>{`\\(Wq(n) = ${wqOfN.n0}\\)`}</MathJax>
               </div>
-            </p>
+            </div>
 
             {/* Wq(n): n < λt_i */}
-            <p>
+            <div>
               <MathJax>{`\\( \\text{For }n < \\lambda t_i:\\)`}</MathJax>
               <div className="ml-6 mt-4">
                 <MathJax>{`\\(Wq(n) = ${wqOfN.n_LessThan_LambdaTi}\\)`}</MathJax>
               </div>
-            </p>
+            </div>
 
             {/* Wq(n): n ≥ λt_i */}
-            <p>
+            <div>
               <MathJax>{`\\( \\text{For }n \\geq \\lambda t_i:\\)`}</MathJax>
               <div className="ml-6 mt-4">
                 <MathJax
                   inline
                 >{`\\(Wq(n) ${wqOfN.nGreaterThanOrEqualLambdaTi}\\)`}</MathJax>
               </div>
-            </p>
+            </div>
           </div>
         </div>
       </div>
