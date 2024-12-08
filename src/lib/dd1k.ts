@@ -41,7 +41,8 @@
  *                    n(t) = ⌊t/λ⌋ - ⌊t/μ - 1/μ⌋
  * 3. For t ≥ t_i, n(t) stabilizes at k-1 or k-2 customers.
  *          [n(t) >= k, the queue is saturated, and new arrivals are rejected]
- *      Once n(t) >= k, the system transitions to a steady-state alternating between k-1 and k-2 customers.
+ *      Once n(t) ≥ k, the system transitions to a steady-state where the system remains full,
+ *      alternating between k-1 and k-2 customers as customers leave and new customers enter.
  *      **Special Case:** When λ%μ = 0, where m is an integer:
  *      - n(t) remains constant at k-1.
  *
@@ -49,7 +50,7 @@
  * Step 4: Compute Waiting Times (Wq(n))
  * 1. For n < λ * t_i, compute the waiting time for each customer as:
  *                    Wq(n) = (1/μ - 1/λ)(n - 1)
- * 2. For n >= λ * t_i, the waiting time alternates between two values
+ * 2. For n ≥ λ * t_i, the waiting time alternates between two values
  *          (1/μ - 1/λ) * (λ * t_i - 2)
  *       and
  *          (1/μ - 1/λ) * (λ * t_i - 3)
@@ -87,172 +88,289 @@ import { EPSILON } from "@/constants";
 import { DD1KCharacteristics, DD1KType } from "@/types/dd1k";
 import { Fraction } from "@/types/math";
 
-/**
- * Calculates the performance metrics for a D/D/1/K queue.
- * @param arrivalRate - The rate at which customers arrive.
- * @param serviceRate - The rate at which customers are served.
- * @param capacity - The maximum number of customers the system can hold.
- * @returns An object containing the calculated metrics.
- */
-export function dd1k(
-  arrivalRate: number,
-  serviceRate: number,
-  capacity: number
-): DD1KCharacteristics {
-  // Calculate the time of first balk (t1)
-  const t1 = findFirstBalkTime(arrivalRate, serviceRate, capacity);
+// eslint-disable-next-line @typescript-eslint/no-namespace
+namespace DD1K {
+  /**
+   * Calculates the performance metrics for a D/D/1/K queue.
+   * @param arrivalRate - The rate at which customers arrive.
+   * @param serviceRate - The rate at which customers are served.
+   * @param capacity - The maximum number of customers the system can hold.
+   * @returns An object containing the calculated metrics.
+   */
+  export function dd1k(
+    arrivalRate: number,
+    serviceRate: number,
+    capacity: number
+  ): DD1KCharacteristics {
+    // Calculate the time of first balk (t1)
+    const t1 = findFirstBalkTime(arrivalRate, serviceRate, capacity);
 
-  // Convert rates to fractions
-  const arrivalRateFraction = toProperFraction(arrivalRate);
-  const serviceRateFraction = toProperFraction(serviceRate);
+    // Convert rates to fractions
+    const arrivalRateFraction = toProperFraction(arrivalRate);
+    const serviceRateFraction = toProperFraction(serviceRate);
 
-  if (arrivalRate > serviceRate) {
-    // Handle Case 1: λ > μ
-    return arrivalBiggerThanservice(
-      arrivalRate,
-      serviceRate,
-      capacity,
-      arrivalRateFraction,
-      serviceRateFraction,
-      t1
-    );
-  }
-  // else {
-  //   // Handle Case 2: λ ≤ μ
-  //   return handleCase2(arrivalRate, serviceRate, capacity);
-  // }
-  // Define the equations for n(t) in its three states
-}
-
-function arrivalBiggerThanservice(
-  arrivalRate: number,
-  serviceRate: number,
-  capacity: number,
-  arrivalRateFraction: Fraction,
-  serviceRateFraction: Fraction,
-  t_i: number
-): DD1KCharacteristics {
-  let systemType: DD1KType = "λ > μ";
-  if (arrivalRate % serviceRate === 0) {
-    systemType = "(λ > μ) && λ%μ = 0";
+    if (arrivalRate > serviceRate) {
+      // Handle Case 1: λ > μ
+      return arrivalBiggerThanservice(
+        arrivalRate,
+        serviceRate,
+        capacity,
+        arrivalRateFraction,
+        serviceRateFraction,
+        t1
+      );
+    }
+    // else {
+    //   // Handle Case 2: λ ≤ μ
+    //   return handleCase2(arrivalRate, serviceRate, capacity);
+    // }
+    // Define the equations for n(t) in its three states
   }
 
-  // const n_t = {
-  //   tLessThan1OverLambda: `0`,
-  //   tBetween1OverLambdaAndTi: `⌊t/${arrivalRateFraction.denominator}⌋ - ⌊t/${serviceRateFraction.denominator} - ${arrivalRateFraction.denominator}/${serviceRateFraction.denominator}⌋`,
-  //   tGreaterThanOrEqualTi: `⌊t/${arrivalRateFraction.denominator}⌋ - ⌊t/${serviceRateFraction.denominator} - ${arrivalRateFraction.denominator}/${serviceRateFraction.denominator}⌋`,
-  // };
+  function arrivalBiggerThanservice(
+    arrivalRate: number,
+    serviceRate: number,
+    capacity: number,
+    arrivalRateFraction: Fraction,
+    serviceRateFraction: Fraction,
+    t_i: number
+  ): DD1KCharacteristics {
+    let systemType: DD1KType = "λ > μ";
+    if (arrivalRate % serviceRate === 0) {
+      systemType = "(λ > μ) && λ%μ = 0";
+    }
 
-  // // Define the equations for Wq(n) in its three states
-  // const Wq_n = {
-  //   n0: `0`,
-  //   nLessThanLambdaTi: `(1 / ${serviceRateFraction.numerator}/${serviceRateFraction.denominator} - 1 / ${arrivalRateFraction.numerator}/${arrivalRateFraction.denominator}) * (n - 1)`,
-  //   nGreaterThanOrEqualLambdaTi: `0`,
-  // };
+    // const n_t = {
+    //   tLessThan1OverLambda: `0`,
+    //   tBetween1OverLambdaAndTi: `⌊t/${arrivalRateFraction.denominator}⌋ - ⌊t/${serviceRateFraction.denominator} - ${arrivalRateFraction.denominator}/${serviceRateFraction.denominator}⌋`,
+    //   tGreaterThanOrEqualTi: `⌊t/${arrivalRateFraction.denominator}⌋ - ⌊t/${serviceRateFraction.denominator} - ${arrivalRateFraction.denominator}/${serviceRateFraction.denominator}⌋`,
+    // };
 
-  return {
-    type: systemType,
-    arrivalRate: arrivalRate,
-    serviceRate: serviceRate,
-    arrivalRateFraction: arrivalRateFraction,
-    serviceRateFraction: serviceRateFraction,
-    capacity: capacity,
-    t_i: t_i,
-  };
-}
+    // // Define the equations for Wq(n) in its three states
+    // const Wq_n = {
+    //   n0: `0`,
+    //   nLessThanLambdaTi: `(1 / ${serviceRateFraction.numerator}/${serviceRateFraction.denominator} - 1 / ${arrivalRateFraction.numerator}/${arrivalRateFraction.denominator}) * (n - 1)`,
+    //   nGreaterThanOrEqualLambdaTi: `0`,
+    // };
 
-/**
- * Finds the first time the system reaches capacity.
- * @param arrivalRate - The rate at which customers arrive.
- * @param serviceRate - The rate at which customers are served.
- * @param capacity - The maximum number of customers the system can hold.
- * @returns The first time the system reaches capacity.
- */
-function findFirstBalkTime(
-  arrivalRate: number,
-  serviceRate: number,
-  capacity: number
-): number {
-  console.log(
-    `Finding t_i for λ=${arrivalRate}, μ=${serviceRate}, k=${capacity}`
-  );
-  let t_i = 0;
-  while (true) {
-    t_i += 1 / arrivalRate; // Increment by inter-arrival time
-    const lambdaTi = Math.floor(arrivalRate * t_i);
-    const muCalculation = serviceRate * t_i - serviceRate / arrivalRate;
-    const muTi = Math.floor(muCalculation + EPSILON); // Add epsilon to handle floating-point precision
+    return {
+      type: systemType,
+      arrivalRate: arrivalRate,
+      serviceRate: serviceRate,
+      arrivalRateFraction: arrivalRateFraction,
+      serviceRateFraction: serviceRateFraction,
+      capacity: capacity,
+      t_i: t_i,
+    };
+  }
+
+  /**
+   * Finds the first time the system reaches capacity.
+   * @param arrivalRate - The rate at which customers arrive.
+   * @param serviceRate - The rate at which customers are served.
+   * @param capacity - The maximum number of customers the system can hold.
+   * @returns The first time the system reaches capacity.
+   */
+  function findFirstBalkTime(
+    arrivalRate: number,
+    serviceRate: number,
+    capacity: number
+  ): number {
     console.log(
-      `t1=${t_i}, lambdaTi=${lambdaTi}, muTi=${muTi}, difference=${lambdaTi - muTi}`
+      `Finding t_i for λ=${arrivalRate}, μ=${serviceRate}, k=${capacity}`
     );
-    if (lambdaTi - muTi >= capacity) return t_i;
+    let t_i = 0;
+    while (true) {
+      t_i += 1 / arrivalRate; // Increment by inter-arrival time
+      const lambdaTi = Math.floor(arrivalRate * t_i);
+      const muCalculation = serviceRate * t_i - serviceRate / arrivalRate;
+      const muTi = Math.floor(muCalculation + EPSILON); // Add epsilon to handle floating-point precision
+      console.log(
+        `t1=${t_i}, lambdaTi=${lambdaTi}, muTi=${muTi}, difference=${lambdaTi - muTi}`
+      );
+      if (lambdaTi - muTi >= capacity) return t_i;
+    }
   }
-}
 
-/**
- * Converts a decimal number to a proper fraction.
- * @param decimal - The decimal number to convert.
- * @returns The fraction in the form of an object { numerator, denominator }.
- */
-function toProperFraction(decimal: number): Fraction {
-  const tolerance = 1.0e-6;
-  let h1 = 1,
-    h2 = 0,
-    k1 = 0,
-    k2 = 1,
-    b = decimal;
-  do {
-    const a = Math.floor(b);
-    let aux = h1;
-    h1 = a * h1 + h2;
-    h2 = aux;
-    aux = k1;
-    k1 = a * k1 + k2;
-    k2 = aux;
-    b = 1 / (b - a);
-  } while (Math.abs(decimal - h1 / k1) > decimal * tolerance);
+  /**
+   * Converts a decimal number to a proper fraction.
+   * @param decimal - The decimal number to convert.
+   * @returns The fraction in the form of an object { numerator, denominator }.
+   */
+  function toProperFraction(decimal: number): Fraction {
+    const tolerance = 1.0e-6;
+    let h1 = 1,
+      h2 = 0,
+      k1 = 0,
+      k2 = 1,
+      b = decimal;
+    do {
+      const a = Math.floor(b);
+      let aux = h1;
+      h1 = a * h1 + h2;
+      h2 = aux;
+      aux = k1;
+      k1 = a * k1 + k2;
+      k2 = aux;
+      b = 1 / (b - a);
+    } while (Math.abs(decimal - h1 / k1) > decimal * tolerance);
 
-  return { numerator: h1, denominator: k1 };
-}
+    return { numerator: h1, denominator: k1 };
+  }
 
-export function computeNOfT(
-  t: number,
-  arrivalRate: number,
-  serviceRate: number,
-  t_i: number,
-  capacity: number,
-  systemType: DD1KType
-): number {
-  if (t < 1 / arrivalRate) {
-    // State 1: t < 1/λ
-    return 0;
-  } else if (t >= 1 / arrivalRate && t < t_i) {
-    console.log("State 2: t > 1/λ and t < t_i, vars: ", t, arrivalRate, t_i);
-    // State 2: 1/λ < t < t_i
-    const lambdaT = Math.floor(arrivalRate * t);
-    const muCalculation = serviceRate * t - serviceRate / arrivalRate;
-    const muT = Math.floor(muCalculation + EPSILON); // Add epsilon to handle floating-point precision
-
-    const n = lambdaT - muT;
-    return n;
-  } else {
-    // State 3: t ≥ t_i
-    if (systemType === "(λ > μ) && λ%μ = 0") {
-      // Special case: n(t) remains constant at capacity - 1
-      return capacity - 1;
-    } else {
+  export function computeNOfT(
+    t: number,
+    arrivalRate: number,
+    serviceRate: number,
+    t_i: number,
+    capacity: number,
+    systemType: DD1KType
+  ): number {
+    if (t < 1 / arrivalRate) {
+      // State 1: t < 1/λ
+      return 0;
+    } else if (t >= 1 / arrivalRate && t < t_i) {
+      console.log("State 2: t > 1/λ and t < t_i, vars: ", t, arrivalRate, t_i);
+      // State 2: 1/λ < t < t_i
       const lambdaT = Math.floor(arrivalRate * t);
       const muCalculation = serviceRate * t - serviceRate / arrivalRate;
-      const muT = Math.floor(muCalculation + EPSILON);
+      const muT = Math.floor(muCalculation + EPSILON); // Add epsilon to handle floating-point precision
 
-      // Determine if n(t) is k-1 or k-2
-      const remainder = (lambdaT - muT) % 2; // Modulo 2 to alternate
-
-      if (remainder === 0) {
-        return capacity - 2; // k-2
+      const n = lambdaT - muT;
+      return n;
+    } else {
+      // State 3: t ≥ t_i
+      if (systemType === "(λ > μ) && λ%μ = 0") {
+        // Special case: n(t) remains constant at capacity - 1
+        return capacity - 1;
       } else {
-        return capacity - 1; // k-1
+        const lambdaT = Math.floor(arrivalRate * t);
+        const muCalculation = serviceRate * t - serviceRate / arrivalRate;
+        const muT = Math.floor(muCalculation + EPSILON);
+
+        // Determine if n(t) is k-1 or k-2
+        const remainder = (lambdaT - muT) % 2; // Modulo 2 to alternate
+
+        if (remainder === 0) {
+          return capacity - 2; // k-2
+        } else {
+          return capacity - 1; // k-1
+        }
       }
     }
   }
+
+  /**
+   * Computes the waiting time for each customer.
+   * @param n - The customer number.
+   * @param arrivalRate - The rate at which customers arrive.
+   * @param serviceRate - The rate at which customers are served.
+   * @param t_i - The time of first balk.
+   * @param systemType - The type of the system.
+   * @returns The waiting time for the customer.
+   */
+  export function computeWqOfN(
+    n: number,
+    arrivalRate: number,
+    serviceRate: number,
+    t_i: number,
+    systemType: DD1KType
+  ): number {
+    if (n < arrivalRate * t_i) {
+      return (1 / serviceRate - 1 / arrivalRate) * (n - 1);
+    } else {
+      if (systemType === "(λ > μ) && λ%μ = 0") {
+        return (1 / serviceRate - 1 / arrivalRate) * (arrivalRate * t_i - 2);
+      } else {
+        const remainder = n % 2;
+        if (remainder === 0) {
+          return (1 / serviceRate - 1 / arrivalRate) * (arrivalRate * t_i - 3);
+        } else {
+          return (1 / serviceRate - 1 / arrivalRate) * (arrivalRate * t_i - 2);
+        }
+      }
+    }
+  }
+
+  /**
+   * Checks if a customer arriving at time t would be blocked
+   * @param t - The arrival time
+   * @param arrivalRate - The rate at which customers arrive
+   * @param serviceRate - The rate at which customers are served
+   * @param capacity - The maximum number of customers the system can hold
+   * @param t_i - The time of first balk
+   * @param systemType - The type of the system
+   * @returns True if the customer would be blocked, false otherwise
+   */
+  export function isCustomerBlocked(
+    t: number,
+    arrivalRate: number,
+    serviceRate: number,
+    capacity: number,
+    t_i: number,
+    systemType: DD1KType
+  ): boolean {
+    const systemState = computeNOfT(
+      t,
+      arrivalRate,
+      serviceRate,
+      t_i,
+      capacity,
+      systemType
+    );
+    return systemState >= capacity - 1;
+  }
+
+  /**
+   * Generates data for the arrival timeline graph.
+   * @param arrivalRate - The rate at which customers arrive.
+   * @param serviceRate - The service rate
+   * @param capacity - The maximum number of customers the system can hold.
+   * @param t_i - Time of first balk
+   * @param systemType - Type of the system
+   * @returns An array of objects containing time, arrival, and blocked status.
+   */
+  export function generateArrivalTimelineData(
+    arrivalRate: number,
+    serviceRate: number,
+    capacity: number,
+    t_i: number,
+    systemType: DD1KType
+  ): Array<{ time: string; arrival: number; blocked: boolean }> {
+    const data = [];
+    const maxTime = graphMaxTime(t_i);
+    const timeStep = 1 / arrivalRate;
+
+    // Start with t=0 for initial state
+    data.push({
+      time: "0",
+      arrival: 0,
+      blocked: false,
+    });
+
+    // Generate rest of the timeline
+    for (let t = timeStep; t <= maxTime; t += timeStep) {
+      const arrivals = Math.floor(t * arrivalRate);
+      const blocked = isCustomerBlocked(
+        t,
+        arrivalRate,
+        serviceRate,
+        capacity,
+        t_i,
+        systemType
+      );
+      data.push({
+        time: Math.round(t).toString(), // Round time to whole numbers
+        arrival: arrivals,
+        blocked: blocked,
+      });
+    }
+    return data;
+  }
+
+  export function graphMaxTime(t_i: number): number {
+    return Math.ceil(Math.max(t_i * 2, 10)); // Round up max time
+  }
 }
+
+export default DD1K;

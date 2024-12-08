@@ -4,7 +4,8 @@ import { JSX, useState } from "react";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import { mm1, mm1k, mmc, mmck, dd1, dd1k } from "@/lib";
+import { mm1, mm1k, mmc, mmck, dd1 } from "@/lib";
+import DD1K from "@/lib/dd1k";
 import SystemParameters from "@/components/queuing/SystemParameters";
 import InputParameters from "@/components/queuing/InputParameters";
 import MM1Results from "@/components/results/MM1Results";
@@ -17,7 +18,15 @@ import ProcessTypeSelector from "@/components/queuing/ProcessTypeSelector";
 import { MathJaxContext } from "better-react-mathjax";
 import { DD1KCharacteristics } from "@/types/dd1k";
 import { InfoIcon } from "lucide-react";
-import { Card, CardHeader, CardContent, Typography, Box, Container, Grid } from "@mui/material";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+  Box,
+  Grid,
+} from "@mui/material";
+import { Process } from "@/types/queue";
 
 export default function QueuingTheoryCalculator() {
   const [queueType, setQueueType] = useState<Process>("D/D");
@@ -113,7 +122,7 @@ export default function QueuingTheoryCalculator() {
       //   setResults(<DD1Results results={results} />);
       // } else
       if (queueType === "D/D" && servers === 1 && capacity !== null) {
-        characteristics = dd1k(
+        characteristics = DD1K.dd1k(
           parseFloat(arrivalRate),
           parseFloat(serviceRate),
           capacity
@@ -132,15 +141,15 @@ export default function QueuingTheoryCalculator() {
     <Box
       sx={(theme) => ({
         py: 4,
-        maxWidth: '100%',
-        [theme.breakpoints.up('sm')]: {
+        maxWidth: "100%",
+        [theme.breakpoints.up("sm")]: {
           maxWidth: theme.breakpoints.values.sm,
         },
-        [theme.breakpoints.up('md')]: {
+        [theme.breakpoints.up("md")]: {
           maxWidth: theme.breakpoints.values.xl,
         },
-        marginLeft: 'auto',
-        marginRight: 'auto',
+        marginLeft: "auto",
+        marginRight: "auto",
       })}
     >
       <Card>
@@ -151,7 +160,7 @@ export default function QueuingTheoryCalculator() {
           </Typography>
         </CardHeader>
         <CardContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <ProcessTypeSelector setProcessType={setQueueType} />
             <SystemParameters
               setServers={setServers}
@@ -173,11 +182,7 @@ export default function QueuingTheoryCalculator() {
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={12} sm={3} />
               <Grid item xs={12} sm={6} container justifyContent="center">
-                <Button
-                  variant="contained"
-                  onClick={handleCalculate}
-                  fullWidth
-                >
+                <Button variant="contained" onClick={handleCalculate} fullWidth>
                   Calculate
                 </Button>
               </Grid>

@@ -11,11 +11,11 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import DD1K from "@/lib/dd1k";
 import { DD1KType } from "@/types/dd1k";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import DD1K from "@/lib/dd1k";
 
-interface NumberOfCustomersGraphProps {
+interface WaitingTimeGraphProps {
   arrivalRate: number;
   serviceRate: number;
   capacity: number;
@@ -23,7 +23,7 @@ interface NumberOfCustomersGraphProps {
   systemType: DD1KType;
 }
 
-const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
+const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
   arrivalRate,
   serviceRate,
   capacity,
@@ -32,23 +32,20 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
 }) => {
   const generateData = () => {
     const data = [];
-    const maxTime = DD1K.graphMaxTime(t_i);
-    const timeStep = 1;
+    const maxCustomers = 100;
 
-    for (let t = 0; t <= maxTime; t += timeStep) {
-      const customers = DD1K.computeNOfT(
-        t,
+    for (let n = 0; n <= maxCustomers; n++) {
+      const waitingTime = DD1K.computeWqOfN(
+        n,
         arrivalRate,
         serviceRate,
         t_i,
-        capacity,
         systemType
       );
       data.push({
-        time: t,
-        customers: customers,
+        customer: n,
+        waitingTime: waitingTime,
       });
-      console.log("number of customers at time", t, "is", customers);
     }
     return data;
   };
@@ -68,7 +65,7 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
       }}
     >
       <Typography variant="h6" component="h3">
-        Number of Customers vs Time
+        Waiting Time vs Customer Number
       </Typography>
       <Box
         sx={{
@@ -93,9 +90,9 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="time"
+              dataKey="customer"
               label={{
-                value: "Time (t)",
+                value: "Customer Number (n)",
                 position: "insideBottom",
                 offset: -10,
                 dy: 10,
@@ -103,29 +100,28 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
             />
             <YAxis
               label={{
-                value: "Number of Customers n(t)",
+                value: "Waiting Time Wq(n)",
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
                 dy: isMobile ? 90 : 90,
               }}
               allowDecimals={false}
-              domain={[0, capacity]}
             />
             <Tooltip />
             <Line
               type="stepAfter"
-              dataKey="customers"
+              dataKey="waitingTime"
               stroke="#8884d8"
-              name="Customers in System"
+              name="Waiting Time"
               dot={false}
               strokeWidth={2}
             />
             <ReferenceLine
-              x={t_i}
+              x={arrivalRate * t_i}
               stroke={theme.palette.warning.main}
               label={{
-                value: `t = t_i`,
+                value: `n = λ * t_i`,
                 position: "top",
                 fill: theme.palette.warning.main,
                 fontSize: 12,
@@ -138,4 +134,4 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
   );
 };
 
-export default NumberOfCustomersGraph;
+export default WaitingTimeGraph;

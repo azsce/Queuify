@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from "react";
@@ -11,44 +12,36 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import DD1K from "@/lib/dd1k";
-import { DD1KType } from "@/types/dd1k";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 
-interface NumberOfCustomersGraphProps {
+interface CustomerFlowDiagramProps {
   arrivalRate: number;
   serviceRate: number;
   capacity: number;
   t_i: number;
-  systemType: DD1KType;
 }
 
-const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
+const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
   arrivalRate,
   serviceRate,
   capacity,
   t_i,
-  systemType,
 }) => {
   const generateData = () => {
     const data = [];
-    const maxTime = DD1K.graphMaxTime(t_i);
+    const maxTime = 100;
     const timeStep = 1;
 
     for (let t = 0; t <= maxTime; t += timeStep) {
-      const customers = DD1K.computeNOfT(
-        t,
-        arrivalRate,
-        serviceRate,
-        t_i,
-        capacity,
-        systemType
-      );
+      const arrivals = Math.floor(t * arrivalRate);
+      const departures = Math.floor(t * serviceRate);
+      const blocked = arrivals > capacity ? arrivals - capacity : 0;
       data.push({
         time: t,
-        customers: customers,
+        arrivals: arrivals,
+        departures: departures,
+        blocked: blocked,
       });
-      console.log("number of customers at time", t, "is", customers);
     }
     return data;
   };
@@ -68,7 +61,7 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
       }}
     >
       <Typography variant="h6" component="h3">
-        Number of Customers vs Time
+        Customer Flow Diagram
       </Typography>
       <Box
         sx={{
@@ -103,21 +96,36 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
             />
             <YAxis
               label={{
-                value: "Number of Customers n(t)",
+                value: "Customers",
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
                 dy: isMobile ? 90 : 90,
               }}
               allowDecimals={false}
-              domain={[0, capacity]}
             />
             <Tooltip />
             <Line
-              type="stepAfter"
-              dataKey="customers"
+              type="monotone"
+              dataKey="arrivals"
               stroke="#8884d8"
-              name="Customers in System"
+              name="Arrivals"
+              dot={false}
+              strokeWidth={2}
+            />
+            <Line
+              type="monotone"
+              dataKey="departures"
+              stroke="#82ca9d"
+              name="Departures"
+              dot={false}
+              strokeWidth={2}
+            />
+            <Line
+              type="monotone"
+              dataKey="blocked"
+              stroke="#ff7300"
+              name="Blocked"
               dot={false}
               strokeWidth={2}
             />
@@ -138,4 +146,4 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
   );
 };
 
-export default NumberOfCustomersGraph;
+export default CustomerFlowDiagram;
