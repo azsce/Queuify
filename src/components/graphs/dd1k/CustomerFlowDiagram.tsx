@@ -104,33 +104,46 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
           <LineChart
             data={data}
             margin={{
-              top: 20,
+              top: 30,
               right: 0,
               left: isMobile ? 0 : 90,
-              bottom: isMobile ? 30 : 50,
+              bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="time"
-              label={{
-                value: "Time (t)",
-                position: "insideBottom",
-                offset: -10,
-                dy: 10,
-              }}
-              hide={!showTopAxis}
-            />
-            <XAxis
-              dataKey="time"
-              label={{
-                value: "Time (t)",
-                position: "insideBottom",
-                offset: -10,
-                dy: 10,
-              }}
-              hide={!showBottomAxis}
-            />
+            {/* Add time axis at the top */}
+            {showTopAxis && (
+              <XAxis
+                dataKey="time"
+                orientation="top"
+                xAxisId="top"
+                label={{
+                  value: "Time (t)",
+                  position: "insideTop",
+                  offset: -25,
+                }}
+                tick={{ dy: -10 }}
+              />
+            )}
+            {/* Keep existing bottom axis for customer index */}
+            {showBottomAxis && (
+              <XAxis
+                xAxisId="bottom"
+                dataKey="customerIndex"
+                orientation="bottom"
+                label={{
+                  value: "Customer Index",
+                  position: "insideBottom",
+                  offset: -10,
+                  dy: 10,
+                }}
+                height={40}
+                tick={{ dy: 10 }}
+              />
+            )}
+            {!showTopAxis && !showBottomAxis && (
+              <XAxis dataKey="time" xAxisId="default" hide={true} />
+            )}
             <YAxis
               label={{
                 value: "Customers",
@@ -149,6 +162,9 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
               name="Arrivals"
               dot={false}
               strokeWidth={2}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
             />
             <Line
               type="monotone"
@@ -157,6 +173,9 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
               name="Departures"
               dot={false}
               strokeWidth={2}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
             />
             <Line
               type="monotone"
@@ -165,9 +184,15 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
               name="Blocked"
               dot={false}
               strokeWidth={2}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
             />
             <ReferenceLine
               x={t_i}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
               stroke={theme.palette.warning.main}
               label={{
                 value: `t = t_i`,

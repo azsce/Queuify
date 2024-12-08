@@ -115,20 +115,16 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
           <LineChart
             data={dataWithCustomers}
             margin={{
-              top: 20,
+              top: subGraph ? 0 : 20,
               right: 0,
               left: isMobile ? 0 : 90,
-              bottom: isMobile ? 30 : 50,
+              bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             {/* Add default XAxis when neither custom axis is shown */}
             {!showTopAxis && !showBottomAxis && (
-              <XAxis 
-                dataKey="time"
-                xAxisId="default"
-                hide={true}
-              />
+              <XAxis dataKey="time" xAxisId="default" hide={true} />
             )}
             {showTopAxis && (
               <XAxis
@@ -164,7 +160,7 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
-                dy: isMobile ? 90 : 90,
+                dy: 90,
               }}
             />
             <Tooltip />
@@ -173,11 +169,7 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
                 key={index}
                 x={entry.time}
                 xAxisId={
-                  showTopAxis 
-                    ? "top" 
-                    : showBottomAxis 
-                      ? "bottom" 
-                      : "default"
+                  showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
                 }
                 stroke={
                   entry.time === "0"

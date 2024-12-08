@@ -18,11 +18,16 @@ interface DD1KGraphContainerProps {
   systemType: DD1KType;
 }
 
-const GRAPH_HEIGHT = 200; // Height for each sub-graph
+const GRAPH_HEIGHT = 300; // Height for each sub-graph
 
 const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = (props) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <Box
+        sx={{
+          mt: 2,
+        }}
+      ></Box>
       <CustomerFlowDiagram
         {...props}
         height={GRAPH_HEIGHT}
