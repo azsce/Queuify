@@ -17,9 +17,7 @@ import ProcessTypeSelector from "@/components/queuing/ProcessTypeSelector";
 import { MathJaxContext } from "better-react-mathjax";
 import { DD1KCharacteristics } from "@/types/dd1k";
 import { InfoIcon } from "lucide-react";
-import { Card, CardHeader, CardContent, Typography } from "@mui/material";
-import { Process } from "@/types/queue";
-import Grid from "@mui/material/Grid2";
+import { Card, CardHeader, CardContent, Typography, Box, Container, Grid } from "@mui/material";
 
 export default function QueuingTheoryCalculator() {
   const [queueType, setQueueType] = useState<Process>("D/D");
@@ -131,7 +129,20 @@ export default function QueuingTheoryCalculator() {
   };
 
   return (
-    <div className="container mx-auto p-4 text-sm sm:text-base">
+    <Box
+      sx={(theme) => ({
+        py: 4,
+        maxWidth: '100%',
+        [theme.breakpoints.up('sm')]: {
+          maxWidth: theme.breakpoints.values.sm,
+        },
+        [theme.breakpoints.up('md')]: {
+          maxWidth: theme.breakpoints.values.xl,
+        },
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      })}
+    >
       <Card>
         <CardHeader>
           <Typography variant="h5">Queuing Theory Calculator</Typography>
@@ -140,7 +151,7 @@ export default function QueuingTheoryCalculator() {
           </Typography>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <ProcessTypeSelector setProcessType={setQueueType} />
             <SystemParameters
               setServers={setServers}
@@ -159,24 +170,23 @@ export default function QueuingTheoryCalculator() {
               arrivalTime={arrivalTime}
               serviceTime={serviceTime}
             />
-            <Grid size={12} container spacing={0} alignItems="start">
-              {/* Empty Column */}
-              <Grid size={1} />
-              <Grid size={11} container justifyContent='center'>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} sm={3} />
+              <Grid item xs={12} sm={6} container justifyContent="center">
                 <Button
                   variant="contained"
                   onClick={handleCalculate}
-                  sx={{ width: "80%" }}
+                  fullWidth
                 >
                   Calculate
                 </Button>
               </Grid>
             </Grid>
-          </div>
+          </Box>
 
-          <div className="mt-8">
+          <Box mt={4}>
             {error && (
-              <Alert severity="error" className="mb-6">
+              <Alert severity="error" sx={{ mb: 3 }}>
                 <AlertTitle>Error</AlertTitle>
                 {error}
               </Alert>
@@ -193,9 +203,9 @@ export default function QueuingTheoryCalculator() {
                 may be limited or require additional explanation.
               </span>
             </Alert> */}
-          </div>
+          </Box>
         </CardContent>
       </Card>
-    </div>
+    </Box>
   );
 }
