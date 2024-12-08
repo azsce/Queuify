@@ -302,8 +302,11 @@ namespace DD1K {
   /**
    * Checks if a customer arriving at time t would be blocked.
    * A customer is blocked if:
-   * 1. Current queue state is at capacity (k-1) AND no service completion occurs at time t
-   * 2. Current queue state is at capacity (k)
+   * 1. Time t is less than t_i: customer is never blocked
+   * 2. Time t equals t_i: customer is blocked (first blocking)
+   * 3. Time t > t_i:
+   *    - Current queue state is at capacity (k-1) AND no service completion occurs at time t
+   *    - Current queue state is at capacity (k)
    */
   export function isCustomerBlocked(
     t: number,
@@ -313,6 +316,11 @@ namespace DD1K {
     t_i: number,
     systemType: DD1KType
   ): boolean {
+    // Early time checks
+    if (t < t_i) return false;
+    if (Math.abs(t - t_i) < EPSILON) return true;
+
+    // For t > t_i, check queue state and service completion
     const currentState = computeNOfT(
       t,
       arrivalRate,
@@ -322,20 +330,16 @@ namespace DD1K {
       systemType
     );
 
-    // If system is not at or near capacity, customer is not blocked
     if (currentState < capacity - 1) {
       return false;
     }
 
-    // If system is at capacity - 1, check if there's a service completion
     if (currentState === capacity - 1) {
-      return !isServiceCompletion(t, serviceRate);
+      return isServiceCompletion(t, serviceRate);
     }
 
-    // If current state is >= k, customer is blocked
     return true;
   }
-
 
   export function graphMaxTime(t_i: number): number {
     return Math.ceil(Math.max(t_i * 2, 10)); // Round up max time
