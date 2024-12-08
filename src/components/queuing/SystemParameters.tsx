@@ -53,28 +53,43 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
           autoComplete="servers"
         />
       </Grid>
-      {queueType === "D/D" && (
+      {queueType === "D/D" ? (
+        <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12 }}>
+              <InputWithInfinity
+                id="capacityMinusOne"
+                label="System Capacity - 1 (K-1)"
+                value={capacityMinusOne}
+                onChange={handleInputChange(setCapacityMinusOne)}
+                onInfinityClick={() => handleInfinityClick(setCapacityMinusOne)}
+                autoComplete="capacity - 1"
+              />
+            </Grid>
+            <Grid size={{ xs: 12 }}>
+              <InputWithInfinity
+                id="capacity"
+                label="System Capacity (K)"
+                value={capacity}
+                onChange={handleInputChange(setCapacity)}
+                onInfinityClick={() => handleInfinityClick(setCapacity)}
+                autoComplete="capacity"
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+      ) : (
         <Grid size={{ xs: 12, sm: 6 }}>
           <InputWithInfinity
-            id="capacityMinusOne"
-            label="System Capacity - 1 (K-1)"
-            value={capacityMinusOne}
-            onChange={handleInputChange(setCapacityMinusOne)}
-            onInfinityClick={() => handleInfinityClick(setCapacityMinusOne)}
-            autoComplete="capacity - 1"
+            id="capacity"
+            label="System Capacity (K)"
+            value={capacity}
+            onChange={handleInputChange(setCapacity)}
+            onInfinityClick={() => handleInfinityClick(setCapacity)}
+            autoComplete="capacity"
           />
         </Grid>
       )}
-      <Grid size={{ xs: 12, sm: 6 }}>
-        <InputWithInfinity
-          id="capacity"
-          label="System Capacity (K)"
-          value={capacity}
-          onChange={handleInputChange(setCapacity)}
-          onInfinityClick={() => handleInfinityClick(setCapacity)}
-          autoComplete="capacity"
-        />
-      </Grid>
     </Grid>
   );
 };
@@ -91,13 +106,12 @@ type InputWithInfinityProps = {
 
 const NoNumberArrowsTextField = styled(TextField)({
   "& input[type=number]": {
-    "-moz-appearance": "textfield",
+    MozAppearance: "textfield",
   },
-  "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button":
-    {
-      "-webkit-appearance": "none",
-      margin: 0,
-    },
+  "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
+    WebkitAppearance: "none",
+    margin: 0,
+  },
 });
 
 const InputWithInfinity: React.FC<InputWithInfinityProps> = ({
