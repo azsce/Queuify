@@ -76,12 +76,20 @@ export default function InputParameters({
           </Grid>
         </Grid>{" "}
         {/* Service Rate-Time Input Fields */}
-      </Grid>{" "}
+      </Grid>
       {/* Service Rate-Time And Infinity Link Indicator  */}
-      {/* Arrival Rate-Time */}
-      <Grid container spacing={2}>
+
+      {/* Arrival Rate-Time And Infinity Link Indicator */}
+      <Grid size={{ xs: 12, sm: 6 }} container spacing={0} alignItems="center">
         {/* Arrival Rate-Time Infinity Link Indicator */}
-        <Grid size={{ xs: 1 }}>
+        <Grid
+          size={{ xs: 1 }}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Box
             sx={{
               position: "relative",
@@ -96,10 +104,11 @@ export default function InputParameters({
           </Box>
         </Grid>
 
+        {/* Arrival Rate-Time Input Fields */}
         <Grid size={{ xs: 11 }}>
           <Grid container spacing={2}>
             {/* Arrival Rate */}
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 label="Arrival Rate (λ)"
                 value={arrivalRate}
@@ -115,7 +124,7 @@ export default function InputParameters({
             </Grid>
 
             {/* Arrival Time */}
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 label="Arrival Time (1/λ)"
                 value={arrivalTime}
