@@ -2,8 +2,9 @@ import { TextField, IconButton, Box } from "@mui/material";
 import { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import { styled } from "@mui/system";
-import { InfinityIcon, LinkIcon } from "lucide-react";
+import { InfinityIcon } from "lucide-react";
 import { Process } from "@/types/queue";
+import InfinityLinkIndicator from "../InfinityLinkIndicator";
 
 type SystemParametersProps = {
   setServers: (servers: number | undefined) => void;
@@ -55,22 +56,31 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
         />
       </Grid>
       {processType === "D/D" ? (
-        <Grid container spacing={2} alignItems="center">
+        <Grid
+          size={{ xs: 12, sm: 6 }}
+          container
+          spacing={0}
+          alignItems="center"
+        >
           <Grid
             size={{ xs: 1 }}
-            sx={{ display: "flex", justifyContent: "center" }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
             <Box
               sx={{
+                position: "relative",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 height: "100%",
                 justifyContent: "center",
-                color: "gray",
               }}
             >
-              <LinkIcon size={20} />
+              <InfinityLinkIndicator />
             </Box>
           </Grid>
           <Grid size={{ xs: 11 }}>

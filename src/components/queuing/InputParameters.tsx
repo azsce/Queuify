@@ -11,8 +11,11 @@ export default function InputParameters({
   arrivalTime,
   serviceTime,
 }) {
+
+  
   return (
     <Grid container spacing={2}>
+      {/* Arrival Rate */}
       <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           label="Arrival Rate (λ)"
@@ -27,20 +30,8 @@ export default function InputParameters({
           fullWidth
         />
       </Grid>
-      <Grid size={{ xs: 12, sm: 6 }}>
-        <TextField
-          label="Service Rate (μ)"
-          value={serviceRate}
-          onChange={(e) => {
-            setServiceRate(e.target.value);
-            if (e.target.value) {
-              setServiceTime(1 / parseFloat(e.target.value));
-            }
-          }}
-          placeholder="Enter service rate"
-          fullWidth
-        />
-      </Grid>
+
+      {/* Arrival Time */}
       <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           label="Arrival Time (1/λ)"
@@ -55,6 +46,24 @@ export default function InputParameters({
           fullWidth
         />
       </Grid>
+
+      {/* Service Rate */}
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <TextField
+          label="Service Rate (μ)"
+          value={serviceRate}
+          onChange={(e) => {
+            setServiceRate(e.target.value);
+            if (e.target.value) {
+              setServiceTime(1 / parseFloat(e.target.value));
+            }
+          }}
+          placeholder="Enter service rate"
+          fullWidth
+        />
+      </Grid>
+
+      {/* Service Time */}
       <Grid size={{ xs: 12, sm: 6 }}>
         <TextField
           label="Service Time (1/μ)"
