@@ -22,6 +22,10 @@ interface ArrivalTimelineProps {
   capacity: number;
   t_i: number;
   systemType: DD1KType;
+  height?: number;
+  subGraph?: boolean;
+  showTopAxis?: boolean;
+  showBottomAxis?: boolean;
 }
 
 const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
@@ -30,6 +34,10 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
   capacity,
   t_i,
   systemType,
+  height,
+  subGraph,
+  showTopAxis,
+  showBottomAxis,
 }) => {
   const generateData: () => Array<{
     time: string;
@@ -84,21 +92,23 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
         display: "flex",
         flexDirection: "column",
         gap: 2,
-        mt: 2,
+        mt: subGraph ? 0 : 2,
       }}
     >
-      <Typography variant="h6" component="h3">
-        Arrival Timeline
-      </Typography>
+      {!subGraph && (
+        <Typography variant="h6" component="h3">
+          Arrival Timeline
+        </Typography>
+      )}
       <Box
         sx={{
           width: "100%",
-          height: isMobile ? 400 : 500,
-          borderRadius: 2,
-          border: 1,
+          height: height || (isMobile ? 400 : 500),
+          borderRadius: subGraph ? 0 : 2,
+          border: subGraph ? 0 : 1,
           borderColor: "divider",
           backgroundColor: "background.paper",
-          p: { xs: 0, sm: 4 },
+          p: subGraph ? 0 : { xs: 0, sm: 4 },
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
@@ -112,31 +122,42 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            {/* Top time axis */}
-            <XAxis
-              dataKey="time"
-              orientation="top"
-              label={{
-                value: "Time (t)",
-                position: "insideTop",
-                offset: -25, // Increased from -20
-              }}
-              tick={{ dy: -10 }} // Add this line to move ticks up
-            />
-            {/* Bottom customer index axis */}
-            <XAxis
-              xAxisId="customer"
-              dataKey="customerIndex"
-              orientation="bottom"
-              label={{
-                value: "Customer Index",
-                position: "insideBottom",
-                offset: -10,
-                dy: 10,
-              }}
-              height={40} // Add height for better visibility
-              tick={{ dy: 10 }} // Move ticks down
-            />
+            {/* Add default XAxis when neither custom axis is shown */}
+            {!showTopAxis && !showBottomAxis && (
+              <XAxis 
+                dataKey="time"
+                xAxisId="default"
+                hide={true}
+              />
+            )}
+            {showTopAxis && (
+              <XAxis
+                dataKey="time"
+                orientation="top"
+                xAxisId="top"
+                label={{
+                  value: "Time (t)",
+                  position: "insideTop",
+                  offset: -25, // Increased from -20
+                }}
+                tick={{ dy: -10 }} // Add this line to move ticks up
+              />
+            )}
+            {showBottomAxis && (
+              <XAxis
+                xAxisId="bottom"
+                dataKey="customerIndex"
+                orientation="bottom"
+                label={{
+                  value: "Customer Index",
+                  position: "insideBottom",
+                  offset: -10,
+                  dy: 10,
+                }}
+                height={40} // Add height for better visibility
+                tick={{ dy: 10 }} // Move ticks down
+              />
+            )}
             <YAxis
               label={{
                 value: "Arrival Times",
@@ -151,7 +172,13 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
               <ReferenceLine
                 key={index}
                 x={entry.time}
-                xAxisId={0} // Explicitly use top axis
+                xAxisId={
+                  showTopAxis 
+                    ? "top" 
+                    : showBottomAxis 
+                      ? "bottom" 
+                      : "default"
+                }
                 stroke={
                   entry.time === "0"
                     ? "transparent"
@@ -174,12 +201,14 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
           </LineChart>
         </ResponsiveContainer>
       </Box>
-      <Typography
-        variant="caption"
-        sx={{ color: "red", mt: 1, textAlign: "center" }}
-      >
-        ⊗ Red lines indicate blocked customers
-      </Typography>
+      {!subGraph && (
+        <Typography
+          variant="caption"
+          sx={{ color: "red", mt: 1, textAlign: "center" }}
+        >
+          ⊗ Red lines indicate blocked customers
+        </Typography>
+      )}
     </Box>
   );
 };

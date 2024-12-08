@@ -22,6 +22,10 @@ interface DepartureTimelineProps {
   capacity: number;
   t_i: number;
   systemType: DD1KType;
+  height?: number;
+  subGraph?: boolean;
+  showTopAxis?: boolean;
+  showBottomAxis?: boolean;
 }
 
 const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
@@ -30,6 +34,10 @@ const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
   capacity,
   t_i,
   systemType,
+  height,
+  subGraph,
+  showTopAxis,
+  showBottomAxis,
 }) => {
   const generateData = () => {
     const data = [];
@@ -74,19 +82,21 @@ const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
   // Remove timeAxisTicks as we'll use same configuration as ArrivalTimeline
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
-      <Typography variant="h6" component="h3">
-        Departure Timeline
-      </Typography>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: subGraph ? 0 : 2 }}>
+      {!subGraph && (
+        <Typography variant="h6" component="h3">
+          Departure Timeline
+        </Typography>
+      )}
       <Box
         sx={{
           width: "100%",
-          height: isMobile ? 400 : 500,
-          borderRadius: 2,
-          border: 1,
+          height: height || (isMobile ? 400 : 500),
+          borderRadius: subGraph ? 0 : 2,
+          border: subGraph ? 0 : 1,
           borderColor: "divider",
           backgroundColor: "background.paper",
-          p: { xs: 0, sm: 4 },
+          p: subGraph ? 0 : { xs: 0, sm: 4 },
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
@@ -100,29 +110,41 @@ const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="time"
-              orientation="top"
-              label={{
-                value: "Time (t)",
-                position: "insideTop",
-                offset: -25,
-              }}
-              tick={{ dy: -10 }}
-            />
-            <XAxis
-              xAxisId="customer"
-              dataKey="customerIndex"
-              orientation="bottom"
-              label={{
-                value: "Customer Departed",
-                position: "insideBottom",
-                offset: -10,
-                dy: 10,
-              }}
-              height={40}
-              tick={{ dy: 10 }}
-            />
+            {!showTopAxis && !showBottomAxis && (
+              <XAxis 
+                dataKey="time"
+                xAxisId="default"
+                hide={true}
+              />
+            )}
+            {showTopAxis && (
+              <XAxis
+                dataKey="time"
+                orientation="top"
+                xAxisId="top"
+                label={{
+                  value: "Time (t)",
+                  position: "insideTop",
+                  offset: -25,
+                }}
+                tick={{ dy: -10 }}
+              />
+            )}
+            {showBottomAxis && (
+              <XAxis
+                xAxisId="bottom"
+                dataKey="customerIndex"
+                orientation="bottom"
+                label={{
+                  value: "Customer Departed",
+                  position: "insideBottom",
+                  offset: -10,
+                  dy: 10,
+                }}
+                height={40}
+                tick={{ dy: 10 }}
+              />
+            )}
             <YAxis
               label={{
                 value: "Departure Times",
@@ -137,7 +159,13 @@ const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
               <ReferenceLine
                 key={index}
                 x={entry.time}
-                xAxisId={0}
+                xAxisId={
+                  showTopAxis 
+                    ? "top" 
+                    : showBottomAxis 
+                      ? "bottom" 
+                      : "default"
+                }
                 stroke={
                   entry.customerIndex === ""
                     ? "transparent"
@@ -158,9 +186,11 @@ const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
           </LineChart>
         </ResponsiveContainer>
       </Box>
-      <Typography variant="caption" sx={{ mt: 1, textAlign: "center" }}>
-        ◆ Indicates departure times
-      </Typography>
+      {!subGraph && (
+        <Typography variant="caption" sx={{ mt: 1, textAlign: "center" }}>
+          ◆ Indicates departure times
+        </Typography>
+      )}
     </Box>
   );
 };

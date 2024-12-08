@@ -21,6 +21,10 @@ interface CustomerFlowDiagramProps {
   capacity: number;
   t_i: number;
   systemType: DD1KType;
+  height?: number;
+  subGraph?: boolean;
+  showTopAxis?: boolean;
+  showBottomAxis?: boolean;
 }
 
 const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
@@ -29,6 +33,10 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
   capacity,
   t_i,
   systemType,
+  height,
+  subGraph,
+  showTopAxis,
+  showBottomAxis,
 }) => {
   const generateData = () => {
     const data = [];
@@ -47,7 +55,7 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
         t_i,
         systemType
       );
-      
+
       if (isBlocked) {
         totalBlocked++;
       }
@@ -73,21 +81,23 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
         display: "flex",
         flexDirection: "column",
         gap: 2,
-        mt: 2,
+        mt: subGraph ? 0 : 2,
       }}
     >
-      <Typography variant="h6" component="h3">
-        Customer Flow Diagram
-      </Typography>
+      {!subGraph && (
+        <Typography variant="h6" component="h3">
+          Customer Flow Diagram
+        </Typography>
+      )}
       <Box
         sx={{
           width: "100%",
-          height: isMobile ? 400 : 500,
-          borderRadius: 2,
-          border: 1,
+          height: height || (isMobile ? 400 : 500),
+          borderRadius: subGraph ? 0 : 2,
+          border: subGraph ? 0 : 1,
           borderColor: "divider",
           backgroundColor: "background.paper",
-          p: { xs: 0, sm: 4 },
+          p: subGraph ? 0 : { xs: 0, sm: 4 },
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
@@ -109,6 +119,17 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                 offset: -10,
                 dy: 10,
               }}
+              hide={!showTopAxis}
+            />
+            <XAxis
+              dataKey="time"
+              label={{
+                value: "Time (t)",
+                position: "insideBottom",
+                offset: -10,
+                dy: 10,
+              }}
+              hide={!showBottomAxis}
             />
             <YAxis
               label={{
@@ -116,7 +137,7 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
-                dy: isMobile ? 90 : 90,
+                dy: 90,
               }}
               allowDecimals={false}
             />

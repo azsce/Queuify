@@ -21,6 +21,10 @@ interface WaitingTimeGraphProps {
   capacity: number;
   t_i: number;
   systemType: DD1KType;
+  height?: number;
+  subGraph?: boolean;
+  showTopAxis?: boolean;
+  showBottomAxis?: boolean;
 }
 
 const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
@@ -29,6 +33,10 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
   capacity,
   t_i,
   systemType,
+  height,
+  subGraph,
+  showTopAxis,
+  showBottomAxis,
 }) => {
   const maxCustomers = Math.ceil(arrivalRate * t_i * 2); // Ensure we show enough customers after t_i
 
@@ -62,21 +70,23 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
         display: "flex",
         flexDirection: "column",
         gap: 2,
-        mt: 2,
+        mt: subGraph ? 0 : 2,
       }}
     >
-      <Typography variant="h6" component="h3">
-        Waiting Time vs Customer Number
-      </Typography>
+      {!subGraph && (
+        <Typography variant="h6" component="h3">
+          Waiting Time vs Customer Number
+        </Typography>
+      )}
       <Box
         sx={{
           width: "100%",
-          height: isMobile ? 400 : 500,
-          borderRadius: 2,
-          border: 1,
+          height: height || (isMobile ? 400 : 500),
+          borderRadius: subGraph ? 0 : 2,
+          border: subGraph ? 0 : 1,
           borderColor: "divider",
           backgroundColor: "background.paper",
-          p: { xs: 0, sm: 4 },
+          p: subGraph ? 0 : { xs: 0, sm: 4 },
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
@@ -90,22 +100,48 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="customer"
-              label={{
-                value: "Customer Number (n)",
-                position: "insideBottom",
-                offset: -10,
-                dy: 10,
-              }}
-            />
+            {!showTopAxis && !showBottomAxis && (
+              <XAxis 
+                dataKey="customer"
+                xAxisId="default"
+                hide={true}
+              />
+            )}
+            {showTopAxis && (
+              <XAxis
+                dataKey="customer"
+                xAxisId="top"
+                orientation="top"
+                label={{
+                  value: "Customer Number (n)",
+                  position: "insideTop",
+                  offset: -25,
+                }}
+                tick={{ dy: -10 }}
+              />
+            )}
+            {showBottomAxis && (
+              <XAxis
+                dataKey="customer"
+                xAxisId="bottom"
+                orientation="bottom"
+                label={{
+                  value: "Customer Number (n)",
+                  position: "insideBottom",
+                  offset: -10,
+                  dy: 10,
+                }}
+                height={40}
+                tick={{ dy: 10 }}
+              />
+            )}
             <YAxis
               label={{
                 value: "Waiting Time Wq(n)",
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
-                dy: isMobile ? 90 : 90,
+                dy: 90,
               }}
               allowDecimals={false}
             />
@@ -117,9 +153,11 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
               name="Waiting Time"
               dot={false}
               strokeWidth={2}
+              xAxisId={showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"}
             />
             <ReferenceLine
               x={arrivalRate * t_i}
+              xAxisId={showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"}
               stroke={theme.palette.warning.main}
               label={{
                 value: `n = λ * t_i`,

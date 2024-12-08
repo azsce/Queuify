@@ -11,8 +11,6 @@ import ServiceTimeline from "./ServiceTimeline";
 import DepartureTimeline from "./DepartureTimeline";
 
 interface DD1KGraphContainerProps {
-  width?: number | string;
-  height?: number | string;
   arrivalRate: number;
   serviceRate: number;
   capacity: number;
@@ -20,56 +18,52 @@ interface DD1KGraphContainerProps {
   systemType: DD1KType;
 }
 
-const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({
-  arrivalRate,
-  serviceRate,
-  capacity,
-  t_i,
-  systemType,
-}) => {
+const GRAPH_HEIGHT = 200; // Height for each sub-graph
+
+const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = (props) => {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-      <NumberOfCustomersGraph
-        arrivalRate={arrivalRate}
-        serviceRate={serviceRate}
-        capacity={capacity}
-        t_i={t_i}
-        systemType={systemType}
-      />
-      <WaitingTimeGraph
-        arrivalRate={arrivalRate}
-        serviceRate={serviceRate}
-        capacity={capacity}
-        t_i={t_i}
-        systemType={systemType}
-      />
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
       <CustomerFlowDiagram
-        arrivalRate={arrivalRate}
-        serviceRate={serviceRate}
-        capacity={capacity}
-        t_i={t_i}
-        systemType={systemType}
+        {...props}
+        height={GRAPH_HEIGHT}
+        subGraph={true}
+        showTopAxis={true}
+        showBottomAxis={false}
       />
       <ArrivalTimeline
-        arrivalRate={arrivalRate}
-        serviceRate={serviceRate}
-        capacity={capacity}
-        t_i={t_i}
-        systemType={systemType}
+        {...props}
+        height={GRAPH_HEIGHT}
+        subGraph={true}
+        showTopAxis={false}
+        showBottomAxis={false}
       />
       <ServiceTimeline
-        arrivalRate={arrivalRate}
-        serviceRate={serviceRate}
-        capacity={capacity}
-        t_i={t_i}
-        systemType={systemType}
+        {...props}
+        height={GRAPH_HEIGHT}
+        subGraph={true}
+        showTopAxis={false}
+        showBottomAxis={false}
       />
       <DepartureTimeline
-        arrivalRate={arrivalRate}
-        serviceRate={serviceRate}
-        capacity={capacity}
-        t_i={t_i}
-        systemType={systemType}
+        {...props}
+        height={GRAPH_HEIGHT}
+        subGraph={true}
+        showTopAxis={false}
+        showBottomAxis={false}
+      />
+      <NumberOfCustomersGraph
+        {...props}
+        height={GRAPH_HEIGHT}
+        subGraph={true}
+        showTopAxis={false}
+        showBottomAxis={false}
+      />
+      <WaitingTimeGraph
+        {...props}
+        height={GRAPH_HEIGHT}
+        subGraph={true}
+        showTopAxis={false}
+        showBottomAxis={true}
       />
     </Box>
   );
