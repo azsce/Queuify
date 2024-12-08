@@ -45,16 +45,20 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
 
   return (
     <Grid container spacing={2}>
-      {/* Number of Servers */}
-      <Grid size={{ xs: 12, sm: 6 }}>
-        <InputWithInfinity
-          id="servers"
-          label="Number of Servers (c)"
-          value={servers}
-          onChange={handleInputChange(setServers)}
-          onInfinityClick={() => handleInfinityClick(setServers)}
-          autoComplete="servers"
-        />
+      <Grid size={{ xs: 12, sm: 6 }} container spacing={0} alignItems="start">
+        {/* Empty Column */}
+        <Grid size={1} />
+        {/* Number of Servers */}
+        <Grid size={11}>
+          <InputWithInfinity
+            id="servers"
+            label="Number of Servers (C)"
+            value={servers}
+            onChange={handleInputChange(setServers)}
+            onInfinityClick={() => handleInfinityClick(setServers)}
+            autoComplete="servers"
+          />
+        </Grid>
       </Grid>
 
       {/* System Capacity and System Capacity - 1  and Infinite Link Indicator */}
@@ -67,7 +71,7 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
         >
           {/* Infinite Link Indicator */}
           <Grid
-            size={{ xs: 1 }}
+            size={1}
             sx={{
               display: "flex",
               justifyContent: "center",
