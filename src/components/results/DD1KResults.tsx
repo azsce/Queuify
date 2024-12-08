@@ -57,14 +57,12 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
     n_LessThan_LambdaTi: `(1/${serviceRateFraction.denominator} - 1/${arrivalRateFraction.denominator})(n - 1)`,
     nGreaterThanOrEqualLambdaTi: nGreaterThanOrEqualLambdaTi,
   };
-  
 
   let caseOutput = "";
   if (type === "λ > μ") {
-    caseOutput = '\\lambda > \\mu';
-  }
-  else if (type === "(λ > μ) && λ%μ = 0") {
-    caseOutput = '(\\lambda > \\mu) \\text{ and } \\lambda \\bmod \\mu = 0';
+    caseOutput = "\\lambda > \\mu";
+  } else if (type === "(λ > μ) && λ%μ = 0") {
+    caseOutput = "(\\lambda > \\mu) \\text{ and } \\lambda \\bmod \\mu = 0";
   }
 
   return (
@@ -90,54 +88,54 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-8">
           <h3 className="text-xl font-semibold">
             <MathJax inline>{`\\(n(t)\\)`}</MathJax> (Number of Customers)
           </h3>
-          <div className="ml-4 space-y-3">
+          <div className="ml-4 space-y-8">
             <p>
               <MathJax>{`\\( \\text{For }t < \\frac{1}{\\lambda}:\\)`}</MathJax>
-              <span className="ml-2">
+              <span className="ml-6">
                 <MathJax
                   inline
                 >{`\\(n(t) = ${n_t.t_lessThan_arrivalTime}\\)`}</MathJax>
               </span>
             </p>
             <p>
-              <MathJax>{`\\( \\text{For }\\frac{1}{\\lambda} \\leq t < t_i:\\)`}</MathJax>
-              <div className="ml-2 mt-1">
+              <MathJax>{`\\( \\text{For } 1/\\lambda \\leq t < t_i:\\)`}</MathJax>
+              <div className="ml-6 mt-4">
                 <MathJax>{`\\(n(t) = ${n_t.t_between_arrivalTime_and_ti}\\)`}</MathJax>
               </div>
             </p>
             <p>
               <MathJax>{`\\( \\text{For }t \\geq t_i:\\)`}</MathJax>
-              <div className="ml-2 mt-1">
+              <div className="ml-6 mt-4">
                 <MathJax>{`\\(n(t) ${n_t.t_greaterOrEqual_ti}\\)`}</MathJax>
               </div>
             </p>
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-8">
           <h3 className="text-xl font-semibold">
             <MathJax inline>{`\\(Wq(n)\\)`}</MathJax> (Waiting Times)
           </h3>
-          <div className="ml-4 space-y-3">
+          <div className="ml-4 space-y-8">
             <p>
               <MathJax>{`\\( \\text{For }n = 0:\\)`}</MathJax>
-              <span className="ml-2">
+              <span className="ml-6">
                 <MathJax inline>{`\\(Wq(n) = ${wqOfN.n0}\\)`}</MathJax>
               </span>
             </p>
             <p>
               <MathJax>{`\\( \\text{For }n < \\lambda t_i:\\)`}</MathJax>
-              <div className="ml-2 mt-1">
+              <div className="ml-6 mt-4">
                 <MathJax>{`\\(Wq(n) = ${wqOfN.n_LessThan_LambdaTi}\\)`}</MathJax>
               </div>
             </p>
             <p>
               <MathJax>{`\\( \\text{For }n \\geq \\lambda t_i:\\)`}</MathJax>
-              <span className="ml-2">
+              <span className="ml-6">
                 <MathJax
                   inline
                 >{`\\(Wq(n) ${wqOfN.nGreaterThanOrEqualLambdaTi}\\)`}</MathJax>
