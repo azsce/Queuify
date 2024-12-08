@@ -135,6 +135,9 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
           </LineChart>
         </ResponsiveContainer>
       </Box>
+      <Typography variant="caption" sx={{ color: 'red', mt: 1, textAlign: 'center' }}>
+        ⊗ Red lines indicate blocked customers
+      </Typography>
     </Box>
   );
 };
