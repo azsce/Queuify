@@ -45,6 +45,7 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
 
   return (
     <Grid container spacing={2}>
+      {/* Number of Servers */}
       <Grid size={{ xs: 12, sm: 6 }}>
         <InputWithInfinity
           id="servers"
@@ -55,6 +56,8 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
           autoComplete="servers"
         />
       </Grid>
+
+      {/* System Capacity and System Capacity - 1  and Infinite Link Indicator */}
       {processType === "D/D" ? (
         <Grid
           size={{ xs: 12, sm: 6 }}
@@ -62,6 +65,7 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
           spacing={0}
           alignItems="center"
         >
+          {/* Infinite Link Indicator */}
           <Grid
             size={{ xs: 1 }}
             sx={{
@@ -83,8 +87,11 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
               <InfinityLinkIndicator />
             </Box>
           </Grid>
+
+          {/* System Capacity  - 1 and System Capacity */}
           <Grid size={{ xs: 11 }}>
             <Grid container spacing={2}>
+              {/* System Capacity - 1 */}
               <Grid size={{ xs: 12 }}>
                 <InputWithInfinity
                   id="capacityMinusOne"
@@ -97,6 +104,7 @@ const SystemParameters: React.FC<SystemParametersProps> = ({
                   autoComplete="capacity - 1"
                 />
               </Grid>
+              {/* System Capacity */}
               <Grid size={{ xs: 12 }}>
                 <InputWithInfinity
                   id="capacity"
