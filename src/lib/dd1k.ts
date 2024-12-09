@@ -220,6 +220,16 @@ export namespace DD1KλExceedμ {
     }
   }
 
+  /**
+   * Computes the number of customers in the system at time t.
+   * @param t - Current time
+   * @param arrivalRate - The rate at which customers arrive
+   * @param serviceRate - The rate at which customers are served
+   * @param t_i - Time of first balk
+   * @param capacity - Maximum system capacity
+   * @param systemType - Type of DD1K system
+   * @returns Number of customers in the system at time t
+   */
   export function computeNOfT(
     t: number,
     arrivalRate: number,
@@ -364,9 +374,21 @@ export namespace DD1KλExceedμ {
 }
 
 export namespace DD1KμEqualλ {
+  /**
+   * Computes the constant number of customers in the system when arrival rate equals service rate.
+   * @param initialCustomers - Initial number of customers in the system
+   * @returns Number of customers in the system
+   */
   export function computeNOfT(initialCustomers) {
     return initialCustomers;
   }
+
+  /**
+   * Computes the waiting time for customers when arrival rate equals service rate.
+   * @param initialCustomers - Initial number of customers in the system
+   * @param serviceRate - The rate at which customers are served
+   * @returns Waiting time for customers
+   */
   export function computeWqOfN(initialCustomers: number, serviceRate: number) {
     return (initialCustomers - 1) / (1 * serviceRate);
   }
@@ -398,6 +420,14 @@ export namespace DD1KμExceedλ {
   //  * t_i is determined as the smallest t such that n(t) = 0:
   //  * 0 = M + ⌊λt_i⌋ - ⌊μt_i⌋
   //  * M = ⌊λt_i⌋ - ⌊μt_i⌋
+
+  /**
+   * Finds the time at which the system reaches steady state.
+   * @param arrivalRate - The rate at which customers arrive
+   * @param serviceRate - The rate at which customers are served
+   * @param initialCustomers - Initial number of customers in the system
+   * @returns Time at which steady state is reached
+   */
   function findTransientTime(
     arrivalRate: number,
     serviceRate: number,
@@ -427,12 +457,29 @@ export namespace DD1KμExceedλ {
   //  *
   //  * 3. For n ≥ ⌊λt_i⌋:
   //  * Wq(n) = 0
+
+  /**
+   * Computes the average waiting time for initial customers in the system.
+   * @param initialCustomers - Initial number of customers in the system
+   * @param serviceRate - The rate at which customers are served
+   * @returns Average waiting time for initial customers
+   */
   export function computeAvarageWqOfNForInitialCustomers(
     initialCustomers: number,
     serviceRate: number
   ) {
     return (initialCustomers - 1) / (2 * serviceRate);
   }
+
+  /**
+   * Computes the waiting time for the nth customer in the system.
+   * @param n - Customer number
+   * @param arrivalRate - The rate at which customers arrive
+   * @param serviceRate - The rate at which customers are served
+   * @param initialCustomers - Initial number of customers in the system
+   * @param t_i - Time at which steady state is reached
+   * @returns Waiting time for the nth customer
+   */
   export function computeWqOfN(
     n: number,
     arrivalRate: number,
