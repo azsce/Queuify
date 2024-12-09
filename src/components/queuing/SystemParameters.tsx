@@ -1,10 +1,10 @@
-import { TextField, IconButton, Box } from "@mui/material";
+import { IconButton, Box } from "@mui/material";
 import { useState, useMemo, Dispatch, SetStateAction } from "react";
 import Grid from "@mui/material/Grid2";
-import { styled } from "@mui/system";
 import { InfinityIcon } from "lucide-react";
 import { Process } from "@/types/queue";
 import InfinityLinkIndicator from "../InfinityLinkIndicator";
+import { NoNumberArrowsTextField } from "../NoNumberArrowsTextField";
 
 type SystemParametersProps = {
   setServers: Dispatch<SetStateAction<number>>;
@@ -193,17 +193,6 @@ type InputWithInfinityProps = {
   autoComplete?: string;
   onBlur?: () => void;
 };
-
-const NoNumberArrowsTextField = styled(TextField)({
-  "& input[type=number]": {
-    MozAppearance: "textfield",
-  },
-  "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button":
-    {
-      WebkitAppearance: "none",
-      margin: 0,
-    },
-});
 
 const InputWithInfinity: React.FC<InputWithInfinityProps> = ({
   id,

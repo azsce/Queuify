@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
-import { Divider } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import DD1KGraphContainer from "../graphs/dd1k/DD1KGraphContainer";
 import { DD1KCharacteristics, N_Of_T } from "@/types/dd1k";
+import DD1K from "@/lib/dd1k";
+import { NoNumberArrowsTextField } from "../NoNumberArrowsTextField";
 
 declare global {
   interface Window {
@@ -40,6 +42,8 @@ const DD1KResults: React.FC<DD1KResultsProps> = ({ characteristics }) => {
 const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
   type,
   capacity,
+  arrivalRate,
+  serviceRate,
   arrivalRateFraction,
   serviceRateFraction,
   t_i,
@@ -64,11 +68,6 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
     serviceRateFraction.denominator - arrivalRateFraction.denominator;
 
   let nGreaterThanOrEqualLambdaTi = "";
-  // if (type === "λ > μ") {
-  //   nGreaterThanOrEqualLambdaTi = `\\text{ alternates between } ${service_minus_arrival_time}(${kMinus1}) \\text{ and } ${service_minus_arrival_time}(${kMinus2})`;
-  // } else if (type === "(λ > μ) && λ%μ = 0") {
-  //   nGreaterThanOrEqualLambdaTi = `\\text{ = } ${service_minus_arrival_time}(${kMinus1})`;
-  // }
   if (type === "λ > μ") {
     nGreaterThanOrEqualLambdaTi = `\\text{ alternates between } ${service_minus_arrival_time}(\\lambda t_i - 2) \\text{ and } ${service_minus_arrival_time}(\\lambda t_i - 3)`;
   } else if (type === "(λ > μ) && λ%μ = 0") {
@@ -88,15 +87,71 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
     caseOutput = "(\\lambda > \\mu) \\text{ and } (\\lambda \\% \\mu = 0)";
   }
 
+  const [tVar, setTVar] = React.useState<number | undefined>();
+  const [nOfTVar, setNOfTVar] = React.useState<number>(0);
+  const [nVar, setNVar] = React.useState<number | undefined>();
+  const [wqOfNVar, setWqOfNVar] = React.useState<number | undefined>();
+
+  const handleTVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const t = parseFloat(e.target.value);
+    setTVar(t);
+    const nOfT = DD1K.computeNOfT(
+      t,
+      arrivalRate,
+      serviceRate,
+      t_i,
+      capacity,
+      type
+    );
+    console.log(nOfT);
+    setNOfTVar(nOfT);
+  };
+
+  const handleNVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const n = parseFloat(e.target.value);
+    setNVar(n);
+    const wqOfN = DD1K.computeWqOfN(
+      n,
+      arrivalRate,
+      serviceRate,
+      t_i,
+      capacity,
+      type
+    );
+    setWqOfNVar(wqOfN);
+  };
+
   return (
     <MathJaxContext>
       <div className="space-y-6 text-sm md:text-base">
         {/* Main header with title */}
-        <div className="text-center mb-6">
-          <h2 className="text-xl md:text-2xl font-bold">
-            <MathJax inline>{`\\(D/D/1/(k-1)\\)`}</MathJax> Queue Results
-          </h2>
-        </div>
+        <Box
+          className="text-center mb-6"
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: "center",
+            justifyContent: "center",
+            gap: { xs: 2, md: 4 },
+          }}
+        >
+          <Typography
+            variant="h1"
+            sx={{
+              fontSize: {
+                xs: "1rem",
+                sm: "1.5rem",
+                md: "1.75rem",
+                lg: "2rem",
+                xl: "2.25rem",
+              },
+              maxLines: 1,
+            }}
+          >
+            System Characteristics for
+          </Typography>
+          <MathJax inline>{`\\(D/D/1/(k-1)\\)`}</MathJax>
+        </Box>
 
         <Divider />
 
@@ -171,6 +226,47 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
               </div>
             </div>
           </div>
+
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                minWidth: "8rem",
+              }}
+            >
+              n(t) for t =
+            </Typography>
+            <NoNumberArrowsTextField
+              label="t ="
+              placeholder="t = "
+              value={tVar}
+              type="number"
+              variant="outlined"
+              onChange={handleTVarChange}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <Typography
+                      sx={{
+                        minWidth: "6rem",
+                        borderLeft: "1px solid #000",
+                        paddingLeft: "1rem",
+                      }}
+                    >
+                      n(t) = {nOfTVar}
+                    </Typography>
+                  ),
+                },
+              }}
+            ></NoNumberArrowsTextField>
+          </Box>
         </div>
 
         <Divider />
@@ -207,6 +303,47 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
               </div>
             </div>
           </div>
+
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                minWidth: "8rem",
+              }}
+            >
+              Wq(n) for n =
+            </Typography>
+            <NoNumberArrowsTextField
+              label="n ="
+              placeholder="n = "
+              value={nVar}
+              type="number"
+              variant="outlined"
+              onChange={handleNVarChange}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <Typography
+                      sx={{
+                        minWidth: "12rem",
+                        borderLeft: "1px solid #000",
+                        paddingLeft: "1rem",
+                      }}
+                    >
+                      Wq(n) = {wqOfNVar}
+                    </Typography>
+                  ),
+                },
+              }}
+            ></NoNumberArrowsTextField>
+          </Box>
         </div>
       </div>
     </MathJaxContext>

@@ -28,6 +28,8 @@ import {
 } from "@mui/material";
 import { Process } from "@/types/queue";
 import Grid from "@mui/material/Grid2";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
 
 export default function QueuingTheoryCalculator() {
   const [queueType, setQueueType] = useState<Process>("D/D");
@@ -139,81 +141,92 @@ export default function QueuingTheoryCalculator() {
   };
 
   return (
-    <Container
-      maxWidth="lg"
-      // sx={(theme) => ({
-      //   py: 4,
-      //   maxWidth: "100%",
-      //   [theme.breakpoints.up("sm")]: {
-      //     maxWidth: theme.breakpoints.values.sm,
-      //   },
-      //   [theme.breakpoints.up("sm")]: {
-      //     maxWidth: theme.breakpoints.values.xl,
-      //   },
-      //   marginLeft: "auto",
-      //   marginRight: "auto",
-      // })}
-    >
-      <Card>
-        <CardHeader>
-          <Typography variant="h5">Queuing Theory Calculator</Typography>
-          <Typography variant="body2">
-            Calculate key performance metrics for various queuing systems
+    <>
+      <AppBar position="fixed">
+        <Toolbar>
+          <Typography variant="h6" component="div">
+            Queuing Theory Calculator
           </Typography>
-        </CardHeader>
-        <CardContent>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <ProcessTypeSelector setProcessType={setQueueType} />
-            <SystemParameters
-              setServers={setServers}
-              setCapacity={setCapacity}
-              servers={servers}
-              capacity={capacity}
-              processType={queueType}
-            />
-            <InputParameters
-              setArrivalRate={setArrivalRate}
-              setServiceRate={setServiceRate}
-              arrivalRate={arrivalRate}
-              serviceRate={serviceRate}
-              setArrivalTime={setArrivalTime}
-              setServiceTime={setServiceTime}
-              arrivalTime={arrivalTime}
-              serviceTime={serviceTime}
-            />
-            <Grid size={12} container spacing={0} alignItems="start">
-              {/* Empty Column */}
-              <Grid size={1} />
-              <Grid size={11} justifyContent={"start"}>
-                <Button variant="contained" onClick={handleCalculate} fullWidth>
-                  Calculate
-                </Button>
+        </Toolbar>
+      </AppBar>
+      <Container
+        // maxWidth="lg"
+        sx={(theme) => ({
+          py: 4,
+          maxWidth: "100%",
+          [theme.breakpoints.up("sm")]: {
+            maxWidth: theme.breakpoints.values.sm,
+          },
+          [theme.breakpoints.up("sm")]: {
+            maxWidth: theme.breakpoints.values.sm,
+          },
+          [theme.breakpoints.up("md")]: {
+            maxWidth: theme.breakpoints.values.md,
+          },
+          marginLeft: "auto",
+          marginRight: "auto",
+        })}
+      >
+        <Card>
+          <CardHeader></CardHeader>
+          <CardContent>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <ProcessTypeSelector setProcessType={setQueueType} />
+              <SystemParameters
+                setServers={setServers}
+                setCapacity={setCapacity}
+                servers={servers}
+                capacity={capacity}
+                processType={queueType}
+              />
+              <InputParameters
+                setArrivalRate={setArrivalRate}
+                setServiceRate={setServiceRate}
+                arrivalRate={arrivalRate}
+                serviceRate={serviceRate}
+                setArrivalTime={setArrivalTime}
+                setServiceTime={setServiceTime}
+                arrivalTime={arrivalTime}
+                serviceTime={serviceTime}
+              />
+              <Grid size={12} container spacing={0} alignItems="start">
+                {/* Empty Column */}
+                <Grid size={1} />
+                <Grid size={11} justifyContent={"start"}>
+                  <Button
+                    variant="contained"
+                    onClick={handleCalculate}
+                    fullWidth
+                  >
+                    Process
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
-          </Box>
+            </Box>
 
-          <Box mt={4}>
-            {error && (
-              <Alert severity="error" sx={{ mb: 3 }}>
-                <AlertTitle>Error</AlertTitle>
-                {error}
-              </Alert>
-            )}
+            <Box mt={4}>
+              {error && (
+                <Alert severity="error" sx={{ mb: 3 }}>
+                  <AlertTitle>Error</AlertTitle>
+                  {error}
+                </Alert>
+              )}
 
-            {results}
+              {results}
 
-            {/* <Alert severity="info" className="mt-6">
-              <InfoIcon className="h-4 w-4" />
-              <AlertTitle>Note</AlertTitle>
-              <span className="ml-2 mt-1">
-                For D/D/1 and D/D/1/(k-1) models, the Time (t) field is used for
-                transient analysis. For unstable systems (λ {">"} μ), results
-                may be limited or require additional explanation.
-              </span>
-            </Alert> */}
-          </Box>
-        </CardContent>
-      </Card>
-    </Container>
+              {/* <Alert severity="info" className="mt-6">
+                <InfoIcon className="h-4 w-4" />
+                <AlertTitle>Note</AlertTitle>
+                <span className="ml-2 mt-1">
+                  For D/D/1 and D/D/1/(k-1) models, the Time (t) field is used for
+                  transient analysis. For unstable systems (λ {">"} μ), results
+                  may be limited or require additional explanation.
+                </span>
+              </Alert> */}
+            </Box>
+          </CardContent>
+        </Card>
+      </Container>
+    </>
   );
 }

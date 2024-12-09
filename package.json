@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "export": "next build && next export",
+    "deploy": "npm run export && gh-pages -d out"
   },
   "dependencies": {
     "@emotion/react": "^11.13.5",
@@ -20,6 +22,7 @@
     "better-react-mathjax": "^2.0.4-beta1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "gh-pages": "^6.2.0",
     "lucide-react": "^0.468.0",
     "mathjax": "^3.2.2",
     "next": "15.0.4",
