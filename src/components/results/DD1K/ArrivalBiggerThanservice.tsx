@@ -168,7 +168,7 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
             <strong>
               <MathJax inline>{`\\(t_i\\)`}</MathJax> (Time of First Balk):
             </strong>
-            <MathJax inline>{`\\(t_i = ${t_i.toFixed(2)}\\)`}</MathJax>
+            <MathJax inline>{`\\(t_i = ${t_i}\\)`}</MathJax>
           </div>
 
           <div className="flex items-center gap-2">

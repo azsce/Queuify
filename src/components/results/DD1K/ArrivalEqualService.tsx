@@ -89,7 +89,7 @@ const ArrivalEqualService: React.FC<DD1KCharacteristics> = ({
               <div className="ml-6 mt-4">
                 <MathJax
                   inline
-                >{`\\(Wq(n) = (${M} - 1) \\cdot \\frac{1}{\\mu} = ${Wq_n.toFixed(2)}\\)`}</MathJax>
+                >{`\\(Wq(n) = (${M} - 1) \\cdot \\frac{1}{\\mu} = ${Wq_n}\\)`}</MathJax>
               </div>
             </div>
           </div>
