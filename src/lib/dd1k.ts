@@ -150,7 +150,8 @@ namespace DD1K {
         serviceRate,
         capacity,
         arrivalRateFraction,
-        serviceRateFraction
+        serviceRateFraction,
+        initialCustomers
       );
     }
   }
@@ -376,10 +377,12 @@ export namespace DD1KμExceedλ {
     serviceRate: number,
     capacity: number,
     arrivalRateFraction: Fraction,
-    serviceRateFraction: Fraction
+    serviceRateFraction: Fraction,
+    initialCustomers: number
   ): DD1KCharacteristics {
-    const t_i = findTransientTime(arrivalRate, serviceRate, capacity);
-
+    console.log("DD1KμExceedλ");
+    const t_i = findTransientTime(arrivalRate, serviceRate, initialCustomers);
+    console.log("t_i", t_i);
     return {
       type: "λ < μ",
       arrivalRate: arrivalRate,
@@ -402,15 +405,14 @@ export namespace DD1KμExceedλ {
   ): number {
     let t_i = 0;
     while (true) {
+      t_i += 1; // Increment by inter-arrival time
       const lambdaTi = Math.floor(arrivalRate * t_i);
       const muTi = Math.floor(serviceRate * t_i);
-      if (initialCustomers === lambdaTi - muTi) {
+
+      if (initialCustomers + lambdaTi - muTi <= 0) {
         return t_i;
       }
-      t_i += 1 / arrivalRate;
     }
-
-    return t_i;
   }
 
   //  n(t) = M + ⌊λt⌋ - ⌊μt⌋

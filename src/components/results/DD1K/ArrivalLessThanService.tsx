@@ -2,6 +2,7 @@ import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { Box, Divider, Typography } from "@mui/material";
 import { DD1KCharacteristics } from "@/types/dd1k";
 import { useEffect, useState } from "react";
+import { NoNumberArrowsTextField } from "@/components/NoNumberArrowsTextField";
 
 const ArrivalLessThanService: React.FC<DD1KCharacteristics> = ({
   type,
@@ -41,6 +42,16 @@ const ArrivalLessThanService: React.FC<DD1KCharacteristics> = ({
     }
   };
 
+  const isWholeNumber = (fraction: {
+    numerator: number;
+    denominator: number;
+  }) => {
+    return fraction.denominator === 1;
+  };
+
+  const isServiceRateWhole = isWholeNumber(serviceRateFraction);
+  const isArrivalRateWhole = isWholeNumber(arrivalRateFraction);
+
   const [tVar, setTVar] = useState<number | undefined>();
   const [nOfTVar, setNOfTVar] = useState<number>(0);
   const [nVar, setNVar] = useState<number | undefined>();
@@ -60,6 +71,16 @@ const ArrivalLessThanService: React.FC<DD1KCharacteristics> = ({
     setWqOfNVar(wqOfN);
   };
 
+  const formatFraction = (fraction: {
+    numerator: number;
+    denominator: number;
+  }) => {
+    if (fraction.denominator === 1) {
+      return fraction.numerator.toString();
+    }
+    return `\\frac{${fraction.numerator}}{${fraction.denominator}}`;
+  };
+
   return (
     <MathJaxContext>
       <div className="space-y-6 text-sm md:text-base">
@@ -67,7 +88,7 @@ const ArrivalLessThanService: React.FC<DD1KCharacteristics> = ({
           className="text-center mb-6"
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
+            flexDirection: { xs: "column", md: "row" },
             alignItems: "center",
             justifyContent: "center",
             gap: { xs: 2, md: 4 },
@@ -98,13 +119,13 @@ const ArrivalLessThanService: React.FC<DD1KCharacteristics> = ({
             <strong>Arrival Rate (λ):</strong>
             <MathJax
               inline
-            >{`\\(\\lambda = ${arrivalRateFraction.numerator}/${arrivalRateFraction.denominator}\\)`}</MathJax>
+            >{`\\(\\lambda = ${formatFraction(arrivalRateFraction)}\\)`}</MathJax>
           </div>
           <div className="flex items-center gap-2">
             <strong>Service Rate (μ):</strong>
             <MathJax
               inline
-            >{`\\(\\mu = ${serviceRateFraction.numerator}/${serviceRateFraction.denominator}\\)`}</MathJax>
+            >{`\\(\\mu = ${formatFraction(serviceRateFraction)}\\)`}</MathJax>
           </div>
           <div className="flex items-center gap-2">
             <strong>System Capacity (K):</strong>
@@ -119,7 +140,7 @@ const ArrivalLessThanService: React.FC<DD1KCharacteristics> = ({
             <strong>
               <MathJax inline>{`\\(t_i\\)`}</MathJax> (Time of First Balk):
             </strong>
-            <MathJax inline>{`\\(t_i = ${t_i.toFixed(2)}\\)`}</MathJax>
+            <MathJax inline>{`\\(t_i = ${t_i}\\)`}</MathJax>
           </div>
         </div>
 
@@ -137,6 +158,22 @@ const ArrivalLessThanService: React.FC<DD1KCharacteristics> = ({
                   inline
                 >{`\\(n(t) = M + \\lfloor \\lambda t \\rfloor - \\lfloor \\mu t \\rfloor\\)`}</MathJax>
               </div>
+              <div className="ml-6 mt-4">
+                <MathJax
+                  inline
+                >{`\\(n(t) = ${M} + \\lfloor ${formatFraction(arrivalRateFraction)}t \\rfloor - \\lfloor ${formatFraction(serviceRateFraction)}t \\rfloor\\)`}</MathJax>
+              </div>
+              {tVar !== undefined && (
+                <Typography
+                  variant="body1"
+                  sx={{
+                    textAlign: "center",
+                    marginTop: "1rem",
+                  }}
+                >
+                  Actual value of n(t) = {nOfTVar}
+                </Typography>
+              )}
             </div>
           </div>
 
@@ -194,7 +231,7 @@ const ArrivalLessThanService: React.FC<DD1KCharacteristics> = ({
               <div className="ml-6 mt-4">
                 <MathJax
                   inline
-                >{`\\(W_q(0) = \\frac{M - 1}{2\\mu} = ${initialWq.toFixed(2)}\\)`}</MathJax>
+                >{`\\(W_q(0) = \\frac{M - 1}{2\\mu} = ${initialWq}\\)`}</MathJax>
               </div>
             </div>
 
@@ -205,6 +242,28 @@ const ArrivalLessThanService: React.FC<DD1KCharacteristics> = ({
                   inline
                 >{`\\(Wq(n) = (M - 1 + n) \\cdot \\frac{1}{\\mu} - n \\cdot \\frac{1}{\\lambda}\\)`}</MathJax>
               </div>
+              <div className="ml-6 mt-4">
+                <MathJax inline>{`\\(Wq(n) = (n + ${M - 1}) \\cdot ${
+                  isServiceRateWhole
+                    ? `\\frac{1}{${serviceRateFraction.numerator}}`
+                    : `\\frac{${serviceRateFraction.denominator}}{${serviceRateFraction.numerator}}`
+                } - n \\cdot ${
+                  isArrivalRateWhole
+                    ? `\\frac{1}{${arrivalRateFraction.numerator}}`
+                    : `\\frac{${arrivalRateFraction.denominator}}{${arrivalRateFraction.numerator}}`
+                }\\)`}</MathJax>
+              </div>
+              {nVar !== undefined && (
+                <Typography
+                  variant="body1"
+                  sx={{
+                    textAlign: "center",
+                    marginTop: "1rem",
+                  }}
+                >
+                  Actual value of Wq(n) = {wqOfNVar}
+                </Typography>
+              )}
             </div>
 
             <div>

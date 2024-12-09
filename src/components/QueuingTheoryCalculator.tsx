@@ -182,11 +182,11 @@ export default function QueuingTheoryCalculator() {
         sx={(theme) => ({
           py: 4,
           maxWidth: "100%",
-          [theme.breakpoints.up("sm")]: {
-            maxWidth: theme.breakpoints.values.sm,
+          [theme.breakpoints.up("xs")]: {
+            maxWidth: "100%",
           },
           [theme.breakpoints.up("sm")]: {
-            maxWidth: theme.breakpoints.values.sm,
+            maxWidth: theme.breakpoints.values.lg,
           },
           [theme.breakpoints.up("md")]: {
             maxWidth: theme.breakpoints.values.md,
