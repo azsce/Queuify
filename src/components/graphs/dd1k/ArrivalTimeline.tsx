@@ -131,12 +131,14 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
                 dataKey="time"
                 orientation="top"
                 xAxisId="top"
-                label={{
-                  value: "Time (t)",
-                  position: "insideTop",
-                  offset: -25, // Increased from -20
-                }}
-                tick={{ dy: -10 }} // Add this line to move ticks up
+                // label={{
+                //   value: "Time (t)",
+                //   position: "insideTop",
+                //   offset: -25, // Increased from -20
+                // }}
+                // tick={{ dy: -10 }} // Add this line to move ticks up
+                tickSize={0} // Remove ticks
+                tickFormatter={() => ""} // Add tick formatter
               />
             )}
             {showBottomAxis && (
@@ -144,24 +146,26 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
                 xAxisId="bottom"
                 dataKey="customerIndex"
                 orientation="bottom"
-                label={{
-                  value: "Customer Index",
-                  position: "insideBottom",
-                  offset: -10,
-                  dy: 10,
-                }}
+                // label={{
+                //   value: "Customer Index",
+                //   position: "insideBottom",
+                //   offset: -10,
+                //   dy: 10,
+                // }}
                 height={40} // Add height for better visibility
                 tick={{ dy: 10 }} // Move ticks down
               />
             )}
             <YAxis
               label={{
-                value: "Arrival Times",
+                value: "Arrival TimeLine",
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
                 dy: 90,
               }}
+              tickCount={1}
+              tickFormatter={() => ""} // Add tick formatter
             />
             <Tooltip />
             {dataWithCustomers.map((entry, index) => (

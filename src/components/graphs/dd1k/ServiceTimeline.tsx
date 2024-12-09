@@ -14,7 +14,6 @@ import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { DD1KType } from "@/types/dd1k";
 import DD1K from "@/lib/dd1k";
 import { colors } from "@/constants";
-import { getTimeAxisTicks } from "@/utils/graph";
 
 interface ServiceTimelineProps {
   arrivalRate: number;
@@ -31,9 +30,7 @@ interface ServiceTimelineProps {
 const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
   arrivalRate,
   serviceRate,
-  capacity,
   t_i,
-  systemType,
   height,
   subGraph,
   showTopAxis,
@@ -81,7 +78,6 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
   const data = generateData();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const maxTime = DD1K.graphMaxTime(t_i);
   // Remove timeAxisTicks as we'll use same configuration as ArrivalTimeline
 
   return (
@@ -113,10 +109,10 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
           <LineChart
             data={data}
             margin={{
-              top: 20, // Match ArrivalTimeline margin
+              top: subGraph ? 0 : 20,
               right: 0,
               left: isMobile ? 0 : 90,
-              bottom: isMobile ? 30 : 50,
+              bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
@@ -128,12 +124,14 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
                 dataKey="time"
                 orientation="top"
                 xAxisId="top"
-                label={{
-                  value: "Time (t)",
-                  position: "insideTop",
-                  offset: -25,
-                }}
-                tick={{ dy: -10 }}
+                // label={{
+                //   value: "Time (t)",
+                //   position: "insideTop",
+                //   offset: -25,
+                // }}
+                // tick={{ dy: -10 }}
+                tickSize={0} // Remove ticks
+                tickFormatter={() => ""}
               />
             )}
             {showBottomAxis && (
@@ -153,12 +151,14 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
             )}
             <YAxis
               label={{
-                value: "Service Times",
+                value: "Service TimeLine",
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
                 dy: 90,
               }}
+              tickCount={1}
+              tickFormatter={() => ""} // Add tick formatter
             />
             <Tooltip />
             {data.map((entry, index) => (

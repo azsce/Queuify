@@ -9,7 +9,6 @@ import CustomerFlowDiagram from "./CustomerFlowDiagram";
 import ArrivalTimeline from "./ArrivalTimeline";
 import ServiceTimeline from "./ServiceTimeline";
 import DepartureTimeline from "./DepartureTimeline";
-import CombinedGraph from "./CombinedGraph"; // Import CombinedGraph
 
 interface DD1KGraphContainerProps {
   arrivalRate: number;
@@ -29,14 +28,8 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = (props) => {
           mt: 2,
         }}
       ></Box>
-      <WaitingTimeGraph
-        {...props}
-        height={GRAPH_HEIGHT}
-        subGraph={true}
-        showTopAxis={false}
-        showBottomAxis={true}
-      />
-      <CombinedGraph {...props} height={1000} /> {/* Add CombinedGraph */}
+
+      {/* <CombinedGraph {...props} height={1000} /> Add CombinedGraph */}
       <CustomerFlowDiagram
         {...props}
         height={GRAPH_HEIGHT}
@@ -44,33 +37,40 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = (props) => {
         showTopAxis={true}
         showBottomAxis={false}
       />
-      {/* <ArrivalTimeline
+      <ArrivalTimeline
         {...props}
         height={GRAPH_HEIGHT}
         subGraph={true}
-        showTopAxis={false}
-        showBottomAxis={false}
+        showTopAxis={true}
+        showBottomAxis={true}
       />
       <ServiceTimeline
         {...props}
         height={GRAPH_HEIGHT}
         subGraph={true}
-        showTopAxis={false}
-        showBottomAxis={false}
+        showTopAxis={true}
+        showBottomAxis={true}
       />
       <DepartureTimeline
         {...props}
         height={GRAPH_HEIGHT}
         subGraph={true}
-        showTopAxis={false}
-        showBottomAxis={false}
-      /> */}
+        showTopAxis={true}
+        showBottomAxis={true}
+      />
       <NumberOfCustomersGraph
         {...props}
         height={GRAPH_HEIGHT}
         subGraph={true}
         showTopAxis={false}
         showBottomAxis={false}
+      />
+      <WaitingTimeGraph
+        {...props}
+        height={GRAPH_HEIGHT}
+        subGraph={true}
+        showTopAxis={false}
+        showBottomAxis={true}
       />
     </Box>
   );

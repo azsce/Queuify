@@ -1,26 +1,21 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React from "react";
 import {
   LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   ResponsiveContainer,
-  ReferenceLine,
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { DD1KType } from "@/types/dd1k";
 import DD1K from "@/lib/dd1k";
-import { ColorMap } from "@/constants/graphColors";
 import {
   generateBasicData,
-  calculateSectionHeights,
-  sections,
   generateTimeLineData,
-  adjustBasicData,
 } from "@/utils/graphDataUtils";
 import renderTimeLines from "./TimelineUtils";
 
@@ -80,28 +75,28 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
   );
 
   // Calculate section heights and related metrics
-  const {
-    sectionHeight,
-    sectionSpacing,
-    scaleFactors,
-    yAxisOffsets,
-    totalHeight,
-  } = calculateSectionHeights(basicData, height);
+  // const {
+  //   sectionHeight,
+  //   sectionSpacing,
+  //   scaleFactors,
+  //   yAxisOffsets,
+  //   totalHeight,
+  // } = calculateSectionHeights(basicData, height);
 
   // Now yAxisOffsets will be properly typed
-  const adjustedData = adjustBasicData(basicData, scaleFactors, yAxisOffsets);
+  // const adjustedData = adjustBasicData(basicData, scaleFactors, yAxisOffsets);
 
-  // Add section dividers
-  const sectionDividers = Object.values(yAxisOffsets)
-    .slice(1)
-    .map((offset) => offset - sectionSpacing / 2);
+  // // Add section dividers
+  // const sectionDividers = Object.values(yAxisOffsets)
+  //   .slice(1)
+  //   .map((offset) => offset - sectionSpacing / 2);
 
   // Add vertical axis ticks for each section using imported sections
-  const yAxisTicks = Object.values(sections).flatMap((sectionIndex) => [
-    sectionIndex * (sectionHeight + sectionSpacing),
-    sectionIndex * (sectionHeight + sectionSpacing) + sectionHeight * 0.5,
-    (sectionIndex + 1) * (sectionHeight + sectionSpacing),
-  ]);
+  // const yAxisTicks = Object.values(sections).flatMap((sectionIndex) => [
+  //   sectionIndex * (sectionHeight + sectionSpacing),
+  //   sectionIndex * (sectionHeight + sectionSpacing) + sectionHeight * 0.5,
+  //   (sectionIndex + 1) * (sectionHeight + sectionSpacing),
+  // ]);
 
   const timeLineData = generateTimeLineData(basicData);
 
@@ -131,7 +126,7 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
           flexDirection: "column",
         }}
       >
-        <Box height="50%">
+        <Box height="100%">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               layout="vertical"
@@ -162,7 +157,7 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
             </LineChart>
           </ResponsiveContainer>
         </Box>
-        <Box height="50%">
+        {/* <Box height="50%">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={adjustedData}
@@ -234,7 +229,7 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
                 stroke={theme.palette.text.primary}
               />
               {/* Add section dividers */}
-              {sectionDividers.map((height) => (
+        {/* {sectionDividers.map((height) => (
                 <ReferenceLine
                   key={`divider-${height}`}
                   y={height}
@@ -242,10 +237,10 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
                   strokeDasharray="3 3"
                   xAxisId={"bottom"}
                 />
-              ))}
-              {/* <Tooltip content={<CustomTooltip data={basicData} />} /> */}
-              {/* Add lines for each metric */}
-              <Line
+              ))} */}
+        {/* <Tooltip content={<CustomTooltip data={basicData} />} /> */}
+        {/* Add lines for each metric */}
+        {/* <Line
                 type="stepAfter"
                 dataKey="customers"
                 xAxisId="top" // Specify xAxisId
@@ -302,9 +297,9 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
                   fontSize: 12,
                 }}
               />
-            </LineChart>
-          </ResponsiveContainer>
-        </Box>
+            // </LineChart> */}
+        {/* </ResponsiveContainer> */}
+        {/* </Box> */}
       </Box>
       <Typography variant="caption" sx={{ mt: 1, textAlign: "center" }}>
         ○ Arrival • □ Service Start • ◆ Departure
