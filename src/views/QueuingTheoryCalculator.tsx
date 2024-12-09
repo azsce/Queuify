@@ -18,19 +18,10 @@ import ProcessTypeSelector from "@/components/queuing/ProcessTypeSelector";
 // import { MathJaxContext } from "better-react-mathjax";
 import { DD1KCharacteristics } from "@/types/dd1k";
 // import { InfoIcon } from "lucide-react";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Typography,
-  Box,
-  Container,
-} from "@mui/material";
+import { Card, CardHeader, CardContent, Box, Container } from "@mui/material";
 import { Process } from "@/types/queue";
 import Grid from "@mui/material/Grid2";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import { NoNumberArrowsTextField } from "./NoNumberArrowsTextField";
+import { NoNumberArrowsTextField } from "../components/NoNumberArrowsTextField";
 
 export default function QueuingTheoryCalculator() {
   const [queueType, setQueueType] = useState<Process>("D/D");
@@ -170,13 +161,6 @@ export default function QueuingTheoryCalculator() {
 
   return (
     <>
-      <AppBar position="fixed">
-        <Toolbar>
-          <Typography variant="h6" component="div">
-            Queuing Theory Calculator
-          </Typography>
-        </Toolbar>
-      </AppBar>
       <Container
         // maxWidth="lg"
         sx={(theme) => ({
