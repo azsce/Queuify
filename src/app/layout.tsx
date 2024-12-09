@@ -3,7 +3,10 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Box } from "@mui/material";
 import TopAppBar from "@/components/TopAppBar";
-
+import { ThemeProvider } from "@/components/theme-provider";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import Loading from "@/components/Loading";
+import MuiThemeProvider from "@/components/MuiThemeProvider";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -29,15 +32,28 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-          }}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
         >
-          <TopAppBar />
-          {children}
-        </Box>
+          <AppRouterCacheProvider>
+            <MuiThemeProvider defaultMode="dark">
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Loading>
+                  <TopAppBar />
+                  {children}
+                </Loading>
+              </Box>
+            </MuiThemeProvider>
+          </AppRouterCacheProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,17 +1,19 @@
 "use client";
 
 import React from "react";
-import { AppBar, Toolbar, IconButton, Tabs, Tab } from "@mui/material";
-import { Home as HomeIcon } from "@mui/icons-material";
+import { AppBar, Toolbar, IconButton, Link, Button, Box } from "@mui/material";
+import { DarkMode, Home as HomeIcon, Nightlight } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 
 const links = [
   {
     label: "Home",
-    href: "/Queue",
+    href: "/",
   },
   {
     label: "D/D/1/(k-1)",
-    href: "/Queue/dd1k",
+    href: "/dd1k",
   },
   // {
   //     label: "M/M/1",
@@ -20,23 +22,72 @@ const links = [
 ];
 
 export default function TopAppBar() {
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
+  const router = useRouter();
+  const { theme, setTheme } = useTheme();
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <IconButton href="/" color="inherit">
-          <HomeIcon />
-        </IconButton>
-        <Tabs value={value} onChange={handleChange} textColor="inherit">
-          {links.map((link) => (
-            <Tab key={link.label} label={link.label} href={link.href} />
-          ))}
-        </Tabs>
+    <AppBar
+      position="static"
+      sx={{
+        dispaly: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "100%",
+      }}
+    >
+      <Toolbar
+        sx={{
+          dispaly: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          width: "100%",
+        }}
+      >
+        <Box
+          sx={{
+            dispaly: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          <Box
+            sx={{
+              dispaly: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <IconButton
+              color="inherit"
+              onClick={() => {
+                console.log("clicked");
+                router.push("/");
+              }}
+            >
+              <HomeIcon />
+            </IconButton>
+            {links.map((link) => (
+              <Button
+                key={link.label}
+                onClick={() => router.push(link.href)}
+                color="inherit"
+                sx={{ margin: 1 }}
+                LinkComponent={Link}
+              >
+                {link.label}
+              </Button>
+            ))}
+          </Box>
+          <IconButton
+            color="inherit"
+            onClick={() => {
+              setTheme(theme === "dark" ? "light" : "dark");
+            }}
+          >
+            {theme === "dark" ? <Nightlight /> : <DarkMode />}
+          </IconButton>
+        </Box>
       </Toolbar>
     </AppBar>
   );
