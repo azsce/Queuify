@@ -231,14 +231,17 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
               variant="outlined"
               onChange={handleTVarChange}
               sx={{ width: { xs: "100%", md: "auto" } }}
+              color="primary"
               slotProps={{
                 input: {
                   endAdornment: (
                     <Typography
                       sx={{
-                        minWidth: "6rem",
-                        borderLeft: "1px solid #000",
+                        minWidth: { xs: "8rem", sm: "16rem" },
+                        borderLeft: "1px solid",
+                        borderColor: "primary.main",
                         paddingLeft: "1rem",
+                        color: "primary.main",
                       }}
                     >
                       n(t) = {nOfTVar}
@@ -253,7 +256,7 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
         <Divider />
 
         {/* Section for displaying Wq(n) */}
-        <div className="space-y-8">
+        <div className="space-y-8" style={{ marginBottom: 20 }}>
           <h3 className="text-lg md:text-xl font-semibold">
             <MathJax inline>{`\\(Wq(n)\\)`}</MathJax> (Waiting Times)
           </h3>
@@ -304,14 +307,17 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
               variant="outlined"
               onChange={handleNVarChange}
               sx={{ width: { xs: "100%", md: "auto" } }}
+              color="secondary"
               slotProps={{
                 input: {
                   endAdornment: (
                     <Typography
                       sx={{
-                        minWidth: "12rem",
-                        borderLeft: "1px solid #000",
-                        paddingLeft: "1rem",
+                        minWidth: { xs: "8rem", sm: "16rem" },
+                        borderLeft: "1px solid",
+                        borderColor: "secondary.main",
+                        paddingLeft: "0.5rem",
+                        color: "secondary.main",
                       }}
                     >
                       Wq(n) = {wqOfNVar}

@@ -167,12 +167,14 @@ const DD1KExplanation = () => {
                 fontSize: { xs: "1.25rem", sm: "1.5rem", md: "1.75rem" },
               }}
             >
-              Function Algorithms
+              <strong>Function Algorithms {"λ > μ or 1/λ < 1/μ"} </strong>
             </Typography>
 
             <Box sx={{ ml: { xs: 2, sm: 4 }, gap: { xs: 2, sm: 3, md: 4 } }}>
               <Typography variant="subtitle1" sx={{ mt: 2 }}>
-                Finding First Balk Time (t_i):
+                <em>
+                  <strong>Finding First Balk Time (t_i):</strong>
+                </em>
               </Typography>
               <Typography variant="body1">
                 The algorithm iteratively increments time by the inter-arrival
@@ -184,7 +186,9 @@ const DD1KExplanation = () => {
               \\]`}</MathJax>
 
               <Typography variant="subtitle1" sx={{ mt: 3 }}>
-                Computing n(t) - Number of Customers:
+                <em>
+                  <strong>Computing n(t) - Number of Customers:</strong>
+                </em>
               </Typography>
               <Typography variant="body1">
                 The algorithm has three phases:
@@ -201,7 +205,9 @@ const DD1KExplanation = () => {
               </Box>
 
               <Typography variant="subtitle1" sx={{ mt: 3 }}>
-                Service Completion Check:
+                <em>
+                  <strong>Service Completion Check:</strong>
+                </em>
               </Typography>
               <Typography variant="body1">
                 Determines if a service completion occurs at time t by checking
@@ -212,7 +218,9 @@ const DD1KExplanation = () => {
               \\]`}</MathJax>
 
               <Typography variant="subtitle1" sx={{ mt: 3 }}>
-                Blocking Check Algorithm:
+                <em>
+                  <strong>Blocking Check Algorithm:</strong>
+                </em>
               </Typography>
               <Typography variant="body1">
                 A customer is blocked when:
@@ -229,7 +237,9 @@ const DD1KExplanation = () => {
               </Box>
 
               <Typography variant="subtitle1" sx={{ mt: 3 }}>
-                Waiting Time Calculation (Wq(n)):
+                <em>
+                  <strong>Waiting Time Calculation (Wq(n)):</strong>
+                </em>
               </Typography>
               <Typography variant="body1">
                 The algorithm computes waiting times differently based on
