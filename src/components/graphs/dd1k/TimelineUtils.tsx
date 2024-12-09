@@ -1,115 +1,73 @@
+import { Line } from "recharts";
+import { DD1KBasicData } from "@/utils/graphDataUtils";
 import { colors } from "@/constants";
-import { ReferenceLine } from "recharts";
-import React from "react";
 
-interface TimelineData {
-  time: string;
-  customerArrives: string;
-  customerEnteringService: string;
-  customerDeparting: string;
-}
+const t_arrival = "arrival_";
+const t_service = "service_";
+const t_departure = "departure_";
 
-interface TimelineConfig {
-  yAxisOffsets: {
-    timeline: number;
-  };
-  sectionHeight: number;
-  xAxisId?: "top" | "bottom" | "default";
-}
+const renderTimeLines = (
+  arrivalTime: number,
+  maxTime: number,
+  basicData: DD1KBasicData[]
+) => {
+  let customerArriveIndex = 0;
+  let customerServiceIndex = 0;
+  let customerDepartureIndex = 0;
 
-type TimelineLinesProps = {
-  adjustedData: TimelineData[];
-  config: TimelineConfig;
+  let i = 0;
+
+  const lines = [];
+  for (let t = arrivalTime; t <= maxTime; t += arrivalTime) {
+    if (basicData[i]?.customerArrives !== "") {
+      customerArriveIndex++;
+    }
+    if (basicData[i]?.customerEnteringService !== "") {
+      customerServiceIndex++;
+    }
+
+    if (basicData[i]?.customerDeparting !== "") {
+      customerDepartureIndex++;
+    }
+
+    i++;
+
+    lines.push(
+      <Line
+        key={`out-${t}`}
+        xAxisId={"top"}
+        type="monotone"
+        dataKey={`${t_arrival}${t}`}
+        stroke={colors[customerArriveIndex % colors.length]}
+        dot={false}
+      />,
+      <Line
+        key={`system-${t}`}
+        xAxisId={"top"}
+        type="monotone"
+        dataKey={`${t_service}${t}`}
+        stroke={colors[customerServiceIndex % colors.length]}
+        dot={false}
+      />,
+      <Line
+        key={`service-${t}`}
+        xAxisId={"top"}
+        type="monotone"
+        dataKey={`${t_service}${t}`}
+        stroke={colors[customerServiceIndex % colors.length]}
+        dot={false}
+      />,
+      <Line
+        key={`departure-${t}`}
+        xAxisId={"top"}
+        type="monotone"
+        dataKey={`${t_departure}${t}`}
+        stroke={colors[customerDepartureIndex % colors.length]}
+        dot={false}
+      />
+    );
+  }
+  return lines;
 };
 
-const TimelineLines: React.FC<TimelineLinesProps> = ({
-  adjustedData,
-  config,
-}) => {
-  const basePosition = config.yAxisOffsets.timeline;
-  const spacing = config.sectionHeight / 4; // Use quarter height for spacing
-
-  return (
-    <>
-      {/* Customer Arrivals */}
-      {adjustedData.map(
-        (entry, index) =>
-          entry.customerArrives && (
-            <ReferenceLine
-              key={`arrival-${index}`}
-              x={entry.time}
-              y={basePosition}
-              xAxisId={config.xAxisId || "bottom"}
-              stroke={
-                colors[parseInt(entry.customerArrives.slice(1)) % colors.length]
-              }
-              label={{
-                value: "○",
-                position: "center",
-                dy: -spacing,
-                fill: colors[
-                  parseInt(entry.customerArrives.slice(1)) % colors.length
-                ],
-                fontSize: 16,
-              }}
-            />
-          )
-      )}
-      {/* Service Entry */}
-      {adjustedData.map(
-        (entry, index) =>
-          entry.customerEnteringService && (
-            <ReferenceLine
-              key={`service-${index}`}
-              x={entry.time}
-              y={basePosition + spacing}
-              xAxisId={config.xAxisId || "bottom"}
-              stroke={
-                colors[
-                  parseInt(entry.customerEnteringService.slice(1)) %
-                    colors.length
-                ]
-              }
-              label={{
-                value: "□",
-                position: "center",
-                fill: colors[
-                  parseInt(entry.customerEnteringService.slice(1)) %
-                    colors.length
-                ],
-                fontSize: 16,
-              }}
-            />
-          )
-      )}
-      {/* Departures */}
-      {adjustedData.map(
-        (entry, index) =>
-          entry.customerDeparting && (
-            <ReferenceLine
-              key={`departure-${index}`}
-              x={entry.time}
-              y={basePosition + spacing * 2}
-              xAxisId={config.xAxisId || "bottom"}
-              stroke={
-                colors[
-                  parseInt(entry.customerDeparting.slice(1)) % colors.length
-                ]
-              }
-              label={{
-                value: "◆",
-                position: "center",
-                dy: spacing,
-                fill: colors[
-                  parseInt(entry.customerDeparting.slice(1)) % colors.length
-                ],
-                fontSize: 16,
-              }}
-            />
-          )
-      )}
-    </>
-  );
-};
-
-export default TimelineLines;
+export default renderTimeLines;
