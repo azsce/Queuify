@@ -124,7 +124,7 @@ namespace DD1K {
 
     if (arrivalRate > serviceRate) {
       // Handle Case 1: λ > μ
-      return DD1KλExceedμ.arrivalBiggerThanservice(
+      return DD1KλExceedμ.characteristics(
         arrivalRate,
         serviceRate,
         capacity,
@@ -143,12 +143,53 @@ namespace DD1K {
         initialCustomers: initialCustomers,
       };
       return result;
+    } else {
+      // Handle Case 2: λ < μ
+      return DD1KμExceedλ.characteristics(
+        arrivalRate,
+        serviceRate,
+        capacity,
+        arrivalRateFraction,
+        serviceRateFraction
+      );
     }
-    // else {
-    //   // Handle Case 2: λ ≤ μ
-    //   return handleCase2(arrivalRate, serviceRate, capacity);
-    // }
-    // Define the equations for n(t) in its three states
+  }
+
+  export function graphMaxTime(t_i: number): number {
+    return Math.ceil(Math.max(t_i * 2, 10)); // Round up max time
+  }
+}
+
+export namespace DD1KλExceedμ {
+  export function characteristics(
+    arrivalRate: number,
+    serviceRate: number,
+    capacity: number,
+    arrivalRateFraction: Fraction,
+    serviceRateFraction: Fraction
+  ): DD1KCharacteristics {
+    let systemType: DD1KType = "λ > μ";
+    if (arrivalRate % serviceRate === 0) {
+      systemType = "(λ > μ) && λ%μ = 0";
+    }
+
+    // Calculate the time of first balk (t1)
+    const t_i = findFirstBalkTime(
+      arrivalRate,
+      serviceRate,
+      capacity,
+      systemType
+    );
+
+    return {
+      type: systemType,
+      arrivalRate: arrivalRate,
+      serviceRate: serviceRate,
+      arrivalRateFraction: arrivalRateFraction,
+      serviceRateFraction: serviceRateFraction,
+      capacity: capacity,
+      t_i: t_i,
+    };
   }
 
   /**
@@ -176,43 +217,6 @@ namespace DD1K {
 
       if (lambdaTi - muTi >= capacity) return t_i;
     }
-  }
-
-  export function graphMaxTime(t_i: number): number {
-    return Math.ceil(Math.max(t_i * 2, 10)); // Round up max time
-  }
-}
-
-export namespace DD1KλExceedμ {
-  export function arrivalBiggerThanservice(
-    arrivalRate: number,
-    serviceRate: number,
-    capacity: number,
-    arrivalRateFraction: Fraction,
-    serviceRateFraction: Fraction
-  ): DD1KCharacteristics {
-    let systemType: DD1KType = "λ > μ";
-    if (arrivalRate % serviceRate === 0) {
-      systemType = "(λ > μ) && λ%μ = 0";
-    }
-
-    // Calculate the time of first balk (t1)
-    const t_i = DD1K.findFirstBalkTime(
-      arrivalRate,
-      serviceRate,
-      capacity,
-      systemType
-    );
-
-    return {
-      type: systemType,
-      arrivalRate: arrivalRate,
-      serviceRate: serviceRate,
-      arrivalRateFraction: arrivalRateFraction,
-      serviceRateFraction: serviceRateFraction,
-      capacity: capacity,
-      t_i: t_i,
-    };
   }
 
   export function computeNOfT(
@@ -339,7 +343,9 @@ export namespace DD1KλExceedμ {
     t_i: number,
     systemType: DD1KType
   ): number {
-    if (n < arrivalRate * t_i) {
+    if (n === 0) {
+      return 0;
+    } else if (n < arrivalRate * t_i) {
       return (1 / serviceRate - 1 / arrivalRate) * (n - 1);
     } else {
       if (systemType === "(λ > μ) && λ%μ = 0") {
@@ -365,19 +371,49 @@ export namespace DD1KμEqualλ {
   }
 }
 export namespace DD1KμExceedλ {
-  //  n(t) = M + ⌊λt⌋ - ⌊μt⌋
-  export function computeNOfT(
-    t: number,
+  export function characteristics(
     arrivalRate: number,
     serviceRate: number,
-    initialCustomers: number
-  ): number {
-    return (
-      initialCustomers +
-      Math.floor(arrivalRate * t) -
-      Math.floor(serviceRate * t)
-    );
+    capacity: number,
+    arrivalRateFraction: Fraction,
+    serviceRateFraction: Fraction
+  ): DD1KCharacteristics {
+    const t_i = findTransientTime(arrivalRate, serviceRate, capacity);
+
+    return {
+      type: "λ < μ",
+      arrivalRate: arrivalRate,
+      serviceRate: serviceRate,
+      arrivalRateFraction: arrivalRateFraction,
+      serviceRateFraction: serviceRateFraction,
+      capacity: capacity,
+      t_i: t_i,
+    };
   }
+
+  //    * **Finding t_i**
+  //  * t_i is determined as the smallest t such that n(t) = 0:
+  //  * 0 = M + ⌊λt_i⌋ - ⌊μt_i⌋
+  //  * M = ⌊λt_i⌋ - ⌊μt_i⌋
+  function findTransientTime(
+    arrivalRate: number,
+    serviceRate: number,
+    initialCustomers: number // M
+  ): number {
+    let t_i = 0;
+    while (true) {
+      const lambdaTi = Math.floor(arrivalRate * t_i);
+      const muTi = Math.floor(serviceRate * t_i);
+      if (initialCustomers === lambdaTi - muTi) {
+        return t_i;
+      }
+      t_i += 1 / arrivalRate;
+    }
+
+    return t_i;
+  }
+
+  //  n(t) = M + ⌊λt⌋ - ⌊μt⌋
 
   //    * **Average Waiting Time, Wq(n):**
   //  *

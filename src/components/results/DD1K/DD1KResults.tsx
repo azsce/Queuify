@@ -4,6 +4,7 @@ import DD1KGraphContainer from "../../graphs/dd1k/DD1KGraphContainer";
 import { DD1KCharacteristics } from "@/types/dd1k";
 import ArrivalBiggerThanservice from "./ArrivalBiggerThanservice";
 import ArrivalEqualService from "./ArrivalEqualService";
+import ArrivalLessThanService from "./ArrivalLessThanService";
 
 type DD1KResultsProps = {
   characteristics: DD1KCharacteristics;
@@ -12,16 +13,19 @@ type DD1KResultsProps = {
 const DD1KResults: React.FC<DD1KResultsProps> = ({ characteristics }) => {
   const { type } = characteristics;
   const result =
-    type === "λ > μ" ? (
-      <ArrivalBiggerThanservice {...characteristics} />
-    ) : type === "λ = μ" ? (
+    type === "λ = μ" ? (
       <ArrivalEqualService {...characteristics} />
-    ) : null;
+    ) : type === "λ < μ" ? (
+      <ArrivalLessThanService {...characteristics} />
+    ) : (
+      <ArrivalBiggerThanservice {...characteristics} />
+    );
+
   return (
     <>
       {result}
       <Divider />
-      {type === "λ > μ" && (
+      {(type === "λ > μ" || type === "(λ > μ) && λ%μ = 0") && (
         <DD1KGraphContainer
           arrivalRate={characteristics.arrivalRate}
           serviceRate={characteristics.serviceRate}

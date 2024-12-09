@@ -157,6 +157,7 @@ export default function QueuingTheoryCalculator() {
           capacity,
           initialCustomers
         );
+        console.log("characteristics", characteristics);
         setResults(<DD1KResults characteristics={characteristics} />);
       } else {
         setError("Unsupported queue configuration.");
