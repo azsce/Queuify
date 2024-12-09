@@ -1,23 +1,23 @@
 "use client";
 
-import { JSX, useEffect, useState } from "react";
+import { JSX, useState } from "react";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import { mm1, mm1k, mmc, mmck, dd1 } from "@/lib";
+// import { mm1, mm1k, mmc, mmck, dd1 } from "@/lib";
 import DD1K from "@/lib/dd1k";
 import SystemParameters from "@/components/queuing/SystemParameters";
 import InputParameters from "@/components/queuing/InputParameters";
-import MM1Results from "@/components/results/MM1Results";
-import MM1KResults from "@/components/results/MM1KResults";
-import MMCResults from "@/components/results/MMCResults";
-import MMCKResults from "@/components/results/MMCKResults";
-import DD1Results from "@/components/results/DD1Results";
+// import MM1Results from "@/components/results/MM1Results";
+// import MM1KResults from "@/components/results/MM1KResults";
+// import MMCResults from "@/components/results/MMCResults";
+// import MMCKResults from "@/components/results/MMCKResults";
+// import DD1Results from "@/components/results/DD1Results";
 import DD1KResults from "@/components/results/DD1KResults";
 import ProcessTypeSelector from "@/components/queuing/ProcessTypeSelector";
-import { MathJaxContext } from "better-react-mathjax";
+// import { MathJaxContext } from "better-react-mathjax";
 import { DD1KCharacteristics } from "@/types/dd1k";
-import { InfoIcon } from "lucide-react";
+// import { InfoIcon } from "lucide-react";
 import {
   Card,
   CardHeader,

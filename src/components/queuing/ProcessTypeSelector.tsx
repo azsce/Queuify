@@ -1,4 +1,4 @@
-import { Process, ProcessEnum } from "@/types/queue";
+import { Process } from "@/types/queue";
 import {
   FormControl,
   FormLabel,
@@ -33,7 +33,7 @@ const ProcessTypeSelector: React.FC<ProcessTypeSelectorProps> = ({
         >
           <FormLabel>Queue Type</FormLabel>
           <RadioGroup
-            defaultValue={ProcessEnum.D_D}
+            defaultValue="D/D"
             onChange={(e) => setProcessType(e.target.value as Process)}
             row
             sx={{ justifyContent: "flex-end" }}

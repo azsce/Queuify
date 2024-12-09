@@ -24,8 +24,7 @@ export type Wq_Of_N = {
   nGreaterThanOrEqualLambdaTi: string; // n ≥ λ*t_i
 };
 
-
-enum WhichCase {
-  LAMBDA_GT_MU = "λ > μ",
-  LAMBDA_GT_MU_DIVISIBLE = "(λ > μ) && λ%μ = 0",
-}
+// enum WhichCase {
+//   LAMBDA_GT_MU = "λ > μ",
+//   LAMBDA_GT_MU_DIVISIBLE = "(λ > μ) && λ%μ = 0",
+// }
