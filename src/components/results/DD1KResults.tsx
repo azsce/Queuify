@@ -110,14 +110,7 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
   const handleNVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const n = parseFloat(e.target.value);
     setNVar(n);
-    const wqOfN = DD1K.computeWqOfN(
-      n,
-      arrivalRate,
-      serviceRate,
-      t_i,
-      capacity,
-      type
-    );
+    const wqOfN = DD1K.computeWqOfN(n, arrivalRate, serviceRate, t_i, type);
     setWqOfNVar(wqOfN);
   };
 
