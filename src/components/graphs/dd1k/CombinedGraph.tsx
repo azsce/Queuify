@@ -16,7 +16,6 @@ import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { DD1KType } from "@/types/dd1k";
 import DD1K from "@/lib/dd1k";
 import { colors } from "@/constants";
-import { getTimeAxisTicks } from "@/utils/graph";
 
 const ColorMap = {
   arrivals: "#8884d8",
@@ -96,11 +95,10 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const maxTime = DD1K.graphMaxTime(t_i);
 
-  // Generate data for each sub-graph
-  const generateData = () => {
+  // First generate basic data without timeline
+  const generateBasicData = () => {
     const data = [];
     const timeStep = 1 / arrivalRate;
-    const maxCustomers = Math.ceil(arrivalRate * t_i * 2);
     const serviceTime = 1 / serviceRate;
     const firstServiceTime = 1 / arrivalRate;
     const firstDepartureTime = 1 / arrivalRate + serviceTime;
@@ -166,58 +164,69 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
     return data;
   };
 
-  const data = generateData();
+  const basicData = generateBasicData();
 
-  // Calculate maximum values for each metric group
+  // Calculate section heights and values all at once
   const maxValues = {
     metrics: Math.max(
-      ...data.map((d) => Math.max(d.arrivals, d.departures, d.blocked))
+      ...basicData.map((d) => Math.max(d.arrivals, d.departures, d.blocked))
     ),
-    customers: Math.max(...data.map((d) => d.customers)),
-    waitingTime: Math.max(...data.map((d) => d.waitingTime)),
+    customers: Math.max(...basicData.map((d) => d.customers)),
+    waitingTime: Math.max(...basicData.map((d) => d.waitingTime)),
+    timeline: 0.5, // Fixed height for timeline
   };
 
-  // Calculate the section height based on the largest value
+  // Calculate section height and spacing
   const maxSectionValue = Math.max(...Object.values(maxValues));
-  const numberOfSections = 3; // Three main sections: metrics, customers, waiting time
   const sectionHeight = maxSectionValue;
-  const sectionSpacing = sectionHeight * 0.25; // Add 25% spacing between sections
+  const sectionSpacing = sectionHeight * 0.25;
 
-  // Define vertical offsets for each section (with spacing)
+  // Define vertical offsets
   const yAxisOffsets = {
     metrics: 0,
     customers: sectionHeight + sectionSpacing,
-    waitingTime: (sectionHeight + sectionSpacing) * 2 + sectionSpacing, // Added extra spacing
+    timeline: (sectionHeight + sectionSpacing) * 2 + sectionSpacing,
+    waitingTime: (sectionHeight + sectionSpacing) * 3 + sectionSpacing,
   };
 
-  const totalHeight = yAxisOffsets.waitingTime + sectionHeight; // Update total height
-
-  // Scale factors for each section
-  const scaleFactors = {
-    metrics: sectionHeight / maxValues.metrics,
-    customers: sectionHeight / maxValues.customers,
-    waitingTime: sectionHeight / maxValues.waitingTime,
-  };
-
-  // Adjust data for virtual Y-axis with proper scaling
-  const adjustedData = data.map((entry) => ({
+  // Add timeline data and scale everything
+  const adjustedData = basicData.map((entry) => ({
     ...entry,
-    // Scale metrics and add offset
-    arrivals: entry.arrivals * scaleFactors.metrics + yAxisOffsets.metrics,
-    departures: entry.departures * scaleFactors.metrics + yAxisOffsets.metrics,
-    blocked: entry.blocked * scaleFactors.metrics + yAxisOffsets.metrics,
-    // Scale customers and add offset
+    // Scale metrics
+    arrivals:
+      entry.arrivals * (sectionHeight / maxValues.metrics) +
+      yAxisOffsets.metrics,
+    departures:
+      entry.departures * (sectionHeight / maxValues.metrics) +
+      yAxisOffsets.metrics,
+    blocked:
+      entry.blocked * (sectionHeight / maxValues.metrics) +
+      yAxisOffsets.metrics,
+    // Scale customers
     customers:
-      entry.customers * scaleFactors.customers + yAxisOffsets.customers,
-    // Scale waiting time and add offset
+      entry.customers * (sectionHeight / maxValues.customers) +
+      yAxisOffsets.customers,
+    // Scale waiting time
     waitingTime:
-      entry.waitingTime * scaleFactors.waitingTime + yAxisOffsets.waitingTime,
+      entry.waitingTime * (sectionHeight / maxValues.waitingTime) +
+      yAxisOffsets.waitingTime,
+    // Add timeline
+    timeline: entry.service
+      ? yAxisOffsets.timeline + sectionHeight * 0.5
+      : yAxisOffsets.timeline,
+    timelineCustomer: entry.service || null,
+    timelineColor: entry.service
+      ? colors[entry.service % colors.length]
+      : "transparent",
   }));
+
+  const totalHeight = yAxisOffsets.waitingTime + sectionHeight;
 
   // Add reference lines for section divisions
   const sectionDividers = [
     sectionHeight + sectionSpacing / 2,
     yAxisOffsets.customers + sectionHeight + sectionSpacing / 2,
+    yAxisOffsets.timeline + sectionHeight + sectionSpacing / 2,
   ];
 
   // Add section labels for Y-axis with spacing
@@ -230,6 +239,30 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
     yAxisOffsets.waitingTime + sectionHeight / 2,
     totalHeight,
   ];
+
+  // Scale factors for each section (add this before the Y-axis definition)
+  const scaleFactors = {
+    metrics: sectionHeight / maxValues.metrics,
+    customers: sectionHeight / maxValues.customers,
+    waitingTime: sectionHeight / maxValues.waitingTime,
+  };
+
+  // Instead of one timeline line, create multiple lines for each customer
+  const timelineLines = Array.from(
+    new Set(basicData.filter((d) => d.service).map((d) => d.service))
+  ).map((customerNumber) => (
+    <Line
+      key={`timeline-${customerNumber}`}
+      type="step"
+      data={adjustedData.filter((d) => d.timelineCustomer === customerNumber)}
+      dataKey="timeline"
+      xAxisId="bottom"
+      stroke={colors[customerNumber % colors.length]}
+      name={`Customer ${customerNumber}`}
+      dot={false}
+      strokeWidth={3}
+    />
+  ));
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
@@ -323,7 +356,7 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
                 xAxisId={"bottom"}
               />
             ))}
-            <Tooltip content={<CustomTooltip data={data} />} />
+            <Tooltip content={<CustomTooltip data={basicData} />} />
             {/* Add lines for each metric */}
             <Line
               type="monotone"
@@ -370,28 +403,8 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
               dot={false}
               strokeWidth={2}
             />
-            {/* {adjustedData.map((entry, index) => (
-              <ReferenceLine
-                key={index}
-                x={entry.time}
-                xAxisId="bottom" // Explicitly set to "bottom"
-                stroke={
-                  entry.customerIndex === ""
-                    ? "transparent"
-                    : colors[
-                        parseInt(entry.customerIndex.slice(1)) % colors.length
-                      ]
-                }
-                label={{
-                  value: "◆",
-                  position: "top",
-                  fill: colors[
-                    parseInt(entry.customerIndex.slice(1)) % colors.length
-                  ],
-                  fontSize: 12,
-                }}
-              />
-            ))} */}
+            {/* Replace single timeline line with multiple lines */}
+            {timelineLines}
             <ReferenceLine
               x={t_i}
               xAxisId="bottom" // Explicitly set to "bottom"
