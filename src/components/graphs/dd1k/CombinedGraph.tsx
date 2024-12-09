@@ -16,63 +16,12 @@ import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { DD1KType } from "@/types/dd1k";
 import DD1K from "@/lib/dd1k";
 import { colors } from "@/constants";
-
-const ColorMap = {
-  arrivals: "#8884d8",
-  departures: "#82ca9d",
-  blocked: "red",
-  customers: "#2db300",
-  waitingTime: "#ff00a2",
-};
-
-// Custom tooltip to show correct values
-interface CustomTooltipProps {
-  active?: boolean;
-  payload?: any[];
-  label?: string;
-  data: any[];
-}
-
-const CustomTooltip: React.FC<CustomTooltipProps> = ({
-  active,
-  payload,
-  label,
-  data,
-}) => {
-  if (active && payload?.length) {
-    const originalData = data.find((d) => d.time === label);
-    return (
-      <div className="custom-tooltip">
-        <p className="label" color="text.primary">
-          {" "}
-          {`Time: ${label}`}{" "}
-        </p>
-        <p
-          className="intro"
-          color={ColorMap.arrivals}
-        >{`Arrivals: ${originalData.arrivals}`}</p>
-        <p
-          className="intro"
-          color={ColorMap.departures}
-        >{`Departures: ${originalData.departures}`}</p>
-        <p
-          className="intro"
-          color={ColorMap.blocked}
-        >{`Blocked: ${originalData.blocked}`}</p>
-        <p
-          className="intro"
-          color={ColorMap.customers}
-        >{`Customers in the System: ${originalData.customers}`}</p>
-        <p
-          className="intro"
-          color={ColorMap.waitingTime}
-        >{`Waiting Time: ${originalData.waitingTime}`}</p>
-      </div>
-    );
-  }
-
-  return null;
-};
+import { ColorMap } from "@/constants/graphColors";
+import CustomTooltip from "./CustomTooltip";
+import {
+  generateBasicData,
+  calculateSectionHeights,
+} from "@/utils/graphDataUtils";
 
 interface CombinedGraphProps {
   arrivalRate: number;
@@ -95,91 +44,18 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const maxTime = DD1K.graphMaxTime(t_i);
 
-  // First generate basic data without timeline
-  const generateBasicData = () => {
-    const data = [];
-    const timeStep = 1 / arrivalRate;
-    const serviceTime = 1 / serviceRate;
-    const firstServiceTime = 1 / arrivalRate;
-    const firstDepartureTime = 1 / arrivalRate + serviceTime;
-    let totalBlocked = 0;
-    let currentCustomer = 1;
-
-    for (let t = 0; t <= maxTime; t += timeStep) {
-      const arrivals = Math.floor(t * arrivalRate);
-      const departures = Math.floor(t * serviceRate);
-      const isBlocked = DD1K.isCustomerBlocked(
-        t,
-        arrivalRate,
-        serviceRate,
-        capacity,
-        t_i,
-        systemType
-      );
-
-      if (isBlocked) {
-        totalBlocked++;
-      }
-
-      const customers = DD1K.computeNOfT(
-        t,
-        arrivalRate,
-        serviceRate,
-        t_i,
-        capacity,
-        systemType
-      );
-
-      const waitingTime = DD1K.computeWqOfN(
-        customers,
-        arrivalRate,
-        serviceRate,
-        t_i,
-        systemType
-      );
-
-      const customerNumber = Math.floor(t * arrivalRate) + 1; // Add this line
-
-      data.push({
-        time: Math.round(t).toString(), // Ensure time is rounded to whole numbers
-        customer: customerNumber.toString(), // Add this line
-        arrivals: arrivals,
-        departures: departures,
-        blocked: totalBlocked,
-        customers: customers,
-        waitingTime: waitingTime,
-        service:
-          t >= firstServiceTime &&
-          (t - firstServiceTime) % serviceTime < timeStep
-            ? currentCustomer
-            : null,
-        departure:
-          t >= firstDepartureTime &&
-          (t - firstDepartureTime) % serviceTime < timeStep
-            ? currentCustomer++
-            : null,
-        customerIndex: `C${currentCustomer}`, // Ensure customerIndex is defined
-      });
-    }
-    return data;
-  };
-
-  const basicData = generateBasicData();
-
-  // Calculate section heights and values all at once
-  const maxValues = {
-    metrics: Math.max(
-      ...basicData.map((d) => Math.max(d.arrivals, d.departures, d.blocked))
-    ),
-    customers: Math.max(...basicData.map((d) => d.customers)),
-    waitingTime: Math.max(...basicData.map((d) => d.waitingTime)),
-    timeline: 0.5, // Fixed height for timeline
-  };
+  const basicData = generateBasicData(
+    maxTime,
+    arrivalRate,
+    serviceRate,
+    capacity,
+    t_i,
+    systemType
+  );
 
   // Calculate section height and spacing
-  const maxSectionValue = Math.max(...Object.values(maxValues));
-  const sectionHeight = maxSectionValue;
-  const sectionSpacing = sectionHeight * 0.25;
+  const { maxValues, sectionHeight, sectionSpacing } =
+    calculateSectionHeights(basicData);
 
   // Define vertical offsets
   const yAxisOffsets = {
