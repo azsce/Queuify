@@ -15,13 +15,13 @@ import {
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { DD1KType } from "@/types/dd1k";
 import DD1K from "@/lib/dd1k";
-import { colors } from "@/constants";
 import { ColorMap } from "@/constants/graphColors";
 import CustomTooltip from "./CustomTooltip";
 import {
   generateBasicData,
   calculateSectionHeights,
 } from "@/utils/graphDataUtils";
+import TimelineLines from "./TimelineUtils";
 
 interface CombinedGraphProps {
   arrivalRate: number;
@@ -86,14 +86,6 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
     waitingTime:
       entry.waitingTime * (sectionHeight / maxValues.waitingTime) +
       yAxisOffsets.waitingTime,
-    // Add timeline
-    timeline: entry.service
-      ? yAxisOffsets.timeline + sectionHeight * 0.5
-      : yAxisOffsets.timeline,
-    timelineCustomer: entry.service || null,
-    timelineColor: entry.service
-      ? colors[entry.service % colors.length]
-      : "transparent",
   }));
 
   const totalHeight = yAxisOffsets.waitingTime + sectionHeight;
@@ -122,23 +114,6 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
     customers: sectionHeight / maxValues.customers,
     waitingTime: sectionHeight / maxValues.waitingTime,
   };
-
-  // Instead of one timeline line, create multiple lines for each customer
-  const timelineLines = Array.from(
-    new Set(basicData.filter((d) => d.service).map((d) => d.service))
-  ).map((customerNumber) => (
-    <Line
-      key={`timeline-${customerNumber}`}
-      type="step"
-      data={adjustedData.filter((d) => d.timelineCustomer === customerNumber)}
-      dataKey="timeline"
-      xAxisId="bottom"
-      stroke={colors[customerNumber % colors.length]}
-      name={`Customer ${customerNumber}`}
-      dot={false}
-      strokeWidth={3}
-    />
-  ));
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
@@ -279,8 +254,15 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
               dot={false}
               strokeWidth={2}
             />
-            {/* Replace single timeline line with multiple lines */}
-            {timelineLines}
+            {/* Replace single timeline line with new timeline generation */}
+            <TimelineLines
+              adjustedData={adjustedData}
+              config={{
+                yAxisOffsets,
+                sectionHeight,
+                xAxisId: "bottom",
+              }}
+            />
             <ReferenceLine
               x={t_i}
               xAxisId="bottom" // Explicitly set to "bottom"
@@ -295,6 +277,9 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
           </LineChart>
         </ResponsiveContainer>
       </Box>
+      <Typography variant="caption" sx={{ mt: 1, textAlign: "center" }}>
+        ○ Arrival • □ Service Start • ◆ Departure
+      </Typography>
     </Box>
   );
 };

@@ -9,8 +9,9 @@ interface BasicData {
   blocked: number;
   customers: number;
   waitingTime: number;
-  service: number | null;
-  departure: number | null;
+  customerArrives: string;
+  customerEnteringService: string;
+  customerDeparting: string;
   customerIndex: string;
 }
 
@@ -73,15 +74,16 @@ export const generateBasicData = (
       blocked: totalBlocked,
       customers,
       waitingTime,
-      service:
+      customerArrives: t > 0 ? `C${customerNumber}` : "",
+      customerEnteringService:
         t >= firstServiceTime && (t - firstServiceTime) % serviceTime < timeStep
-          ? currentCustomer
-          : null,
-      departure:
+          ? `C${currentCustomer}`
+          : "",
+      customerDeparting:
         t >= firstDepartureTime &&
         (t - firstDepartureTime) % serviceTime < timeStep
-          ? currentCustomer++
-          : null,
+          ? `C${currentCustomer++}`
+          : "",
       customerIndex: `C${currentCustomer}`,
     });
   }
