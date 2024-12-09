@@ -60,7 +60,7 @@
  *
  *
  *
- * -----------------------------------------------------------
+ * -------------------------39----------------------------------
  * Case 2: λ ≤ μ or 1/λ ≥ 1/μ
  * -----------------------------------------------------------
  * This case occurs when the service rate is sufficient to keep up with the arrival rate. The queue remains stable
@@ -76,7 +76,7 @@
  *    Wq(n) = (M - 1 + n) * (1/μ) - n * (1/λ)
  * 2. For n >= λ * t_i, Wq(n) = 0.
  * 3. For λ = μ, Wq(n) = (M - 1) * (1/μ) for all customers.
- *
+ *39
  * Algorithm for Finding t_i Using Trial and Error
  * The key part of this system is finding the time t_i, the time of the first balk when the queue reaches capacity k.
  * This requires trial and error to find the smallest t_i that satisfies the equation.
@@ -139,19 +139,6 @@ namespace DD1K {
     if (arrivalRate % serviceRate === 0) {
       systemType = "(λ > μ) && λ%μ = 0";
     }
-
-    // const n_t = {
-    //   tLessThan1OverLambda: `0`,
-    //   tBetween1OverLambdaAndTi: `⌊t/${arrivalRateFraction.denominator}⌋ - ⌊t/${serviceRateFraction.denominator} - ${arrivalRateFraction.denominator}/${serviceRateFraction.denominator}⌋`,
-    //   tGreaterThanOrEqualTi: `⌊t/${arrivalRateFraction.denominator}⌋ - ⌊t/${serviceRateFraction.denominator} - ${arrivalRateFraction.denominator}/${serviceRateFraction.denominator}⌋`,
-    // };
-
-    // // Define the equations for Wq(n) in its three states
-    // const Wq_n = {
-    //   n0: `0`,
-    //   nLessThanLambdaTi: `(1 / ${serviceRateFraction.numerator}/${serviceRateFraction.denominator} - 1 / ${arrivalRateFraction.numerator}/${arrivalRateFraction.denominator}) * (n - 1)`,
-    //   nGreaterThanOrEqualLambdaTi: `0`,
-    // };
 
     return {
       type: systemType,
