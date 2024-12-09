@@ -1,6 +1,6 @@
 "use client";
 
-import { JSX, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -31,11 +31,11 @@ import { Process } from "@/types/queue";
 export default function QueuingTheoryCalculator() {
   const [queueType, setQueueType] = useState<Process>("D/D");
   const [servers, setServers] = useState<number | undefined>(1);
-  const [capacity, setCapacity] = useState<number | undefined>();
-  const [arrivalRate, setArrivalRate] = useState("");
-  const [serviceRate, setServiceRate] = useState("");
-  const [arrivalTime, setArrivalTime] = useState("");
-  const [serviceTime, setServiceTime] = useState("");
+  const [capacity, setCapacity] = useState<number | undefined>(5);
+  const [arrivalRate, setArrivalRate] = useState("0.25");
+  const [serviceRate, setServiceRate] = useState("0.125");
+  const [arrivalTime, setArrivalTime] = useState("4");
+  const [serviceTime, setServiceTime] = useState("8");
   const [error, setError] = useState("");
   const [results, setResults] = useState<JSX.Element | null>(null);
 

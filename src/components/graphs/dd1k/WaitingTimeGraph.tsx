@@ -101,11 +101,7 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
           >
             <CartesianGrid strokeDasharray="3 3" />
             {!showTopAxis && !showBottomAxis && (
-              <XAxis 
-                dataKey="customer"
-                xAxisId="default"
-                hide={true}
-              />
+              <XAxis dataKey="customer" xAxisId="default" hide={true} />
             )}
             {showTopAxis && (
               <XAxis
@@ -153,11 +149,15 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
               name="Waiting Time"
               dot={false}
               strokeWidth={2}
-              xAxisId={showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
             />
             <ReferenceLine
               x={arrivalRate * t_i}
-              xAxisId={showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
               stroke={theme.palette.warning.main}
               label={{
                 value: `n = λ * t_i`,
