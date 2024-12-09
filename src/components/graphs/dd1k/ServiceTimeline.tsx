@@ -155,10 +155,11 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
-                dy: 90,
+                dy: 70,
               }}
               tickCount={1}
               tickFormatter={() => ""} // Add tick formatter
+              stroke={theme.palette.primary.main}
             />
             <Tooltip />
             {data.map((entry, index) => (

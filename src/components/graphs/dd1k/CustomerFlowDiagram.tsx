@@ -123,6 +123,7 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                   offset: -25,
                 }}
                 tick={{ dy: -10 }}
+                stroke={theme.palette.primary.main}
               />
             )}
             {/* Keep existing bottom axis for customer index */}
@@ -139,6 +140,7 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                 }}
                 height={40}
                 tick={{ dy: 10 }}
+                stroke={theme.palette.primary.main}
               />
             )}
             {!showTopAxis && !showBottomAxis && (
@@ -146,13 +148,14 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
             )}
             <YAxis
               label={{
-                value: "Customers",
+                value: "Customer Flow",
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
-                dy: 90,
+                dy: 60,
               }}
               allowDecimals={false}
+              stroke={theme.palette.primary.main}
             />
             <Tooltip />
             <Line

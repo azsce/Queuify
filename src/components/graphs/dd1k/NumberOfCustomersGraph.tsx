@@ -104,11 +104,7 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
           >
             <CartesianGrid strokeDasharray="3 3" />
             {!showTopAxis && !showBottomAxis && (
-              <XAxis 
-                dataKey="time"
-                xAxisId="default"
-                hide={true}
-              />
+              <XAxis dataKey="time" xAxisId="default" hide={true} />
             )}
             {showTopAxis && (
               <XAxis
@@ -144,10 +140,11 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
-                dy: 90,
+                dy: 105,
               }}
               allowDecimals={false}
               domain={[0, capacity]}
+              stroke={theme.palette.primary.main}
             />
             <Tooltip />
             <Line
@@ -157,11 +154,15 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
               name="Customers in System"
               dot={false}
               strokeWidth={2}
-              xAxisId={showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"} // Add this line
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              } // Add this line
             />
             <ReferenceLine
               x={t_i}
-              xAxisId={showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
               stroke={theme.palette.warning.main}
               label={{
                 value: `t = t_i`,

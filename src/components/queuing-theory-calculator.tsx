@@ -24,9 +24,10 @@ import {
   CardContent,
   Typography,
   Box,
-  Grid,
+  Container,
 } from "@mui/material";
 import { Process } from "@/types/queue";
+import Grid from "@mui/material/Grid2";
 
 export default function QueuingTheoryCalculator() {
   const [queueType, setQueueType] = useState<Process>("D/D");
@@ -138,19 +139,20 @@ export default function QueuingTheoryCalculator() {
   };
 
   return (
-    <Box
-      sx={(theme) => ({
-        py: 4,
-        maxWidth: "100%",
-        [theme.breakpoints.up("sm")]: {
-          maxWidth: theme.breakpoints.values.sm,
-        },
-        [theme.breakpoints.up("md")]: {
-          maxWidth: theme.breakpoints.values.xl,
-        },
-        marginLeft: "auto",
-        marginRight: "auto",
-      })}
+    <Container
+      maxWidth="lg"
+      // sx={(theme) => ({
+      //   py: 4,
+      //   maxWidth: "100%",
+      //   [theme.breakpoints.up("sm")]: {
+      //     maxWidth: theme.breakpoints.values.sm,
+      //   },
+      //   [theme.breakpoints.up("sm")]: {
+      //     maxWidth: theme.breakpoints.values.xl,
+      //   },
+      //   marginLeft: "auto",
+      //   marginRight: "auto",
+      // })}
     >
       <Card>
         <CardHeader>
@@ -179,9 +181,10 @@ export default function QueuingTheoryCalculator() {
               arrivalTime={arrivalTime}
               serviceTime={serviceTime}
             />
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={12} sm={3} />
-              <Grid item xs={12} sm={6} container justifyContent="center">
+            <Grid size={12} container spacing={0} alignItems="start">
+              {/* Empty Column */}
+              <Grid size={1} />
+              <Grid size={11} justifyContent={"start"}>
                 <Button variant="contained" onClick={handleCalculate} fullWidth>
                   Calculate
                 </Button>
@@ -211,6 +214,6 @@ export default function QueuingTheoryCalculator() {
           </Box>
         </CardContent>
       </Card>
-    </Box>
+    </Container>
   );
 }

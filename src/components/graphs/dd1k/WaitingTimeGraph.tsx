@@ -30,7 +30,6 @@ interface WaitingTimeGraphProps {
 const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
   arrivalRate,
   serviceRate,
-  capacity,
   t_i,
   systemType,
   height,
@@ -129,6 +128,7 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                 }}
                 height={40}
                 tick={{ dy: 10 }}
+                stroke={theme.palette.primary.main}
               />
             )}
             <YAxis
@@ -137,9 +137,10 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
-                dy: 90,
+                dy: 85,
               }}
               allowDecimals={false}
+              stroke={theme.palette.primary.main}
             />
             <Tooltip />
             <Line

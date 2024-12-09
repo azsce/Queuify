@@ -44,12 +44,16 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
   serviceRateFraction,
   t_i,
 }) => {
+  const kMinus1 = capacity - 1;
+  const kMinus2 = capacity - 2;
+
   let t_greaterOrEqual_ti = "";
   if (type === "λ > μ") {
-    t_greaterOrEqual_ti = "\\text{ alternates between } k-1 \\text{ and } k-2";
+    t_greaterOrEqual_ti = `\\text{ alternates between } ${kMinus1} \\text{ and } ${kMinus2}`;
   } else if (type === "(λ > μ) && λ%μ = 0") {
-    t_greaterOrEqual_ti = "\\text{ = } k-1";
+    t_greaterOrEqual_ti = `\\text{ = } ${kMinus1}`;
   }
+
   const n_t: N_Of_T = {
     t_lessThan_arrivalTime: `0`,
     t_between_arrivalTime_and_ti: `⌊t/${arrivalRateFraction.denominator}⌋ - ⌊t/${serviceRateFraction.denominator} - ${arrivalRateFraction.denominator}/${serviceRateFraction.denominator}⌋`,
@@ -60,6 +64,11 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
     serviceRateFraction.denominator - arrivalRateFraction.denominator;
 
   let nGreaterThanOrEqualLambdaTi = "";
+  // if (type === "λ > μ") {
+  //   nGreaterThanOrEqualLambdaTi = `\\text{ alternates between } ${service_minus_arrival_time}(${kMinus1}) \\text{ and } ${service_minus_arrival_time}(${kMinus2})`;
+  // } else if (type === "(λ > μ) && λ%μ = 0") {
+  //   nGreaterThanOrEqualLambdaTi = `\\text{ = } ${service_minus_arrival_time}(${kMinus1})`;
+  // }
   if (type === "λ > μ") {
     nGreaterThanOrEqualLambdaTi = `\\text{ alternates between } ${service_minus_arrival_time}(\\lambda t_i - 2) \\text{ and } ${service_minus_arrival_time}(\\lambda t_i - 3)`;
   } else if (type === "(λ > μ) && λ%μ = 0") {

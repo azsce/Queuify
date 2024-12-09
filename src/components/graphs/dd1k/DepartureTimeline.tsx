@@ -159,6 +159,7 @@ const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
               }}
               tickCount={1}
               tickFormatter={() => ""} // Add tick formatter
+              stroke={theme.palette.primary.main}
             />
             <Tooltip />
             {data.map((entry, index) => (
