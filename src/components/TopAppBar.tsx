@@ -7,11 +7,11 @@ import { Home as HomeIcon } from "@mui/icons-material";
 const links = [
   {
     label: "Home",
-    href: "/",
+    href: "/Queue",
   },
   {
     label: "D/D/1/(k-1)",
-    href: "/dd1k",
+    href: "/Queue/dd1k",
   },
   // {
   //     label: "M/M/1",

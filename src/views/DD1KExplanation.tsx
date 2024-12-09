@@ -156,6 +156,99 @@ const DD1KExplanation = () => {
               </Box>
             </Box>
           </section>
+
+          <Divider />
+
+          <section>
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{
+                fontSize: { xs: "1.25rem", sm: "1.5rem", md: "1.75rem" },
+              }}
+            >
+              Function Algorithms
+            </Typography>
+
+            <Box sx={{ ml: { xs: 2, sm: 4 }, gap: { xs: 2, sm: 3, md: 4 } }}>
+              <Typography variant="subtitle1" sx={{ mt: 2 }}>
+                Finding First Balk Time (t_i):
+              </Typography>
+              <Typography variant="body1">
+                The algorithm iteratively increments time by the inter-arrival
+                time (1/λ) until it finds the first time when the number of
+                customers in the system reaches or exceeds capacity:
+              </Typography>
+              <MathJax>{`\\[
+                \\text{At each step: } \\lambda t_i - (\\mu t_i - \\frac{\\mu}{\\lambda}) \\geq k
+              \\]`}</MathJax>
+
+              <Typography variant="subtitle1" sx={{ mt: 3 }}>
+                Computing n(t) - Number of Customers:
+              </Typography>
+              <Typography variant="body1">
+                The algorithm has three phases:
+              </Typography>
+              <Box sx={{ ml: { xs: 3, sm: 5 } }}>
+                <Typography>1. Empty queue (t {"<"} 1/λ): n(t) = 0</Typography>
+                <Typography>2. Filling phase (1/λ ≤ t {"<"} t_i):</Typography>
+                <MathJax>{`\\[
+                  n(t) = \\lfloor\\lambda t\\rfloor - \\lfloor\\mu t - \\frac{\\mu}{\\lambda}\\rfloor
+                \\]`}</MathJax>
+                <Typography>
+                  3. Steady state (t ≥ t_i): Alternates between k-1 and k-2
+                </Typography>
+              </Box>
+
+              <Typography variant="subtitle1" sx={{ mt: 3 }}>
+                Service Completion Check:
+              </Typography>
+              <Typography variant="body1">
+                Determines if a service completion occurs at time t by checking
+                if the time since first service is a multiple of service time:
+              </Typography>
+              <MathJax>{`\\[
+                \\text{Check if } \\frac{t - 1/\\lambda}{1/\\mu} \\text{ is an integer}
+              \\]`}</MathJax>
+
+              <Typography variant="subtitle1" sx={{ mt: 3 }}>
+                Blocking Check Algorithm:
+              </Typography>
+              <Typography variant="body1">
+                A customer is blocked when:
+              </Typography>
+              <Box sx={{ ml: { xs: 3, sm: 5 } }}>
+                <Typography>1. t = t_i (first blocking)</Typography>
+                <Typography>2. t {">"} t_i and:</Typography>
+                <Box sx={{ ml: 2 }}>
+                  <Typography>
+                    - Queue is at capacity (k-1) with no service completion, or
+                  </Typography>
+                  <Typography>- Queue is full (k)</Typography>
+                </Box>
+              </Box>
+
+              <Typography variant="subtitle1" sx={{ mt: 3 }}>
+                Waiting Time Calculation (Wq(n)):
+              </Typography>
+              <Typography variant="body1">
+                The algorithm computes waiting times differently based on
+                customer arrival sequence:
+              </Typography>
+              <Box sx={{ ml: { xs: 3, sm: 5 } }}>
+                <Typography>1. For n {"<"} λt_i:</Typography>
+                <MathJax>{`\\[
+                  W_q(n) = (\\frac{1}{\\mu} - \\frac{1}{\\lambda})(n - 1)
+                \\]`}</MathJax>
+                <Typography>2. For n ≥ λt_i:</Typography>
+                <Typography>Alternates between:</Typography>
+                <MathJax>{`\\[
+                  (\\frac{1}{\\mu} - \\frac{1}{\\lambda})(\\lambda t_i - 2) \\text{ and }
+                  (\\frac{1}{\\mu} - \\frac{1}{\\lambda})(\\lambda t_i - 3)
+                \\]`}</MathJax>
+              </Box>
+            </Box>
+          </section>
         </Box>
       </Container>
     </MathJaxContext>
