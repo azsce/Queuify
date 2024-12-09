@@ -61,32 +61,46 @@
  *
  *
  * -------------------------39----------------------------------
- * Case 2: λ ≤ μ or 1/λ ≥ 1/μ
+ *Case 2: λ ≤ μ or 1/λ ≥ 1/μ
  * -----------------------------------------------------------
- * This case occurs when the service rate is sufficient to keep up with the arrival rate. The queue remains stable
- * with either 1 or 0 customers.
+ *This scenario ensures there is never more than one customer in the system,
+ *leading to n(t) being either 1 or 0. Waiting time Wq(n) is zero for all n.
+ *The study focuses on transient characteristics when starting with M initial
+ *customers in the system until steady state is achieved at n(t) = 1 or 0.
  *
- * Step 2: Calculate the steady-state queue
- * 1. For t < 1/λ, n(t) = 0 (queue is empty).
- * 2. For 1/λ ≤ t < t_i, n(t) increases based on arrival and service rates.
- * 3. For t ≥ t_i, n(t) stabilizes at either 0 or 1 customer in the system.
+ * **Transient Analysis**
+ * Let t_i denote the time the steady state is reached:
  *
- * Step 3: Compute Waiting Times (Wq(n))
- * 1. For initial customers (M), compute the waiting time as:
- *    Wq(n) = (M - 1 + n) * (1/μ) - n * (1/λ)
- * 2. For n >= λ * t_i, Wq(n) = 0.
- * 3. For λ = μ, Wq(n) = (M - 1) * (1/μ) for all customers.
- *39
- * Algorithm for Finding t_i Using Trial and Error
- * The key part of this system is finding the time t_i, the time of the first balk when the queue reaches capacity k.
- * This requires trial and error to find the smallest t_i that satisfies the equation.
+ * For λ < μ:
+ * n(t) = M + ⌊λt⌋ - ⌊μt⌋
+ * For λ = μ:
+ * t_i = 0, no transient phase exists, and n(t) = M.
  *
- * 1. Solve the equation: k = ⌊λ * t_i⌋ - ⌊μ * t_i - μ / λ⌋
+ * **Finding t_i**
+ * t_i is determined as the smallest t such that n(t) = 0:
+ * 0 = M + ⌊λt⌋ - ⌊μt⌋
+ * M = ⌊λt⌋ - ⌊μt⌋
+ *
+ * **Average Waiting Time, Wq(n):**
+ *
+ * 1. Initial Average Waiting Time for M Customers:
+ * W_q(0) = (M - 1) / (2μ)
+ *
+ * 2. For n < ⌊λt⌋:
+ * Wq(n) = (M - 1 + n)(1/μ) - n(1/λ)
+ *
+ * 3. For n ≥ ⌊λt⌋:
+ * Wq(n) = 0
+ *
+ * For λ = μ:
+ * Wq(n) = (M - 1)(1/μ) for all customers.
+ *
  */
 
 import { EPSILON } from "@/constants";
 import { DD1KCharacteristics, DD1KType } from "@/types/dd1k";
 import { Fraction } from "@/types/math";
+import { Dispatch, SetStateAction } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace DD1K {
@@ -100,11 +114,9 @@ namespace DD1K {
   export function dd1k(
     arrivalRate: number,
     serviceRate: number,
-    capacity: number
+    capacity: number,
+    initialCustomers?: number
   ): DD1KCharacteristics {
-    // Calculate the time of first balk (t1)
-    const t1 = findFirstBalkTime(arrivalRate, serviceRate, capacity);
-
     // Convert rates to fractions
     const arrivalRateFraction = toProperFraction(arrivalRate);
     const serviceRateFraction = toProperFraction(serviceRate);
@@ -116,9 +128,20 @@ namespace DD1K {
         serviceRate,
         capacity,
         arrivalRateFraction,
-        serviceRateFraction,
-        t1
+        serviceRateFraction
       );
+    } else if (arrivalRate === serviceRate) {
+      const result: DD1KCharacteristics = {
+        type: "λ = μ",
+        arrivalRate: arrivalRate,
+        serviceRate: serviceRate,
+        arrivalRateFraction: arrivalRateFraction,
+        serviceRateFraction: serviceRateFraction,
+        capacity: capacity,
+        t_i: 0,
+        initialCustomers: initialCustomers,
+      };
+      return result;
     }
     // else {
     //   // Handle Case 2: λ ≤ μ
@@ -132,13 +155,20 @@ namespace DD1K {
     serviceRate: number,
     capacity: number,
     arrivalRateFraction: Fraction,
-    serviceRateFraction: Fraction,
-    t_i: number
+    serviceRateFraction: Fraction
   ): DD1KCharacteristics {
     let systemType: DD1KType = "λ > μ";
     if (arrivalRate % serviceRate === 0) {
       systemType = "(λ > μ) && λ%μ = 0";
     }
+
+    // Calculate the time of first balk (t1)
+    const t_i = findFirstBalkTime(
+      arrivalRate,
+      serviceRate,
+      capacity,
+      systemType
+    );
 
     return {
       type: systemType,
@@ -151,6 +181,15 @@ namespace DD1K {
     };
   }
 
+  function arrivalSmallerThanservice(
+    arrivalRate: number,
+    serviceRate: number,
+    capacity: number
+  ): DD1KCharacteristics {
+    // Handle Case 2: λ ≤ μ
+    return null;
+  }
+
   /**
    * Finds the first time the system reaches capacity.
    * @param arrivalRate - The rate at which customers arrive.
@@ -161,8 +200,12 @@ namespace DD1K {
   function findFirstBalkTime(
     arrivalRate: number,
     serviceRate: number,
-    capacity: number
+    capacity: number,
+    type: DD1KType
   ): number {
+    if (type === "λ < μ" || type === "λ = μ") {
+      return 0;
+    }
     let t_i = 0;
     while (true) {
       t_i += 1 / arrivalRate; // Increment by inter-arrival time

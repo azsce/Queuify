@@ -3,7 +3,22 @@ import Grid from "@mui/material/Grid2";
 import InfinityLinkIndicator from "../InfinityLinkIndicator";
 import { Box } from "@mui/material";
 
-export default function InputParameters({
+type InputParametersProps = {
+  setArrivalRate: (value: string) => void;
+  setServiceRate: (value: string) => void;
+  arrivalRate: string;
+  serviceRate: string;
+  setArrivalTime: (value: string) => void;
+  setServiceTime: (value: string) => void;
+  arrivalTime: string;
+  serviceTime: string;
+  initialCutsomers?: number;
+  setInitialCustomers?: (value: number) => void;
+};
+
+
+
+const InputParameters: React.FC<InputParametersProps> = ({
   setArrivalRate,
   setServiceRate,
   arrivalRate,
@@ -12,7 +27,7 @@ export default function InputParameters({
   setServiceTime,
   arrivalTime,
   serviceTime,
-}) {
+}) => {
   return (
     <Grid container spacing={2}>
       {/* Service Rate-Time */}
@@ -50,7 +65,7 @@ export default function InputParameters({
                 onChange={(e) => {
                   setServiceRate(e.target.value);
                   if (e.target.value) {
-                    setServiceTime(1 / parseFloat(e.target.value));
+                    setServiceTime((1 / parseFloat(e.target.value)).toString());
                   }
                 }}
                 placeholder="Enter service rate"
@@ -66,7 +81,7 @@ export default function InputParameters({
                 onChange={(e) => {
                   setServiceTime(e.target.value);
                   if (e.target.value) {
-                    setServiceRate(1 / parseFloat(e.target.value));
+                    setServiceRate((1 / parseFloat(e.target.value)).toString());
                   }
                 }}
                 placeholder="Enter service time"
@@ -115,7 +130,7 @@ export default function InputParameters({
                 onChange={(e) => {
                   setArrivalRate(e.target.value);
                   if (e.target.value) {
-                    setArrivalTime(1 / parseFloat(e.target.value));
+                    setArrivalTime((1 / parseFloat(e.target.value)).toString());
                   }
                 }}
                 placeholder="Enter arrival rate"
@@ -131,7 +146,7 @@ export default function InputParameters({
                 onChange={(e) => {
                   setArrivalTime(e.target.value);
                   if (e.target.value) {
-                    setArrivalRate(1 / parseFloat(e.target.value));
+                    setArrivalRate((1 / parseFloat(e.target.value)).toString());
                   }
                 }}
                 placeholder="Enter arrival time"
@@ -143,4 +158,6 @@ export default function InputParameters({
       </Grid>
     </Grid>
   );
-}
+};
+
+export default InputParameters;

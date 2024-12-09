@@ -8,9 +8,10 @@ export type DD1KCharacteristics = {
   arrivalRateFraction: Fraction;
   serviceRateFraction: Fraction;
   t_i: number;
+  initialCustomers?: number;
 };
 
-export type DD1KType = "λ > μ" | "(λ > μ) && λ%μ = 0";
+export type DD1KType = "λ > μ" | "(λ > μ) && λ%μ = 0" | "λ < μ" | "λ = μ";
 
 export type N_Of_T = {
   t_lessThan_arrivalTime: string; // t < 1/λ

@@ -1,6 +1,6 @@
 "use client";
 
-import { JSX, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -30,6 +30,7 @@ import { Process } from "@/types/queue";
 import Grid from "@mui/material/Grid2";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
+import { NoNumberArrowsTextField } from "./NoNumberArrowsTextField";
 
 export default function QueuingTheoryCalculator() {
   const [queueType, setQueueType] = useState<Process>("D/D");
@@ -41,6 +42,24 @@ export default function QueuingTheoryCalculator() {
   const [serviceTime, setServiceTime] = useState("8");
   const [error, setError] = useState("");
   const [results, setResults] = useState<JSX.Element | null>(null);
+
+  const [isInitialCutsomersRequired, setIsInitialCutsomersRequired] =
+    useState(false);
+  const [initialCustomers, setInitialCustomers] = useState<
+    number | undefined
+  >();
+
+  useEffect(() => {
+    if (queueType === "D/D") {
+      if (arrivalRate === serviceRate || arrivalRate < serviceRate) {
+        setIsInitialCutsomersRequired(true);
+      } else {
+        setIsInitialCutsomersRequired(false);
+      }
+    } else {
+      setIsInitialCutsomersRequired(false);
+    }
+  }, [queueType, arrivalRate, serviceRate]);
 
   const handleCalculate = () => {
     // Clear previous errors and results
@@ -125,12 +144,17 @@ export default function QueuingTheoryCalculator() {
       //   setResults(<DD1Results results={results} />);
       // } else
       if (queueType === "D/D" && servers === 1 && capacity !== null) {
-        characteristics = DD1K.dd1k(
-          parseFloat(arrivalRate),
-          parseFloat(serviceRate),
-          capacity
-        );
-        setResults(<DD1KResults characteristics={characteristics} />);
+        if (arrivalRate === serviceRate || arrivalRate < serviceRate) {
+          setIsInitialCutsomersRequired(true);
+        } else {
+          characteristics = DD1K.dd1k(
+            parseFloat(arrivalRate),
+            parseFloat(serviceRate),
+            capacity,
+            initialCustomers
+          );
+          setResults(<DD1KResults characteristics={characteristics} />);
+        }
       } else {
         setError("Unsupported queue configuration.");
         return;
@@ -189,6 +213,27 @@ export default function QueuingTheoryCalculator() {
                 arrivalTime={arrivalTime}
                 serviceTime={serviceTime}
               />
+              {isInitialCutsomersRequired && (
+                <Grid container spacing={2}>
+                  <Grid size={{ xs: 12, sm: 6 }} container>
+                    {/* Empty Column */}
+                    <Grid size={1} />
+                    <Grid size={11}>
+                      <NoNumberArrowsTextField
+                        label="Initial Customers: M"
+                        value={initialCustomers}
+                        onChange={(e) =>
+                          setInitialCustomers(parseInt(e.target.value))
+                        }
+                        required
+                        autoComplete="initial-customers"
+                        sx={{ width: "100%" }}
+                        error={isInitialCutsomersRequired && !initialCustomers}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              )}
               <Grid size={12} container spacing={0} alignItems="start">
                 {/* Empty Column */}
                 <Grid size={1} />
