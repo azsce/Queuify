@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import { DD1KType } from "@/types/dd1k";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import DD1K from "@/lib/dd1k";
+import { DD1KλExceedμ } from "@/lib/dd1k";
 
 interface WaitingTimeGraphProps {
   arrivalRate: number;
@@ -43,7 +43,7 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
     const data = [];
 
     for (let n = 0; n <= maxCustomers; n++) {
-      const waitingTime = DD1K.computeWqOfN(
+      const waitingTime = DD1KλExceedμ.computeWqOfN(
         n,
         arrivalRate,
         serviceRate,

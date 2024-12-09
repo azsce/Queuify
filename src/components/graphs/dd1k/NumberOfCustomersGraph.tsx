@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import DD1K from "@/lib/dd1k";
+import DD1K, { DD1KλExceedμ } from "@/lib/dd1k";
 import { DD1KType } from "@/types/dd1k";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { getTimeAxisTicks } from "@/utils/graph";
@@ -45,7 +45,7 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
     const timeStep = 1;
 
     for (let t = 0; t <= maxTime; t += timeStep) {
-      const customers = DD1K.computeNOfT(
+      const customers = DD1KλExceedμ.computeNOfT(
         t,
         arrivalRate,
         serviceRate,

@@ -1,5 +1,5 @@
 import { Line } from "recharts";
-import { DD1KBasicData } from "@/utils/graphDataUtils";
+import { DD1KBasicData } from "@/graph/dD1KgraphDataUtils";
 import { colors } from "@/constants";
 
 const t_arrival = "arrival_";

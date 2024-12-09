@@ -13,7 +13,7 @@ import InputParameters from "@/components/queuing/InputParameters";
 // import MMCResults from "@/components/results/MMCResults";
 // import MMCKResults from "@/components/results/MMCKResults";
 // import DD1Results from "@/components/results/DD1Results";
-import DD1KResults from "@/components/results/DD1KResults";
+import DD1KResults from "@/components/results/DD1K/DD1KResults";
 import ProcessTypeSelector from "@/components/queuing/ProcessTypeSelector";
 // import { MathJaxContext } from "better-react-mathjax";
 import { DD1KCharacteristics } from "@/types/dd1k";
@@ -146,15 +146,18 @@ export default function QueuingTheoryCalculator() {
       if (queueType === "D/D" && servers === 1 && capacity !== null) {
         if (arrivalRate === serviceRate || arrivalRate < serviceRate) {
           setIsInitialCutsomersRequired(true);
-        } else {
-          characteristics = DD1K.dd1k(
-            parseFloat(arrivalRate),
-            parseFloat(serviceRate),
-            capacity,
-            initialCustomers
-          );
-          setResults(<DD1KResults characteristics={characteristics} />);
+          if (!initialCustomers) {
+            setError("Please enter initial customers.");
+            return;
+          }
         }
+        characteristics = DD1K.dd1k(
+          parseFloat(arrivalRate),
+          parseFloat(serviceRate),
+          capacity,
+          initialCustomers
+        );
+        setResults(<DD1KResults characteristics={characteristics} />);
       } else {
         setError("Unsupported queue configuration.");
         return;

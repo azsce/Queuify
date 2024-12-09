@@ -13,7 +13,7 @@ import {
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 
 import { DD1KType } from "@/types/dd1k";
-import DD1K from "@/lib/dd1k";
+import DD1K, { DD1KλExceedμ } from "@/lib/dd1k";
 import { colors } from "@/constants";
 
 interface ArrivalTimelineProps {
@@ -58,7 +58,7 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
     // Generate rest of the timeline
     for (let t = timeStep; t <= maxTime; t += timeStep) {
       const arrivals = Math.floor(t * arrivalRate);
-      const blocked = DD1K.isCustomerBlocked(
+      const blocked = DD1KλExceedμ.isCustomerBlocked(
         t,
         arrivalRate,
         serviceRate,

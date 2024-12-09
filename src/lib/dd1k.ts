@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-namespace */
+
 /**
  * Algorithm to analyze and solve the D/D/1/(k-1) queue system for both cases λ > μ and λ ≤ μ,
  * as well as solving for t_i using trial and error.
@@ -78,18 +80,18 @@
  *
  * **Finding t_i**
  * t_i is determined as the smallest t such that n(t) = 0:
- * 0 = M + ⌊λt⌋ - ⌊μt⌋
- * M = ⌊λt⌋ - ⌊μt⌋
+ * 0 = M + ⌊λt_i⌋ - ⌊μt_i⌋
+ * M = ⌊λt_i⌋ - ⌊μt_i⌋
  *
  * **Average Waiting Time, Wq(n):**
  *
  * 1. Initial Average Waiting Time for M Customers:
  * W_q(0) = (M - 1) / (2μ)
  *
- * 2. For n < ⌊λt⌋:
+ * 2. For n < ⌊λt_i⌋:
  * Wq(n) = (M - 1 + n)(1/μ) - n(1/λ)
  *
- * 3. For n ≥ ⌊λt⌋:
+ * 3. For n ≥ ⌊λt_i⌋:
  * Wq(n) = 0
  *
  * For λ = μ:
@@ -100,9 +102,8 @@
 import { EPSILON } from "@/constants";
 import { DD1KCharacteristics, DD1KType } from "@/types/dd1k";
 import { Fraction } from "@/types/math";
-import { Dispatch, SetStateAction } from "react";
+import { toProperFraction } from "./math";
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 namespace DD1K {
   /**
    * Calculates the performance metrics for a D/D/1/K queue.
@@ -123,7 +124,7 @@ namespace DD1K {
 
     if (arrivalRate > serviceRate) {
       // Handle Case 1: λ > μ
-      return arrivalBiggerThanservice(
+      return DD1KλExceedμ.arrivalBiggerThanservice(
         arrivalRate,
         serviceRate,
         capacity,
@@ -150,46 +151,6 @@ namespace DD1K {
     // Define the equations for n(t) in its three states
   }
 
-  function arrivalBiggerThanservice(
-    arrivalRate: number,
-    serviceRate: number,
-    capacity: number,
-    arrivalRateFraction: Fraction,
-    serviceRateFraction: Fraction
-  ): DD1KCharacteristics {
-    let systemType: DD1KType = "λ > μ";
-    if (arrivalRate % serviceRate === 0) {
-      systemType = "(λ > μ) && λ%μ = 0";
-    }
-
-    // Calculate the time of first balk (t1)
-    const t_i = findFirstBalkTime(
-      arrivalRate,
-      serviceRate,
-      capacity,
-      systemType
-    );
-
-    return {
-      type: systemType,
-      arrivalRate: arrivalRate,
-      serviceRate: serviceRate,
-      arrivalRateFraction: arrivalRateFraction,
-      serviceRateFraction: serviceRateFraction,
-      capacity: capacity,
-      t_i: t_i,
-    };
-  }
-
-  function arrivalSmallerThanservice(
-    arrivalRate: number,
-    serviceRate: number,
-    capacity: number
-  ): DD1KCharacteristics {
-    // Handle Case 2: λ ≤ μ
-    return null;
-  }
-
   /**
    * Finds the first time the system reaches capacity.
    * @param arrivalRate - The rate at which customers arrive.
@@ -197,7 +158,7 @@ namespace DD1K {
    * @param capacity - The maximum number of customers the system can hold.
    * @returns The first time the system reaches capacity.
    */
-  function findFirstBalkTime(
+  export function findFirstBalkTime(
     arrivalRate: number,
     serviceRate: number,
     capacity: number,
@@ -217,30 +178,41 @@ namespace DD1K {
     }
   }
 
-  /**
-   * Converts a decimal number to a proper fraction.
-   * @param decimal - The decimal number to convert.
-   * @returns The fraction in the form of an object { numerator, denominator }.
-   */
-  function toProperFraction(decimal: number): Fraction {
-    const tolerance = 1.0e-6;
-    let h1 = 1,
-      h2 = 0,
-      k1 = 0,
-      k2 = 1,
-      b = decimal;
-    do {
-      const a = Math.floor(b);
-      let aux = h1;
-      h1 = a * h1 + h2;
-      h2 = aux;
-      aux = k1;
-      k1 = a * k1 + k2;
-      k2 = aux;
-      b = 1 / (b - a);
-    } while (Math.abs(decimal - h1 / k1) > decimal * tolerance);
+  export function graphMaxTime(t_i: number): number {
+    return Math.ceil(Math.max(t_i * 2, 10)); // Round up max time
+  }
+}
 
-    return { numerator: h1, denominator: k1 };
+export namespace DD1KλExceedμ {
+  export function arrivalBiggerThanservice(
+    arrivalRate: number,
+    serviceRate: number,
+    capacity: number,
+    arrivalRateFraction: Fraction,
+    serviceRateFraction: Fraction
+  ): DD1KCharacteristics {
+    let systemType: DD1KType = "λ > μ";
+    if (arrivalRate % serviceRate === 0) {
+      systemType = "(λ > μ) && λ%μ = 0";
+    }
+
+    // Calculate the time of first balk (t1)
+    const t_i = DD1K.findFirstBalkTime(
+      arrivalRate,
+      serviceRate,
+      capacity,
+      systemType
+    );
+
+    return {
+      type: systemType,
+      arrivalRate: arrivalRate,
+      serviceRate: serviceRate,
+      arrivalRateFraction: arrivalRateFraction,
+      serviceRateFraction: serviceRateFraction,
+      capacity: capacity,
+      t_i: t_i,
+    };
   }
 
   export function computeNOfT(
@@ -279,38 +251,6 @@ namespace DD1K {
           return capacity - 2; // k-2
         } else {
           return capacity - 1; // k-1
-        }
-      }
-    }
-  }
-
-  /**
-   * Computes the waiting time for each customer.
-   * @param n - The customer number.
-   * @param arrivalRate - The rate at which customers arrive.
-   * @param serviceRate - The rate at which customers are served.
-   * @param t_i - The time of first balk.
-   * @param systemType - The type of the system.
-   * @returns The waiting time for the customer.
-   */
-  export function computeWqOfN(
-    n: number,
-    arrivalRate: number,
-    serviceRate: number,
-    t_i: number,
-    systemType: DD1KType
-  ): number {
-    if (n < arrivalRate * t_i) {
-      return (1 / serviceRate - 1 / arrivalRate) * (n - 1);
-    } else {
-      if (systemType === "(λ > μ) && λ%μ = 0") {
-        return (1 / serviceRate - 1 / arrivalRate) * (arrivalRate * t_i - 2);
-      } else {
-        const remainder = n % 2;
-        if (remainder === 0) {
-          return (1 / serviceRate - 1 / arrivalRate) * (arrivalRate * t_i - 3);
-        } else {
-          return (1 / serviceRate - 1 / arrivalRate) * (arrivalRate * t_i - 2);
         }
       }
     }
@@ -383,8 +323,92 @@ namespace DD1K {
     return true;
   }
 
-  export function graphMaxTime(t_i: number): number {
-    return Math.ceil(Math.max(t_i * 2, 10)); // Round up max time
+  /**
+   * Computes the waiting time for each customer.
+   * @param n - The customer number.
+   * @param arrivalRate - The rate at which customers arrive.
+   * @param serviceRate - The rate at which customers are served.
+   * @param t_i - The time of first balk.
+   * @param systemType - The type of the system.
+   * @returns The waiting time for the customer.
+   */
+  export function computeWqOfN(
+    n: number,
+    arrivalRate: number,
+    serviceRate: number,
+    t_i: number,
+    systemType: DD1KType
+  ): number {
+    if (n < arrivalRate * t_i) {
+      return (1 / serviceRate - 1 / arrivalRate) * (n - 1);
+    } else {
+      if (systemType === "(λ > μ) && λ%μ = 0") {
+        return (1 / serviceRate - 1 / arrivalRate) * (arrivalRate * t_i - 2);
+      } else {
+        const remainder = n % 2;
+        if (remainder === 0) {
+          return (1 / serviceRate - 1 / arrivalRate) * (arrivalRate * t_i - 3);
+        } else {
+          return (1 / serviceRate - 1 / arrivalRate) * (arrivalRate * t_i - 2);
+        }
+      }
+    }
+  }
+}
+
+export namespace DD1KμEqualλ {
+  export function computeNOfT(initialCustomers) {
+    return initialCustomers;
+  }
+  export function computeWqOfN(initialCustomers: number, serviceRate: number) {
+    return (initialCustomers - 1) / (1 * serviceRate);
+  }
+}
+export namespace DD1KμExceedλ {
+  //  n(t) = M + ⌊λt⌋ - ⌊μt⌋
+  export function computeNOfT(
+    t: number,
+    arrivalRate: number,
+    serviceRate: number,
+    initialCustomers: number
+  ): number {
+    return (
+      initialCustomers +
+      Math.floor(arrivalRate * t) -
+      Math.floor(serviceRate * t)
+    );
+  }
+
+  //    * **Average Waiting Time, Wq(n):**
+  //  *
+  //  * 1. Initial Average Waiting Time for M Customers:
+  //  * W_q(0) = (M - 1) / (2μ)
+  //  *
+  //  * 2. For n < ⌊λt_i⌋:
+  //  * Wq(n) = (M - 1 + n)(1/μ) - n(1/λ)
+  //  *
+  //  * 3. For n ≥ ⌊λt_i⌋:
+  //  * Wq(n) = 0
+  export function computeAvarageWqOfNForInitialCustomers(
+    initialCustomers: number,
+    serviceRate: number
+  ) {
+    return (initialCustomers - 1) / (2 * serviceRate);
+  }
+  export function computeWqOfN(
+    n: number,
+    arrivalRate: number,
+    serviceRate: number,
+    initialCustomers: number,
+    t_i: number // time at which the steady state is reached
+  ): number {
+    if (n < Math.floor(arrivalRate * t_i)) {
+      return (
+        (initialCustomers - 1 + n) * (1 / serviceRate) - n * (1 / arrivalRate)
+      );
+    } else {
+      return 0;
+    }
   }
 }
 

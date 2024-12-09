@@ -1,42 +1,15 @@
-import React, { useEffect } from "react";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { Box, Divider, Typography } from "@mui/material";
-import DD1KGraphContainer from "../graphs/dd1k/DD1KGraphContainer";
 import { DD1KCharacteristics, N_Of_T } from "@/types/dd1k";
-import DD1K from "@/lib/dd1k";
-import { NoNumberArrowsTextField } from "../NoNumberArrowsTextField";
 
-declare global {
-  interface Window {
-    MathJax?: {
-      typeset: () => void;
-    };
-  }
-}
+import { DD1KλExceedμ } from "@/lib/dd1k";
+import { NoNumberArrowsTextField } from "../../NoNumberArrowsTextField";
+import { useEffect, useState } from "react";
 
-type DD1KResultsProps = {
-  characteristics: DD1KCharacteristics;
-};
-
-const DD1KResults: React.FC<DD1KResultsProps> = ({ characteristics }) => {
-  useEffect(() => {
-    // eslint-disable-next-line
-    window.MathJax && window.MathJax.typeset();
-  }, [characteristics]);
-
-  return (
-    <>
-      <ArrivalBiggerThanservice {...characteristics} />
-      <Divider />
-      <DD1KGraphContainer
-        arrivalRate={characteristics.arrivalRate}
-        serviceRate={characteristics.serviceRate}
-        capacity={characteristics.capacity}
-        t_i={characteristics.t_i}
-        systemType={characteristics.type}
-      />
-    </>
-  );
+type Wq_Of_N = {
+  n0: string; // n = 0
+  n_LessThan_LambdaTi: string; // n < λ*t_i
+  nGreaterThanOrEqualLambdaTi: string; // n ≥ λ*t_i
 };
 
 const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
@@ -48,6 +21,19 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
   serviceRateFraction,
   t_i,
 }) => {
+  useEffect(() => {
+    // eslint-disable-next-line
+    window.MathJax && window.MathJax.typeset();
+  }, [
+    type,
+    capacity,
+    arrivalRate,
+    serviceRate,
+    arrivalRateFraction,
+    serviceRateFraction,
+    t_i,
+  ]);
+
   const kMinus1 = capacity - 1;
   const kMinus2 = capacity - 2;
 
@@ -87,15 +73,15 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
     caseOutput = "(\\lambda > \\mu) \\text{ and } (\\lambda \\% \\mu = 0)";
   }
 
-  const [tVar, setTVar] = React.useState<number | undefined>();
-  const [nOfTVar, setNOfTVar] = React.useState<number>(0);
-  const [nVar, setNVar] = React.useState<number | undefined>();
-  const [wqOfNVar, setWqOfNVar] = React.useState<number | undefined>();
+  const [tVar, setTVar] = useState<number | undefined>();
+  const [nOfTVar, setNOfTVar] = useState<number>(0);
+  const [nVar, setNVar] = useState<number | undefined>();
+  const [wqOfNVar, setWqOfNVar] = useState<number | undefined>();
 
   const handleTVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const t = parseFloat(e.target.value);
     setTVar(t);
-    const nOfT = DD1K.computeNOfT(
+    const nOfT = DD1KλExceedμ.computeNOfT(
       t,
       arrivalRate,
       serviceRate,
@@ -110,7 +96,13 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
   const handleNVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const n = parseFloat(e.target.value);
     setNVar(n);
-    const wqOfN = DD1K.computeWqOfN(n, arrivalRate, serviceRate, t_i, type);
+    const wqOfN = DD1KλExceedμ.computeWqOfN(
+      n,
+      arrivalRate,
+      serviceRate,
+      t_i,
+      type
+    );
     setWqOfNVar(wqOfN);
   };
 
@@ -343,10 +335,4 @@ const ArrivalBiggerThanservice: React.FC<DD1KCharacteristics> = ({
   );
 };
 
-type Wq_Of_N = {
-  n0: string; // n = 0
-  n_LessThan_LambdaTi: string; // n < λ*t_i
-  nGreaterThanOrEqualLambdaTi: string; // n ≥ λ*t_i
-};
-
-export default DD1KResults;
+export default ArrivalBiggerThanservice;

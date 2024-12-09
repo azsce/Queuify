@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import DD1K from "@/lib/dd1k";
+import DD1K, { DD1KλExceedμ } from "@/lib/dd1k";
 import { DD1KType } from "@/types/dd1k";
 import {
   LineChart,
@@ -47,7 +47,7 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
     for (let t = 0; t <= maxTime; t += timeStep) {
       const arrivals = Math.floor(t * arrivalRate);
       const departures = Math.floor(t * serviceRate);
-      const isBlocked = DD1K.isCustomerBlocked(
+      const isBlocked = DD1KλExceedμ.isCustomerBlocked(
         t,
         arrivalRate,
         serviceRate,

@@ -13,10 +13,7 @@ import {
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { DD1KType } from "@/types/dd1k";
 import DD1K from "@/lib/dd1k";
-import {
-  generateBasicData,
-  generateTimeLineData,
-} from "@/utils/graphDataUtils";
+import { DD1KμExceedλGraphUtils } from "@/graph/dD1KgraphDataUtils";
 import renderTimeLines from "./TimelineUtils";
 
 /**
@@ -65,7 +62,7 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
   const arrivalTime = 1 / arrivalRate;
   const maxTime = DD1K.graphMaxTime(t_i);
 
-  const basicData = generateBasicData(
+  const basicData = DD1KμExceedλGraphUtils.generateBasicData(
     maxTime,
     arrivalRate,
     serviceRate,
@@ -81,10 +78,10 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
   //   scaleFactors,
   //   yAxisOffsets,
   //   totalHeight,
-  // } = calculateSectionHeights(basicData, height);
+  // } = DD1KμExceedλGraphUtils.calculateSectionHeights(basicData, height);
 
   // Now yAxisOffsets will be properly typed
-  // const adjustedData = adjustBasicData(basicData, scaleFactors, yAxisOffsets);
+  // const adjustedData = DD1KμExceedλGraphUtils.adjustBasicData(basicData, scaleFactors, yAxisOffsets);
 
   // // Add section dividers
   // const sectionDividers = Object.values(yAxisOffsets)
@@ -98,7 +95,7 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
   //   (sectionIndex + 1) * (sectionHeight + sectionSpacing),
   // ]);
 
-  const timeLineData = generateTimeLineData(basicData);
+  const timeLineData = DD1KμExceedλGraphUtils.generateTimeLineData(basicData);
 
   // Replace the commented for loop with this
 
