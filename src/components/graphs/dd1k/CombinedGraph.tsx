@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React from "react";
@@ -17,6 +18,14 @@ import DD1K from "@/lib/dd1k";
 import { colors } from "@/constants";
 import { getTimeAxisTicks } from "@/utils/graph";
 
+const ColorMap = {
+  arrivals: "#8884d8",
+  departures: "#82ca9d",
+  blocked: "red",
+  customers: "#2db300",
+  waitingTime: "#ff00a2",
+};
+
 // Custom tooltip to show correct values
 interface CustomTooltipProps {
   active?: boolean;
@@ -35,12 +44,30 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
     const originalData = data.find((d) => d.time === label);
     return (
       <div className="custom-tooltip">
-        <p className="label">{`Time: ${label}`}</p>
-        <p className="intro">{`Arrivals: ${originalData.arrivals}`}</p>
-        <p className="intro">{`Departures: ${originalData.departures}`}</p>
-        <p className="intro">{`Blocked: ${originalData.blocked}`}</p>
-        <p className="intro">{`Customers: ${originalData.customers}`}</p>
-        <p className="intro">{`Waiting Time: ${originalData.waitingTime}`}</p>
+        <p className="label" color="text.primary">
+          {" "}
+          {`Time: ${label}`}{" "}
+        </p>
+        <p
+          className="intro"
+          color={ColorMap.arrivals}
+        >{`Arrivals: ${originalData.arrivals}`}</p>
+        <p
+          className="intro"
+          color={ColorMap.departures}
+        >{`Departures: ${originalData.departures}`}</p>
+        <p
+          className="intro"
+          color={ColorMap.blocked}
+        >{`Blocked: ${originalData.blocked}`}</p>
+        <p
+          className="intro"
+          color={ColorMap.customers}
+        >{`Customers in the System: ${originalData.customers}`}</p>
+        <p
+          className="intro"
+          color={ColorMap.waitingTime}
+        >{`Waiting Time: ${originalData.waitingTime}`}</p>
       </div>
     );
   }
@@ -141,43 +168,69 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
 
   const data = generateData();
 
-  // Calculate virtual Y-axis areas with equal heights
-  const numberOfGraphs = 5; // Total number of sub-graphs
-  const totalHeight = capacity * numberOfGraphs; // Total height of Y-axis
-  const sectionHeight = Math.ceil(totalHeight / numberOfGraphs); // Height of each section
-  const yAxisSpacing = Math.ceil(sectionHeight * 0.5); // 10% of section height for spacing
-
-  const yAxisOffsets = {
-    arrivals: 0,
-    departures: 0,
-    blocked: 0,
-    customers: yAxisSpacing + 3 * sectionHeight,
-    waitingTime: yAxisSpacing + 3 * sectionHeight + 4 * sectionHeight,
+  // Calculate maximum values for each metric group
+  const maxValues = {
+    metrics: Math.max(
+      ...data.map((d) => Math.max(d.arrivals, d.departures, d.blocked))
+    ),
+    customers: Math.max(...data.map((d) => d.customers)),
+    waitingTime: Math.max(...data.map((d) => d.waitingTime)),
   };
 
-  // Scale the data to fit within their respective sections
-  const scaleDataToSection = (value: number, offset: number) => {
-    return value + offset;
+  // Calculate the section height based on the largest value
+  const maxSectionValue = Math.max(...Object.values(maxValues));
+  const numberOfSections = 3; // Three main sections: metrics, customers, waiting time
+  const sectionHeight = maxSectionValue;
+  const sectionSpacing = sectionHeight * 0.25; // Add 25% spacing between sections
+
+  // Define vertical offsets for each section (with spacing)
+  const yAxisOffsets = {
+    metrics: 0,
+    customers: sectionHeight + sectionSpacing,
+    waitingTime: (sectionHeight + sectionSpacing) * 2 + sectionSpacing, // Added extra spacing
+  };
+
+  const totalHeight = yAxisOffsets.waitingTime + sectionHeight; // Update total height
+
+  // Scale factors for each section
+  const scaleFactors = {
+    metrics: sectionHeight / maxValues.metrics,
+    customers: sectionHeight / maxValues.customers,
+    waitingTime: sectionHeight / maxValues.waitingTime,
   };
 
   // Adjust data for virtual Y-axis with proper scaling
   const adjustedData = data.map((entry) => ({
     ...entry,
-    arrivals: scaleDataToSection(entry.arrivals, yAxisOffsets.arrivals),
-    departures: scaleDataToSection(entry.departures, yAxisOffsets.departures),
-    blocked: scaleDataToSection(entry.blocked, yAxisOffsets.blocked),
-    customers: scaleDataToSection(entry.customers, yAxisOffsets.customers),
-    waitingTime: scaleDataToSection(
-      entry.waitingTime,
-      yAxisOffsets.waitingTime
-    ),
+    // Scale metrics and add offset
+    arrivals: entry.arrivals * scaleFactors.metrics + yAxisOffsets.metrics,
+    departures: entry.departures * scaleFactors.metrics + yAxisOffsets.metrics,
+    blocked: entry.blocked * scaleFactors.metrics + yAxisOffsets.metrics,
+    // Scale customers and add offset
+    customers:
+      entry.customers * scaleFactors.customers + yAxisOffsets.customers,
+    // Scale waiting time and add offset
+    waitingTime:
+      entry.waitingTime * scaleFactors.waitingTime + yAxisOffsets.waitingTime,
   }));
 
   // Add reference lines for section divisions
-  const sectionDividers = Array.from(
-    { length: numberOfGraphs - 1 },
-    (_, i) => (i + 1) * sectionHeight
-  );
+  const sectionDividers = [
+    sectionHeight + sectionSpacing / 2,
+    yAxisOffsets.customers + sectionHeight + sectionSpacing / 2,
+  ];
+
+  // Add section labels for Y-axis with spacing
+  const yAxisTicks = [
+    0,
+    sectionHeight / 2,
+    sectionHeight,
+    yAxisOffsets.customers + sectionHeight / 2,
+    yAxisOffsets.customers + sectionHeight,
+    yAxisOffsets.waitingTime + sectionHeight / 2,
+    totalHeight,
+  ];
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
       <Typography variant="h6" component="h3">
@@ -242,8 +295,23 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
               }}
               allowDecimals={false}
               domain={[0, totalHeight]}
-              ticks={[0, ...sectionDividers, totalHeight]}
-              stroke={theme.palette.text.primary} // Add stroke color
+              ticks={yAxisTicks}
+              tickFormatter={(value) => {
+                // Convert back to original scale based on section
+                if (value <= sectionHeight) {
+                  return Math.round(value / scaleFactors.metrics).toString();
+                } else if (value <= 2 * sectionHeight) {
+                  return Math.round(
+                    (value - yAxisOffsets.customers) / scaleFactors.customers
+                  ).toString();
+                } else {
+                  return Math.round(
+                    (value - yAxisOffsets.waitingTime) /
+                      scaleFactors.waitingTime
+                  ).toString();
+                }
+              }}
+              stroke={theme.palette.text.primary}
             />
             {/* Add section dividers */}
             {sectionDividers.map((height) => (
@@ -261,7 +329,7 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
               type="monotone"
               dataKey="arrivals"
               xAxisId="bottom" // Specify xAxisId
-              stroke="#8884d8"
+              stroke={ColorMap.arrivals}
               name="Arrivals"
               dot={false}
               strokeWidth={2}
@@ -270,7 +338,7 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
               type="monotone"
               dataKey="departures"
               xAxisId="bottom" // Specify xAxisId
-              stroke="#82ca9d"
+              stroke={ColorMap.departures}
               name="Departures"
               dot={false}
               strokeWidth={2}
@@ -279,7 +347,7 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
               type="monotone"
               dataKey="blocked"
               xAxisId="bottom" // Specify xAxisId
-              stroke="#ff7300"
+              stroke="red"
               name="Blocked"
               dot={false}
               strokeWidth={2}
@@ -288,7 +356,7 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
               type="stepAfter"
               dataKey="customers"
               xAxisId="bottom" // Specify xAxisId
-              stroke="#2db300"
+              stroke={ColorMap.customers}
               name="Customers in System"
               dot={false}
               strokeWidth={2}
@@ -297,7 +365,7 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
               type="stepAfter"
               dataKey="waitingTime"
               xAxisId="top" // Ensure xAxisId matches the top XAxis
-              stroke="#ff00a2"
+              stroke={ColorMap.waitingTime}
               name="Waiting Time"
               dot={false}
               strokeWidth={2}

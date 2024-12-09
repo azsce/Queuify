@@ -64,14 +64,14 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = (props) => {
         subGraph={true}
         showTopAxis={false}
         showBottomAxis={false}
-      />
+      /> */}
       <NumberOfCustomersGraph
         {...props}
         height={GRAPH_HEIGHT}
         subGraph={true}
         showTopAxis={false}
         showBottomAxis={false}
-      /> */}
+      />
     </Box>
   );
 };
