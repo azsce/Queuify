@@ -29,32 +29,20 @@ import renderTimeLines from "./TimelineUtils";
  * ---------------------------------
  * The graph is divided into 6 equal-height sections from top to bottom:
  *
- * 1. Arrival Timeline Section
- *    - Scale: Fixed height section
- *    - Event markers at 0.5 * sectionHeight
- *    - Virtual Y-Axis: None (fixed positions)
- *
- * 2. Service Timeline Section
- *    - Scale: Fixed height section
- *    - Event markers at 0.5 * sectionHeight
- *    - Virtual Y-Axis: None (fixed positions)
- *
- * 3. Departure Timeline Section
- *    - Scale: Fixed height section
- *    - Event markers at 0.5 * sectionHeight
- *    - Virtual Y-Axis: None (fixed positions)
- *
- * 4. Waiting Time Section
- *    - Scale: waitingTime values scaled to section height
- *    - Virtual Y-Axis: 0 to max waiting time
- *
- * 5. Customers Section
+ * 1. Number of Customers Section
  *    - Scale: customers count scaled to section height
  *    - Virtual Y-Axis: 0 to max customers
+ *    - X-Axis: Time (t)
  *
- * 6. Customer Flow Section
+ * 2. Customer Flow Section
  *    - Scale: metrics (arrivals/departures/blocked) scaled to section height
  *    - Virtual Y-Axis: 0 to max flow value
+ *    - X-Axis: Time (t)
+ *
+ * 3. Waiting Time Section
+ *    - Scale: waitingTime values scaled to section height
+ *    - Virtual Y-Axis: 0 to max waiting time
+ *    - X-Axis: Customer (n)
  *
  * Spacing: Equal spacing between all sections
  * Height: All sections have equal height (sectionHeight)
