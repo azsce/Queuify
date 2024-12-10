@@ -26,13 +26,13 @@ import { NoNumberArrowsTextField } from "../components/NoNumberArrowsTextField";
 import { MMCharacteristics } from "@/types/mm";
 
 export default function QueuingTheoryCalculator() {
-  const [processType, setQueueType] = useState<Process>("D/D");
-  const [servers, setServers] = useState<number | undefined>(1);
-  const [capacity, setCapacity] = useState<number | undefined>(5);
-  const [arrivalRate, setArrivalRate] = useState("0.25");
-  const [serviceRate, setServiceRate] = useState("0.125");
-  const [arrivalTime, setArrivalTime] = useState("4");
-  const [serviceTime, setServiceTime] = useState("8");
+  const [processType, setProcessType] = useState<Process>("D/D");
+  const [servers, setServers] = useState<number | undefined>();
+  const [capacity, setCapacity] = useState<number | undefined>();
+  const [arrivalRate, setArrivalRate] = useState("");
+  const [serviceRate, setServiceRate] = useState("");
+  const [arrivalTime, setArrivalTime] = useState("");
+  const [serviceTime, setServiceTime] = useState("");
   const [error, setError] = useState("");
   const [dd1kResults, setDd1kResults] = useState<JSX.Element | null>(null);
   const [mmResults, setMmResults] = useState<JSX.Element | null>(null);
@@ -194,7 +194,7 @@ export default function QueuingTheoryCalculator() {
               gap: 2,
             }}
           >
-            <ProcessTypeSelector setProcessType={setQueueType} />
+            <ProcessTypeSelector setProcessType={setProcessType} />
             <SystemParameters
               setServers={setServers}
               setCapacity={setCapacity}
