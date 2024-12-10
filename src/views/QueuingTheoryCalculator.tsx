@@ -4,20 +4,14 @@ import { JSX, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-// import { mm1, mm1k, mmc, mmck, dd1 } from "@/lib";
+import { mm } from "@/lib/mm";
 import DD1K from "@/lib/dd1k";
 import SystemParameters from "@/components/queuing/SystemParameters";
 import InputParameters from "@/components/queuing/InputParameters";
-// import MM1Results from "@/components/results/MM1Results";
-// import MM1KResults from "@/components/results/MM1KResults";
-// import MMCResults from "@/components/results/MMCResults";
-// import MMCKResults from "@/components/results/MMCKResults";
-// import DD1Results from "@/components/results/DD1Results";
+import MMResults from "@/components/results/MMResults";
 import DD1KResults from "@/components/results/DD1K/DD1KResults";
 import ProcessTypeSelector from "@/components/queuing/ProcessTypeSelector";
-// import { MathJaxContext } from "better-react-mathjax";
 import { DD1KCharacteristics } from "@/types/dd1k";
-// import { InfoIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -29,9 +23,10 @@ import {
 import { Process } from "@/types/queue";
 import Grid from "@mui/material/Grid2";
 import { NoNumberArrowsTextField } from "../components/NoNumberArrowsTextField";
+import { MMCharacteristics } from "@/types/mm";
 
 export default function QueuingTheoryCalculator() {
-  const [queueType, setQueueType] = useState<Process>("D/D");
+  const [processType, setQueueType] = useState<Process>("D/D");
   const [servers, setServers] = useState<number | undefined>(1);
   const [capacity, setCapacity] = useState<number | undefined>(5);
   const [arrivalRate, setArrivalRate] = useState("0.25");
@@ -39,6 +34,8 @@ export default function QueuingTheoryCalculator() {
   const [arrivalTime, setArrivalTime] = useState("4");
   const [serviceTime, setServiceTime] = useState("8");
   const [error, setError] = useState("");
+  const [dd1kResults, setDd1kResults] = useState<JSX.Element | null>(null);
+  const [mmResults, setMmResults] = useState<JSX.Element | null>(null);
   const [results, setResults] = useState<JSX.Element | null>(null);
 
   const [isInitialCutsomersRequired, setIsInitialCutsomersRequired] =
@@ -48,7 +45,15 @@ export default function QueuingTheoryCalculator() {
   >();
 
   useEffect(() => {
-    if (queueType === "D/D") {
+    if (processType === "D/D") {
+      setResults(dd1kResults);
+    } else if (processType === "M/M") {
+      setResults(mmResults);
+    }
+  }, [dd1kResults, mmResults, processType]);
+
+  useEffect(() => {
+    if (processType === "D/D") {
       if (arrivalRate === serviceRate || arrivalRate < serviceRate) {
         setIsInitialCutsomersRequired(true);
       } else {
@@ -57,7 +62,7 @@ export default function QueuingTheoryCalculator() {
     } else {
       setIsInitialCutsomersRequired(false);
     }
-  }, [queueType, arrivalRate, serviceRate]);
+  }, [processType, arrivalRate, serviceRate]);
 
   const handleCalculate = () => {
     // Clear previous errors and results
@@ -71,7 +76,7 @@ export default function QueuingTheoryCalculator() {
     }
 
     // Check for valid combinations
-    if (queueType === "D/D" && servers !== 1) {
+    if (processType === "D/D" && servers !== 1) {
       setError(
         "Current implementation only handles D/D/1 and D/D/1/(k-1) – single server deterministic queues."
       );
@@ -79,7 +84,7 @@ export default function QueuingTheoryCalculator() {
     }
 
     if (
-      queueType === "D/D" &&
+      processType === "D/D" &&
       servers === 1 &&
       isNaN(capacity) &&
       parseFloat(arrivalRate) > parseFloat(serviceRate)
@@ -91,57 +96,18 @@ export default function QueuingTheoryCalculator() {
     }
 
     try {
-      let characteristics: DD1KCharacteristics;
-      // if (
-      //   queueType === "M/M" &&
-      //   servers === "1" &&
-      //   capacity === "∞"
-      // ) {
-      //   results = mm1(parseFloat(arrivalRate), parseFloat(serviceRate));
-      //   setResults(<MM1Results results={results} />);
-      // } else if (
-      //   queueType === "M/M" &&
-      //   servers === "1" &&
-      //   capacity !== "∞"
-      // ) {
-      //   results = mm1k(
-      //     parseFloat(arrivalRate),
-      //     parseFloat(serviceRate),
-      //     parseInt(capacity)
-      //   );
-      //   setResults(<MM1KResults results={results} />);
-      // } else if (
-      //   queueType === "M/M" &&
-      //   servers !== "1" &&
-      //   capacity === "∞"
-      // ) {
-      //   results = mmc(
-      //     parseFloat(arrivalRate),
-      //     parseFloat(serviceRate),
-      //     parseInt(servers)
-      //   );
-      //   setResults(<MMCResults results={results} />);
-      // } else if (
-      //   queueType === "M/M" &&
-      //   servers !== "1" &&
-      //   capacity !== "∞"
-      // ) {
-      //   results = mmck(
-      //     parseFloat(arrivalRate),
-      //     parseFloat(serviceRate),
-      //     parseInt(servers),
-      //     parseInt(capacity)
-      //   );
-      //   setResults(<MMCKResults results={results} />);
-      // } else if (
-      //   queueType === "D/D" &&
-      //   servers === "1" &&
-      //   capacity === "∞"
-      // ) {
-      //   results = dd1(parseFloat(arrivalRate), parseFloat(serviceRate));
-      //   setResults(<DD1Results results={results} />);
-      // } else
-      if (queueType === "D/D" && servers === 1 && capacity !== null) {
+      let characteristics: DD1KCharacteristics | MMCharacteristics;
+      if (processType === "M/M") {
+        characteristics = mm(
+          parseFloat(arrivalRate),
+          parseFloat(serviceRate),
+          capacity,
+          servers
+        );
+        if (characteristics.validSystem) {
+          setMmResults(<MMResults characteristics={characteristics} />);
+        }
+      } else if (processType === "D/D" && servers === 1 && capacity !== null) {
         if (arrivalRate === serviceRate || arrivalRate < serviceRate) {
           setIsInitialCutsomersRequired(true);
           if (!initialCustomers) {
@@ -156,7 +122,7 @@ export default function QueuingTheoryCalculator() {
           initialCustomers
         );
         console.log("characteristics", characteristics);
-        setResults(<DD1KResults characteristics={characteristics} />);
+        setDd1kResults(<DD1KResults characteristics={characteristics} />);
       } else {
         setError("Unsupported queue configuration.");
         return;
@@ -230,7 +196,7 @@ export default function QueuingTheoryCalculator() {
               setCapacity={setCapacity}
               servers={servers}
               capacity={capacity}
-              processType={queueType}
+              processType={processType}
             />
             <InputParameters
               setArrivalRate={setArrivalRate}
@@ -284,15 +250,22 @@ export default function QueuingTheoryCalculator() {
 
             {results}
 
-            {/* <Alert severity="info" className="mt-6">
-                <InfoIcon className="h-4 w-4" />
+            {processType === "D/D" && !results && (
+              <Alert
+                severity="info"
+                className="mt-6"
+                sx={{
+                  backgroundColor: "background.paper",
+                }}
+              >
                 <AlertTitle>Note</AlertTitle>
                 <span className="ml-2 mt-1">
-                  For D/D/1 and D/D/1/(k-1) models, the Time (t) field is used for
-                  transient analysis. For unstable systems (λ {">"} μ), results
-                  may be limited or require additional explanation.
+                  For D/D/1 and D/D/1/(k-1) models, the Time (t) field is used
+                  for transient analysis. For unstable systems (λ {">"} μ),
+                  results may be limited or require additional explanation.
                 </span>
-              </Alert> */}
+              </Alert>
+            )}
           </Box>
         </CardContent>
       </Card>
