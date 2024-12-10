@@ -1,16 +1,29 @@
-import type { NextConfig } from "next";
-
-import withPWA from "next-pwa";
-
-const withPWAConfig = withPWA({
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const nextPWA = require("next-pwa")({
   dest: "public",
   disable: process.env.NODE_ENV === "development",
+  runtimeCaching: [
+    {
+      urlPattern: /^https?.*/,
+      handler: "NetworkFirst",
+      options: {
+        cacheName: "offlineCache",
+        expiration: {
+          maxEntries: 200,
+        },
+      },
+    },
+  ],
+  register: true,
+  skipWaiting: true,
 });
 
-const nextConfig: NextConfig = {
+module.exports = nextPWA({
   output: "export",
-  basePath: "/Queue",
-  ...withPWAConfig, // Integrate PWA configuration
-};
-
-export default nextConfig;
+  reactStrictMode: true,
+  experimental: {
+    turbo: {
+      enabled: true,
+    },
+  },
+});

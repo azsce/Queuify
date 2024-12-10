@@ -1,7 +1,9 @@
-import type { MetadataRoute } from "next";
+import { type NextRequest } from "next/server";
 
-export default function manifest(): MetadataRoute.Manifest {
-  return {
+export const dynamic = "force-static";
+
+export async function GET(request: NextRequest) {
+  return Response.json({
     name: "Queueing Theory Calculator",
     short_name: "Queue",
     description: "Queueing Theory Calculator",
@@ -9,6 +11,8 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     background_color: "#ffffff",
     theme_color: "#000000",
+    lang: "en-US",
+    orientation: "portrait",
     icons: [
       {
         src: "/icon-64x64.png",
@@ -26,7 +30,5 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/png",
       },
     ],
-  };
+  });
 }
-
-export const dynamic = "force-static"; // Add this line to configure the route for static export

@@ -54,7 +54,9 @@ export default function QueuingTheoryCalculator() {
 
   useEffect(() => {
     if (processType === "D/D") {
-      if (arrivalRate === serviceRate || arrivalRate < serviceRate) {
+      if (arrivalRate === "" || serviceRate === "") {
+        setIsInitialCutsomersRequired(false);
+      } else if (arrivalRate === serviceRate || arrivalRate < serviceRate) {
         setIsInitialCutsomersRequired(true);
       } else {
         setIsInitialCutsomersRequired(false);

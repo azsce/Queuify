@@ -26,6 +26,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "gh-pages": "^6.2.0",
+    "idb-keyval": "^6.2.1",
     "lucide-react": "^0.468.0",
     "mathjax": "^3.2.2",
     "mathjs": "^14.0.0",
@@ -38,7 +39,8 @@
     "recharts": "^2.14.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
-    "workbox-webpack-plugin": "^7.3.0"
+    "workbox-webpack-plugin": "^7.3.0",
+    "workbox-window": "^7.3.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",

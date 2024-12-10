@@ -1,0 +1,15 @@
+{
+  "title": "Offline Queue Calculator",
+  "description": "A fully functional offline-capable queue calculator",
+  "version": "1.0.0",
+  "sections": [
+    {
+      "id": "home",
+      "heading": "Queue Calculator"
+    },
+    {
+      "id": "features",
+      "items": ["Fully offline", "Persistent storage", "Instant loading"]
+    }
+  ]
+}
