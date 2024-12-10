@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 
 function InstallPrompt() {
   const [isIOS, setIsIOS] = useState(false);
@@ -8,6 +9,7 @@ function InstallPrompt() {
 
   useEffect(() => {
     setIsIOS(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
     );
 
@@ -25,15 +27,19 @@ function InstallPrompt() {
       {isIOS && (
         <p>
           To install this app on your iOS device, tap the share button{" "}
-          <img
-            src="share-icon.png"
+          <Image
+            src="/share-icon.png"
             alt="share icon"
+            width={20}
+            height={20}
             style={{ verticalAlign: "middle" }}
           />
-          and then "Add to Home Screen"
-          <img
-            src="plus-icon.png"
+          and then &quot;Add to Home Screen&quot;
+          <Image
+            src="/plus-icon.png"
             alt="plus icon"
+            width={20}
+            height={20}
             style={{ verticalAlign: "middle" }}
           />
           .

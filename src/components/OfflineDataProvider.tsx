@@ -28,7 +28,7 @@ export const OfflineDataContext = createContext<OfflineData>({
 });
 
 interface OfflineDataProviderProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
 export function OfflineDataProvider({ children }: OfflineDataProviderProps) {
@@ -39,6 +39,9 @@ export function OfflineDataProvider({ children }: OfflineDataProviderProps) {
   });
 
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof window === "undefined") return;
+
     // Initialize offline data
     async function loadOfflineData() {
       await OfflineStorage.initializeOfflineData();

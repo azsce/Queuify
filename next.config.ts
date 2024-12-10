@@ -1,29 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const nextPWA = require("next-pwa")({
-  dest: "public",
-  disable: process.env.NODE_ENV === "development",
-  runtimeCaching: [
-    {
-      urlPattern: /^https?.*/,
-      handler: "NetworkFirst",
-      options: {
-        cacheName: "offlineCache",
-        expiration: {
-          maxEntries: 200,
-        },
-      },
-    },
-  ],
-  register: true,
-  skipWaiting: true,
-});
+import { type NextConfig } from "next";
 
-module.exports = nextPWA({
+const config: NextConfig = {
   output: "export",
   reactStrictMode: true,
   experimental: {
-    turbo: {
-      enabled: true,
-    },
+    turbo: {},
   },
-});
+};
+
+export default config;
