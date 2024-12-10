@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import Loading from "@/components/Loading";
 import MuiThemeProvider from "@/components/MuiThemeProvider";
+import InstallPrompt from "@/components/InstallPrompt";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -47,6 +48,7 @@ export default function RootLayout({
                 }}
               >
                 <Loading>
+                  {/* <InstallPrompt /> */}
                   <TopAppBar />
                   {children}
                 </Loading>
