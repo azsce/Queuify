@@ -177,9 +177,19 @@ export default function QueuingTheoryCalculator() {
           },
           marginLeft: "auto",
           marginRight: "auto",
+          t: 0,
+          p: 0,
+          borderRadius: 0,
         })}
       >
-        <Card>
+        <Card
+          sx={{
+            mt: 0,
+            p: 0,
+            borderRadius: 0,
+            height: "100vh",
+          }}
+        >
           <CardHeader></CardHeader>
           <CardContent>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
