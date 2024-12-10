@@ -106,6 +106,10 @@ export default function QueuingTheoryCalculator() {
         );
         if (characteristics.validSystem) {
           setMmResults(<MMResults characteristics={characteristics} />);
+        } else {
+          setError(
+            "The system is unstable. Please check the arrival and service rates."
+          );
         }
       } else if (processType === "D/D" && servers === 1 && capacity !== null) {
         if (arrivalRate === serviceRate || arrivalRate < serviceRate) {

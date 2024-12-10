@@ -29,10 +29,10 @@ const links = [
     label: "D/D/1/(k-1)",
     href: "/dd1k",
   },
-  // {
-  //     label: "M/M/1",
-  //     href: "/mm1",
-  // },
+  {
+    label: "M/M/C/K",
+    href: "/mm",
+  },
 ];
 
 export default function TopAppBar() {
