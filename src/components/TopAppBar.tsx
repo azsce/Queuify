@@ -14,8 +14,8 @@ import {
 import {
   DarkMode,
   Home as HomeIcon,
-  Nightlight,
   Menu as MenuIcon,
+  LightMode,
 } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -82,6 +82,11 @@ export default function TopAppBar() {
           flexDirection: "row",
           justifyContent: "space-between",
           width: "100%",
+          backgroundColor: "background.paper",
+          color: "text.primary",
+          boxShadow: 0,
+          borderRadius: 0,
+          borderBottom: 1,
         }}
       >
         <Toolbar
@@ -148,7 +153,7 @@ export default function TopAppBar() {
                 setTheme(theme === "dark" ? "light" : "dark");
               }}
             >
-              {theme === "dark" ? <Nightlight /> : <DarkMode />}
+              {theme === "dark" ? <LightMode /> : <DarkMode />}
             </IconButton>
           </Box>
         </Toolbar>

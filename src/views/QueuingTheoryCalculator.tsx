@@ -18,7 +18,14 @@ import ProcessTypeSelector from "@/components/queuing/ProcessTypeSelector";
 // import { MathJaxContext } from "better-react-mathjax";
 import { DD1KCharacteristics } from "@/types/dd1k";
 // import { InfoIcon } from "lucide-react";
-import { Card, CardHeader, CardContent, Box, Container } from "@mui/material";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Box,
+  Container,
+  Typography,
+} from "@mui/material";
 import { Process } from "@/types/queue";
 import Grid from "@mui/material/Grid2";
 import { NoNumberArrowsTextField } from "../components/NoNumberArrowsTextField";
@@ -160,104 +167,115 @@ export default function QueuingTheoryCalculator() {
   };
 
   return (
-    <>
-      <Container
-        // maxWidth="lg"
-        sx={(theme) => ({
-          py: 4,
+    <Container
+      // maxWidth="lg"
+      sx={(theme) => ({
+        py: 4,
+        maxWidth: "100%",
+        [theme.breakpoints.up("xs")]: {
           maxWidth: "100%",
-          [theme.breakpoints.up("xs")]: {
-            maxWidth: "100%",
-          },
-          [theme.breakpoints.up("sm")]: {
-            maxWidth: theme.breakpoints.values.lg,
-          },
-          [theme.breakpoints.up("md")]: {
-            maxWidth: theme.breakpoints.values.md,
-          },
-          marginLeft: "auto",
-          marginRight: "auto",
-          t: 0,
+        },
+        [theme.breakpoints.up("sm")]: {
+          maxWidth: theme.breakpoints.values.lg,
+        },
+        [theme.breakpoints.up("md")]: {
+          maxWidth: theme.breakpoints.values.md,
+        },
+        marginLeft: "auto",
+        marginRight: "auto",
+        t: 0,
+        p: 0,
+        borderRadius: 0,
+      })}
+    >
+      <Card
+        sx={{
+          mt: 0,
           p: 0,
           borderRadius: 0,
-        })}
+          height: "100vh",
+          boxShadow: "none",
+        }}
       >
-        <Card
-          sx={{
-            mt: 0,
-            p: 0,
-            borderRadius: 0,
-            height: "100vh",
-          }}
-        >
-          <CardHeader></CardHeader>
-          <CardContent>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <ProcessTypeSelector setProcessType={setQueueType} />
-              <SystemParameters
-                setServers={setServers}
-                setCapacity={setCapacity}
-                servers={servers}
-                capacity={capacity}
-                processType={queueType}
-              />
-              <InputParameters
-                setArrivalRate={setArrivalRate}
-                setServiceRate={setServiceRate}
-                arrivalRate={arrivalRate}
-                serviceRate={serviceRate}
-                setArrivalTime={setArrivalTime}
-                setServiceTime={setServiceTime}
-                arrivalTime={arrivalTime}
-                serviceTime={serviceTime}
-              />
-              {isInitialCutsomersRequired && (
-                <Grid container spacing={2}>
-                  <Grid size={{ xs: 12, sm: 6 }} container>
-                    {/* Empty Column */}
-                    <Grid size={1} />
-                    <Grid size={11}>
-                      <NoNumberArrowsTextField
-                        label="Initial Customers: M"
-                        value={initialCustomers}
-                        onChange={(e) =>
-                          setInitialCustomers(parseInt(e.target.value))
-                        }
-                        required
-                        autoComplete="initial-customers"
-                        sx={{ width: "100%" }}
-                        error={isInitialCutsomersRequired && !initialCustomers}
-                      />
-                    </Grid>
+        <CardHeader></CardHeader>
+        <CardContent>
+          <Typography
+            variant="h4"
+            component="h1"
+            gutterBottom
+            sx={{
+              color: "#000000",
+              fontWeight: 600,
+              fontSize: { xs: "1.2rem", sm: "1.8rem", md: "2.25rem" },
+              textAlign: "center",
+              mt: 0,
+              mb: 2,
+            }}
+          >
+            Queuing Theory Calculator
+          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <ProcessTypeSelector setProcessType={setQueueType} />
+            <SystemParameters
+              setServers={setServers}
+              setCapacity={setCapacity}
+              servers={servers}
+              capacity={capacity}
+              processType={queueType}
+            />
+            <InputParameters
+              setArrivalRate={setArrivalRate}
+              setServiceRate={setServiceRate}
+              arrivalRate={arrivalRate}
+              serviceRate={serviceRate}
+              setArrivalTime={setArrivalTime}
+              setServiceTime={setServiceTime}
+              arrivalTime={arrivalTime}
+              serviceTime={serviceTime}
+            />
+            {isInitialCutsomersRequired && (
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, sm: 6 }} container>
+                  {/* Empty Column */}
+                  <Grid size={1} />
+                  <Grid size={11}>
+                    <NoNumberArrowsTextField
+                      label="Initial Customers: M"
+                      value={initialCustomers}
+                      onChange={(e) =>
+                        setInitialCustomers(parseInt(e.target.value))
+                      }
+                      required
+                      autoComplete="initial-customers"
+                      sx={{ width: "100%" }}
+                      error={isInitialCutsomersRequired && !initialCustomers}
+                    />
                   </Grid>
                 </Grid>
-              )}
-              <Grid size={12} container spacing={0} alignItems="start">
-                {/* Empty Column */}
-                <Grid size={1} />
-                <Grid size={11} justifyContent={"start"}>
-                  <Button
-                    variant="contained"
-                    onClick={handleCalculate}
-                    fullWidth
-                  >
-                    Process
-                  </Button>
-                </Grid>
               </Grid>
-            </Box>
+            )}
+            <Grid size={12} container spacing={0} alignItems="start">
+              {/* Empty Column */}
+              <Grid size={1} />
+              <Grid size={11} justifyContent={"start"}>
+                <Button variant="contained" onClick={handleCalculate} fullWidth>
+                  Process
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
 
-            <Box mt={4}>
-              {error && (
-                <Alert severity="error" sx={{ mb: 3 }}>
-                  <AlertTitle>Error</AlertTitle>
-                  {error}
-                </Alert>
-              )}
+          <Box mt={4}>
+            {error && (
+              <Alert severity="error" sx={{ mb: 3 }}>
+                <AlertTitle>Error</AlertTitle>
+                {error}
+              </Alert>
+            )}
 
-              {results}
+            {results}
 
-              {/* <Alert severity="info" className="mt-6">
+            {/* <Alert severity="info" className="mt-6">
                 <InfoIcon className="h-4 w-4" />
                 <AlertTitle>Note</AlertTitle>
                 <span className="ml-2 mt-1">
@@ -266,10 +284,9 @@ export default function QueuingTheoryCalculator() {
                   may be limited or require additional explanation.
                 </span>
               </Alert> */}
-            </Box>
-          </CardContent>
-        </Card>
-      </Container>
-    </>
+          </Box>
+        </CardContent>
+      </Card>
+    </Container>
   );
 }

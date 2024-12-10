@@ -1,32 +1,36 @@
 "use client";
 
-import { createTheme, ThemeProvider } from "@mui/material";
-import React from "react";
+import nextJsDarkTheme from "@/theme/nextJsDarkTheme";
+import nextJsTheme from "@/theme/nextJsTheme";
+import { ThemeProvider } from "@mui/material";
+import { useTheme } from "next-themes";
+import React, { useMemo } from "react";
 
 type MuiThemeProviderProps = Readonly<{
   children: React.ReactNode;
   defaultMode?: "light" | "dark" | "system";
 }>;
 
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
+const darkTheme = nextJsDarkTheme;
 
-const lightTheme = createTheme({
-  palette: {
-    mode: "light",
-  },
-});
+const lightTheme = nextJsTheme;
 
 const MuiThemeProvider: React.FC<MuiThemeProviderProps> = ({
   children,
   defaultMode = "dark",
 }) => {
-  const theme = defaultMode === "light" ? lightTheme : darkTheme;
+  const { theme } = useTheme();
+  const muiTheme = useMemo(() => {
+    if (theme === "dark") {
+      return darkTheme;
+    } else if (theme === "light") {
+      return lightTheme;
+    }
 
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+    return defaultMode === "dark" ? darkTheme : lightTheme;
+  }, [theme, defaultMode]);
+
+  return <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>;
 };
 
 export default MuiThemeProvider;
