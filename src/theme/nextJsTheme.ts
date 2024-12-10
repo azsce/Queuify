@@ -4,7 +4,7 @@ const nextJsTheme = createTheme({
   palette: {
     mode: "light", // Switch to 'dark' if you prefer the dark mode look of Next.js.
     primary: {
-      main: "#0070f3", // Next.js signature blue color
+      main: "#000", // Next.js signature blue color
     },
     secondary: {
       main: "#333333", // A dark grey for contrast
