@@ -117,7 +117,6 @@ const CombinedGraph: React.FC<CombinedGraphProps> = ({
           borderRadius: 2,
           border: 1,
           borderColor: "divider",
-          backgroundColor: "background.paper",
           p: { xs: 0, sm: 4 },
           display: "flex",
           flexDirection: "column",

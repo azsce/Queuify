@@ -88,7 +88,6 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
           borderRadius: subGraph ? 0 : 2,
           border: subGraph ? 0 : 1,
           borderColor: "divider",
-          backgroundColor: "background.paper",
           p: subGraph ? 0 : { xs: 0, sm: 4 },
         }}
       >
@@ -144,7 +143,6 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
               }}
               allowDecimals={false}
               domain={[0, capacity]}
-              stroke={theme.palette.primary.main}
             />
             <Tooltip />
             <Line

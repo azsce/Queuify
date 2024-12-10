@@ -84,7 +84,6 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
           borderRadius: subGraph ? 0 : 2,
           border: subGraph ? 0 : 1,
           borderColor: "divider",
-          backgroundColor: "background.paper",
           p: subGraph ? 0 : { xs: 0, sm: 4 },
         }}
       >
@@ -140,7 +139,6 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                 dy: 85,
               }}
               allowDecimals={false}
-              stroke={theme.palette.primary.main}
             />
             <Tooltip />
             <Line

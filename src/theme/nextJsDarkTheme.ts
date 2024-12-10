@@ -4,7 +4,7 @@ const nextJsDarkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#0070f3", // Next.js signature blue color
+      main: "#FFF", // Next.js signature blue color
     },
     secondary: {
       main: "#eaeaea", // Light grey for contrast
@@ -49,10 +49,10 @@ const nextJsDarkTheme = createTheme({
           textTransform: "none", // Avoid uppercase
         },
         contained: {
-          backgroundColor: "#0070f3",
+          backgroundColor: "#111",
           color: "#ffffff",
           "&:hover": {
-            backgroundColor: "#005bb5",
+            backgroundColor: "#000",
           },
         },
       },

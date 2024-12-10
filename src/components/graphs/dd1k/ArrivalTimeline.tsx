@@ -107,7 +107,6 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
           borderRadius: subGraph ? 0 : 2,
           border: subGraph ? 0 : 1,
           borderColor: "divider",
-          backgroundColor: "background.paper",
           p: subGraph ? 0 : { xs: 0, sm: 4 },
         }}
       >
@@ -166,7 +165,6 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
               }}
               tickCount={1}
               tickFormatter={() => ""} // Add tick formatter
-              stroke={theme.palette.primary.main}
             />
             <Tooltip />
             {dataWithCustomers.map((entry, index) => (

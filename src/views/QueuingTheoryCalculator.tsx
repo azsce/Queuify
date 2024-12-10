@@ -193,7 +193,8 @@ export default function QueuingTheoryCalculator() {
           mt: 0,
           p: 0,
           borderRadius: 0,
-          height: "100vh",
+          height: "100%",
+          minHeight: "100vh",
           boxShadow: "none",
         }}
       >
@@ -204,17 +205,25 @@ export default function QueuingTheoryCalculator() {
             component="h1"
             gutterBottom
             sx={{
-              color: "#000000",
               fontWeight: 600,
               fontSize: { xs: "1.2rem", sm: "1.8rem", md: "2.25rem" },
               textAlign: "center",
               mt: 0,
               mb: 2,
+              borderBottom: 1,
+              borderColor: "divider",
+              pb: 2,
             }}
           >
             Queuing Theory Calculator
           </Typography>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+            }}
+          >
             <ProcessTypeSelector setProcessType={setQueueType} />
             <SystemParameters
               setServers={setServers}

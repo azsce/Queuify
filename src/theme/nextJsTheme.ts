@@ -49,10 +49,10 @@ const nextJsTheme = createTheme({
           textTransform: "none", // Avoid uppercase
         },
         contained: {
-          backgroundColor: "#0070f3",
+          backgroundColor: "#111",
           color: "#ffffff",
           "&:hover": {
-            backgroundColor: "#005bb5",
+            backgroundColor: "#000",
           },
         },
       },

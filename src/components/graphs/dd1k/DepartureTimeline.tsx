@@ -101,7 +101,6 @@ const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
           borderRadius: subGraph ? 0 : 2,
           border: subGraph ? 0 : 1,
           borderColor: "divider",
-          backgroundColor: "background.paper",
           p: subGraph ? 0 : { xs: 0, sm: 4 },
         }}
       >
@@ -159,7 +158,6 @@ const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
               }}
               tickCount={1}
               tickFormatter={() => ""} // Add tick formatter
-              stroke={theme.palette.primary.main}
             />
             <Tooltip />
             {data.map((entry, index) => (

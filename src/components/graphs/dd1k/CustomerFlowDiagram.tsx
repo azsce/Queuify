@@ -96,7 +96,6 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
           borderRadius: subGraph ? 0 : 2,
           border: subGraph ? 0 : 1,
           borderColor: "divider",
-          backgroundColor: "background.paper",
           p: subGraph ? 0 : { xs: 0, sm: 4 },
         }}
       >
@@ -155,7 +154,6 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                 dy: 60,
               }}
               allowDecimals={false}
-              stroke={theme.palette.primary.main}
             />
             <Tooltip />
             <Line
