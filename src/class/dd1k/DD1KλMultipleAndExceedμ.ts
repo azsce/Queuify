@@ -13,7 +13,7 @@ class DD1KλMultipleAndExceedμ extends DD1KλExceedμ {
 
   waitingTimeForNthCustomerAtSteadyState(n: number): number {
     return (
-      (1 / this.serviceRate - 1 / this.arrivalRate) *
+      (this.serviceTime - 1 / this.arrivalRate) *
       (this.arrivalRate * this.firstBalkTime - 2)
     );
   }

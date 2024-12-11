@@ -51,7 +51,11 @@ class DD1KλExceedμ extends DD1K {
     this.type = "λ > μ";
 
     this.arrivalRate = arrivalRate;
+    this.arrivalTime = 1 / arrivalRate;
+
     this.serviceRate = serviceRate;
+    this.serviceTime = 1 / serviceRate;
+
     this.capacity = capacity;
 
     this.arrivalRateFraction = toProperFraction(arrivalRate);
@@ -78,10 +82,9 @@ class DD1KλExceedμ extends DD1K {
     let firstBalkTime = 0;
     while (true) {
       firstBalkTime += 1 / this.arrivalRate; // Increment by inter-arrival time
-      const lambdaTiFloored  = Math.floor(this.arrivalRate * firstBalkTime);
+      const lambdaTiFloored = Math.floor(this.arrivalRate * firstBalkTime);
       const muTi = this.serviceRate * firstBalkTime;
-      const muTiMinusMuOverLambda =
-        muTi - this.serviceRate / this.arrivalRate;
+      const muTiMinusMuOverLambda = muTi - this.serviceRate / this.arrivalRate;
 
       const muTiMinusMuOverLambdaFloored = Math.floor(
         muTiMinusMuOverLambda + EPSILON
@@ -128,7 +131,7 @@ class DD1KλExceedμ extends DD1K {
   }
 
   isServiceCompletion(t: number): boolean {
-    const serviceTime = 1 / this.serviceRate;
+    const serviceTime = this.serviceTime;
 
     // Check if time t is a service completion time by seeing if (t - 1/λ) is a multiple of service time
     const timeFromFirstService = t - 1 / this.arrivalRate;
@@ -176,7 +179,7 @@ class DD1KλExceedμ extends DD1K {
     if (n === 0) {
       return 0;
     } else if (n < this.arrivalRate * this.firstBalkTime) {
-      return (1 / this.serviceRate - 1 / this.arrivalRate) * (n - 1);
+      return (this.serviceTime - 1 / this.arrivalRate) * (n - 1);
     } else {
       return this.waitingTimeForNthCustomerAtSteadyState(n);
     }
@@ -186,12 +189,12 @@ class DD1KλExceedμ extends DD1K {
     const remainder = n % 2;
     if (remainder === 0) {
       return (
-        (1 / this.serviceRate - 1 / this.arrivalRate) *
+        (this.serviceTime - 1 / this.arrivalRate) *
         (this.arrivalRate * this.firstBalkTime - 3)
       );
     } else {
       return (
-        (1 / this.serviceRate - 1 / this.arrivalRate) *
+        (this.serviceTime - 1 / this.arrivalRate) *
         (this.arrivalRate * this.firstBalkTime - 2)
       );
     }
@@ -240,7 +243,7 @@ class DD1KλExceedμ extends DD1K {
     const data = [];
     const maxTime = xAxisMax ?? this.graphMaxTime();
     const arrivalTime = 1 / this.arrivalRate; // Match arrival timeline step
-    const serviceTime = 1 / this.serviceRate;
+    const serviceTime = this.serviceTime;
 
     // Start with t=0 for initial state
     data.push({

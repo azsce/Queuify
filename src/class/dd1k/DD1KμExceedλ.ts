@@ -16,7 +16,11 @@ class DD1KμExceedλ extends DD1K {
     this.type = "λ < μ";
 
     this.arrivalRate = arrivalRate;
+    this.arrivalTime = 1 / arrivalRate;
+
     this.serviceRate = serviceRate;
+    this.serviceTime = 1 / serviceRate;
+
     this.capacity = capacity;
     this.initialCustomers = initialCustomers;
 
@@ -33,7 +37,7 @@ class DD1KμExceedλ extends DD1K {
     this.muTiFloored = Math.floor(this.muTi);
 
     this.lastInitialCustomerDepartureTime =
-      this.initialCustomers * (1 / this.serviceRate);
+      this.initialCustomers * (this.serviceTime);
   }
 
   /**
@@ -89,7 +93,7 @@ class DD1KμExceedλ extends DD1K {
   waitingTimeForNthCustomer(n: number): number {
     if (n < Math.floor(this.arrivalRate * this.transientTime)) {
       return (
-        (this.initialCustomers - 1 + n) * (1 / this.serviceRate) -
+        (this.initialCustomers - 1 + n) * (this.serviceTime) -
         n * (1 / this.arrivalRate)
       );
     } else {
@@ -147,6 +151,47 @@ class DD1KμExceedλ extends DD1K {
     ); // Round up max time
   }
 
+  getServiceEventAtTime(t: number): {
+    entersService: boolean;
+    isInitial: boolean;
+    customerIndex: string;
+  } {
+    if (t < this.lastInitialCustomerDepartureTime) {
+      const mod = t % (this.serviceTime); 
+      console.log("t", t, "mod", mod);
+      if (mod === 0) {
+        return {
+          entersService: true,
+          isInitial: true,
+          customerIndex: `M${Math.floor(t * this.serviceRate) + 1}`,
+        };
+      }
+    } else {
+      if (t <= this.transientTime) {
+        const n = this.computeNOfT(t);
+        if (n > 0) {
+          return {
+            entersService: true,
+            isInitial: false,
+            customerIndex: `C${Math.floor(t * this.serviceRate) + 1 - this.initialCustomers}`,
+          };
+        }
+      } else if (t % (1 / this.arrivalRate) === 0) {
+        return {
+          entersService: true,
+          isInitial: false,
+          customerIndex: `C${Math.floor(t * this.serviceRate) + 1 - this.initialCustomers}`,
+        };
+      }
+    }
+
+    return {
+      entersService: false,
+      isInitial: false,
+      customerIndex: "",
+    };
+  }
+
   generateServiceTimelineData(
     xAxisMax?: number
   ): Array<{ time: string; service: number; customerIndex: string }> {
@@ -162,49 +207,27 @@ class DD1KμExceedλ extends DD1K {
     let t = 0;
 
     while (t < maxTime) {
-      const roundedTime = Math.round(t).toString();
+      const serviceEvent = this.getServiceEventAtTime(t);
 
-      if (t < this.lastInitialCustomerDepartureTime) {
+      if (serviceEvent.entersService) {
         data.push({
-          time: roundedTime,
+          time: Math.round(t).toString(),
           service: currentCustomer,
-          customerIndex: `M${currentCustomer++}`,
-          inital: true,
+          customerIndex: serviceEvent.customerIndex,
+          inital: serviceEvent.isInitial,
         });
+        currentCustomer++;
       } else {
-        let pushed = false;
-        if (t <= this.transientTime) {
-          const n = this.computeNOfT(t);
-          if (n > 0) {
-            data.push({
-              time: roundedTime,
-              service: currentCustomer,
-              customerIndex: `C${currentCustomer++ - this.initialCustomers}`,
-              inital: false,
-            });
-            pushed = true;
-          }
-        } else if (t % (1 / this.arrivalRate) === 0) {
-          data.push({
-            time: roundedTime,
-            service: currentCustomer,
-            customerIndex: `C${currentCustomer++ - this.initialCustomers}`,
-            inital: false,
-          });
-          pushed = true;
-        }
-
-        if (!pushed) {
-          data.push({
-            time: roundedTime,
-            service: 0,
-            customerIndex: "",
-            inital: false,
-          });
-        }
+        data.push({
+          time: Math.round(t).toString(),
+          service: 0,
+          customerIndex: "",
+          inital: false,
+        });
       }
 
-      t += 1 / this.serviceRate;
+      // t += this.serviceTime;
+      t++;
     }
 
     return data;

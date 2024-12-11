@@ -108,6 +108,9 @@ abstract class DD1K {
   arrivalRateFraction: Fraction;
   serviceRateFraction: Fraction;
 
+  arrivalTime: number;
+  serviceTime: number;
+
   firstBalkTime?: number;
   transientTime?: number;
 

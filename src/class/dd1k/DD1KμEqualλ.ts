@@ -14,7 +14,11 @@ class DD1KμEqualλ extends DD1K {
     this.type = "λ = μ";
 
     this.arrivalRate = arrivalRate;
+    this.arrivalTime = 1 / arrivalRate;
+
     this.serviceRate = serviceRate;
+    this.serviceTime = 1 / serviceRate;
+
     this.capacity = capacity;
     this.initialCustomers = initialCustomers;
 
@@ -41,6 +45,9 @@ class DD1KμEqualλ extends DD1K {
     return false;
   }
 
+  getServiceEventAtTime(t: number): { entersService: boolean; isInitial: boolean; customerIndex: string } {
+    throw new Error("Method not implemented.");
+  }
 
   generateServiceTimelineData(
     xAxisMax?: number
@@ -56,7 +63,7 @@ class DD1KμEqualλ extends DD1K {
         service,
         customerIndex: customerIndex.toString(),
       });
-      time += 1 / this.serviceRate;
+      time += this.serviceTime;
       service = 1;
       customerIndex += 1;
     }
