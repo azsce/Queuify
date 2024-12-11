@@ -3,6 +3,8 @@ import DD1K from "./DD1K";
 import { toProperFraction } from "@/lib/math";
 
 class DD1KμExceedλ extends DD1K {
+  lastInitialCustomerDepartureTime: number;
+
   constructor(
     arrivalRate: number,
     serviceRate: number,
@@ -29,6 +31,9 @@ class DD1KμExceedλ extends DD1K {
 
     this.muTi = this.serviceRate * this.transientTime;
     this.muTiFloored = Math.floor(this.muTi);
+
+    this.lastInitialCustomerDepartureTime =
+      this.initialCustomers * (1 / this.serviceRate);
   }
 
   /**
@@ -92,8 +97,41 @@ class DD1KμExceedλ extends DD1K {
     }
   }
 
+  /**
+   * Computes the number of initial customers remaining in the system at time t.
+   * @param t - Current time
+   * @returns Number of initial customers remaining in the system at time t
+   */
+  computeInitialCustomersRemaining(t: number): number {
+    if (t < this.lastInitialCustomerDepartureTime) {
+      return this.initialCustomers - Math.floor(t * this.serviceRate);
+    } else {
+      return 0;
+    }
+  }
+
+  /**
+   * Computes the number of new customers in the system at time t.
+   * @param t - Current time
+   * @returns Number of new customers in the system at time t
+   */
+  computeNewCustomersInSystem(t: number): number {
+    const totalCustomers = this.computeNOfT(t);
+
+    if (t < this.lastInitialCustomerDepartureTime) {
+      return totalCustomers - this.computeInitialCustomersRemaining(t);
+    } else {
+      return totalCustomers;
+    }
+  }
+
   canCustomerEnterSystem(t: number): boolean {
-    return true;
+    if (t >= this.transientTime) {
+      return true;
+    }
+    const newCustomers = this.computeNewCustomersInSystem(t);
+    console.log("canCustomerEnterSystem newCustomers" + newCustomers);
+    return newCustomers < this.capacity;
   }
 
   /**
@@ -111,21 +149,38 @@ class DD1KμExceedλ extends DD1K {
   generateServiceTimelineData(
     xAxisMax?: number
   ): Array<{ time: string; service: number; customerIndex: string }> {
-    const data = [];
-    let customerIndex = 0;
-    let service = 0;
-    let time = 0;
+    const maxTime = xAxisMax ?? this.graphMaxTime();
 
-    while (time < xAxisMax) {
-      data.push({
-        time: time.toString(),
-        service,
-        customerIndex: customerIndex.toString(),
-      });
-      time += 1 / this.serviceRate;
-      service = 1;
-      customerIndex += 1;
+    const data = [];
+    let currentCustomer = 1;
+    let t = 0;
+
+    while (t < maxTime) {
+      const roundedTime = Math.round(t).toString();
+
+      if (t < this.lastInitialCustomerDepartureTime) {
+        data.push({
+          time: roundedTime,
+          service: currentCustomer,
+          customerIndex: `M${currentCustomer++}`,
+          inital: true,
+        });
+      } else {
+        const n = this.computeNOfT(t);
+        if (n > 0) {
+          data.push({
+            time: roundedTime,
+            service: currentCustomer,
+            customerIndex: `C${currentCustomer++ - this.initialCustomers}`,
+            inital: false,
+          });
+        }
+      }
+
+      t += 1 / this.serviceRate;
     }
+
+    console.log("generateServiceTimelineData data", data);
 
     return data;
   }

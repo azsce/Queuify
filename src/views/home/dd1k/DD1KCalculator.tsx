@@ -21,11 +21,26 @@ import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextFie
 
 export default function DD1KCalculator() {
   // dd1k
-  const [capacity, setCapacity] = useState<number | undefined>();
-  const [arrivalRate, setArrivalRate] = useState("");
-  const [serviceRate, setServiceRate] = useState("");
-  const [arrivalTime, setArrivalTime] = useState("");
-  const [serviceTime, setServiceTime] = useState("");
+  const [capacity, setCapacity] = useState<number | undefined>(() => {
+    const saved = localStorage.getItem("capacity");
+    return saved !== null && saved !== "undefined" ? JSON.parse(saved) : undefined;
+  });
+  const [arrivalRate, setArrivalRate] = useState(() => {
+    const saved = localStorage.getItem("arrivalRate");
+    return saved ?? "";
+  });
+  const [serviceRate, setServiceRate] = useState(() => {
+    const saved = localStorage.getItem("serviceRate");
+    return saved ?? "";
+  });
+  const [arrivalTime, setArrivalTime] = useState(() => {
+    const saved = localStorage.getItem("arrivalTime");
+    return saved ?? "";
+  });
+  const [serviceTime, setServiceTime] = useState(() => {
+    const saved = localStorage.getItem("serviceTime");
+    return saved ?? "";
+  });
 
   // mmxy
   const [error, setError] = useState("");
@@ -33,9 +48,10 @@ export default function DD1KCalculator() {
 
   const [isInitialCutsomersRequired, setIsInitialCutsomersRequired] =
     useState(false);
-  const [initialCustomers, setInitialCustomers] = useState<
-    number | undefined
-  >(undefined);
+  const [initialCustomers, setInitialCustomers] = useState<number | undefined>(() => {
+    const saved = localStorage.getItem("initialCustomers");
+    return saved !== null && saved !== "undefined" ? JSON.parse(saved) : undefined;
+  });
 
   useEffect(() => {
     if (arrivalRate === "" || serviceRate === "") {
@@ -46,6 +62,30 @@ export default function DD1KCalculator() {
       setIsInitialCutsomersRequired(false);
     }
   }, [arrivalRate, serviceRate]);
+
+  useEffect(() => {
+    localStorage.setItem("capacity", JSON.stringify(capacity));
+  }, [capacity]);
+
+  useEffect(() => {
+    localStorage.setItem("arrivalRate", arrivalRate);
+  }, [arrivalRate]);
+
+  useEffect(() => {
+    localStorage.setItem("serviceRate", serviceRate);
+  }, [serviceRate]);
+
+  useEffect(() => {
+    localStorage.setItem("arrivalTime", arrivalTime);
+  }, [arrivalTime]);
+
+  useEffect(() => {
+    localStorage.setItem("serviceTime", serviceTime);
+  }, [serviceTime]);
+
+  useEffect(() => {
+    localStorage.setItem("initialCustomers", JSON.stringify(initialCustomers));
+  }, [initialCustomers]);
 
   const handleCalculate = () => {
     // Clear previous errors and results

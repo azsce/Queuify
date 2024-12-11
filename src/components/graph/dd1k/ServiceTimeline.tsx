@@ -106,7 +106,7 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
             )}
             <YAxis
               label={{
-                value: "Service TimeLine",
+                value: "-> Service",
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
@@ -116,9 +116,9 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
               tickFormatter={() => ""} // Add tick formatter
             />
             <Tooltip />
-            {data.map((entry, index) => (
+            {data.map((entry) => (
               <ReferenceLine
-                key={index}
+                key={entry.time}
                 x={entry.time}
                 xAxisId={
                   showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"

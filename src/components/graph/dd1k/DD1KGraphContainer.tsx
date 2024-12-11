@@ -41,28 +41,28 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ dd1k }) => {
         showTopAxis={true}
         showBottomAxis={true}
       />
-      {/* <ServiceTimeline
+      <ServiceTimeline
+        dd1k={dd1k}
+        height={GRAPH_HEIGHT/2}
+        subGraph={true}
+        showTopAxis={true}
+        showBottomAxis={true}
+      />
+      {/* <DepartureTimeline
         {...props}
         height={GRAPH_HEIGHT}
         subGraph={true}
         showTopAxis={true}
         showBottomAxis={true}
-      />
-      <DepartureTimeline
-        {...props}
-        height={GRAPH_HEIGHT}
-        subGraph={true}
-        showTopAxis={true}
-        showBottomAxis={true}
-      />
-      <NumberOfCustomersGraph
+      /> */}
+      {/* <NumberOfCustomersGraph
         {...props}
         height={GRAPH_HEIGHT}
         subGraph={true}
         showTopAxis={false}
         showBottomAxis={false}
-      />
-      <WaitingTimeGraph
+      /> */}
+      {/* <WaitingTimeGraph
         {...props}
         height={GRAPH_HEIGHT}
         subGraph={true}

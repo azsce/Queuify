@@ -157,21 +157,21 @@ class DD1KλExceedμ extends DD1K {
    */
   canCustomerEnterSystem(t: number): boolean {
     // Early time checks
-    if (t < this.firstBalkTime) return false;
-    if (Math.abs(t - this.firstBalkTime) < EPSILON) return true;
+    if (t < this.firstBalkTime) return true;
+    if (Math.abs(t - this.firstBalkTime) < EPSILON) return false;
 
     // For t > t_i, check queue state and service completion
     const currentState = this.computeNOfT(t);
 
     if (currentState < this.capacity - 1) {
-      return false;
+      return true;
     }
 
     if (currentState === this.capacity - 1) {
-      return !this.isServiceCompletion(t);
+      return this.isServiceCompletion(t);
     }
 
-    return true;
+    return false;
   }
 
   waitingTimeForNthCustomer(n: number): number {
