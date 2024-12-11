@@ -155,7 +155,7 @@ abstract class DD1K {
   }
 
   generateArrivalTimelineData(xAxisMax?: number): Array<{
-    time: string;
+    time: number;
     arrival: number;
     blocked: boolean;
   }> {
@@ -165,7 +165,7 @@ abstract class DD1K {
 
     // Start with t=0 for initial state
     data.push({
-      time: "0",
+      time: 0,
       arrival: 0,
       blocked: false,
     });
@@ -175,7 +175,7 @@ abstract class DD1K {
       const arrivals = Math.floor(t * this.arrivalRate);
       const blocked = !this.canCustomerEnterSystem(t);
       data.push({
-        time: Math.round(t).toString(), // Round time to whole numbers
+        time: Math.round(t), // Round time to whole numbers
         arrival: arrivals,
         blocked: blocked,
       });

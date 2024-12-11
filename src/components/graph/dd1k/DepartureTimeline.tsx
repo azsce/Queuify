@@ -12,7 +12,6 @@ import {
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { DD1KType } from "@/types/dd1k";
-import DD1K from "@/class/dd1k/dd1k";
 import { colors } from "@/constants";
 
 interface DepartureTimelineProps {

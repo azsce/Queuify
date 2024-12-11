@@ -91,30 +91,29 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                 stroke="transparent"
               />
             )}
-            {/* {showBottomAxis && (
+            {showBottomAxis && (
               <XAxis
                 xAxisId="bottom"
-                dataKey="customerIndex"
+                dataKey="time"
                 orientation="bottom"
-                label={{
-                  value: "Customer Served",
-                  position: "insideBottom",
-                  offset: -10,
-                  dy: 10,
+                tickFormatter={() => ""} // Add tick formatter
+                stroke="transparent"
+                axisLine={{
+                  stroke: theme.palette.text.primary,
+                  strokeWidth: 4,
                 }}
-                height={40}
-                tick={{ dy: 10 }}
               />
-            )} */}
+            )}
             <YAxis
               label={{
                 value: "-> Service",
                 angle: -90,
                 position: "insideLeft",
                 dx: isMobile ? 10 : -20,
-                dy: 70,
+                dy: 50,
               }}
               tickCount={1}
+              stroke="transparent"
               tickFormatter={() => ""} // Add tick formatter
             />
             <Tooltip />
@@ -134,18 +133,19 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                           parseInt(entry.customerIndex.slice(1)) % colors.length
                         ]
                 }
-                width={8}
-                strokeWidth={4}
+                strokeWidth={2}
                 label={{
                   value: entry.customerIndex,
-                  position: "top",
-                  fill: entry.customerIndex === ""
-                  ? "transparent"
-                  : entry.isInitialCustomer
-                    ? "black"
-                    : colors[
-                        parseInt(entry.customerIndex.slice(1)) % colors.length
-                      ],
+                  position: "bottom",
+                  fill:
+                    entry.customerIndex === ""
+                      ? "transparent"
+                      : entry.isInitialCustomer
+                        ? "black"
+                        : colors[
+                            parseInt(entry.customerIndex.slice(1)) %
+                              colors.length
+                          ],
                   fontSize: 12,
                 }}
               />

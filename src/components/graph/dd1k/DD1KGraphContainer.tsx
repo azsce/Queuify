@@ -39,14 +39,7 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ dd1k }) => {
         dd1k={dd1k}
         height={GRAPH_HEIGHT / 2}
         subGraph={true}
-        showTopAxis={true}
-        showBottomAxis={true}
-      />
-      <EmptyGraph
-        dd1k={dd1k}
-        height={GRAPH_HEIGHT / 2}
-        subGraph={true}
-        showTopAxis={true}
+        showTopAxis={false}
         showBottomAxis={true}
       />
 
@@ -54,7 +47,7 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ dd1k }) => {
         dd1k={dd1k}
         height={GRAPH_HEIGHT / 2}
         subGraph={true}
-        showTopAxis={true}
+        showTopAxis={false}
         showBottomAxis={true}
       />
       {/* <DepartureTimeline

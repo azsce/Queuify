@@ -95,22 +95,31 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                   offset: -25, // Increased from -20
                 }}
                 tickLine={false}
-                tick={{ dy: -10 }}
                 tickSize={subGraph ? 0 : 2}
                 tickFormatter={() => ""}
-                axisLine={{ stroke: "transparent",
-                  
-                  strokeDasharray: "none" }} // Set the color of the axis line to black
+                axisLine={{
+                  stroke: "transparent",
+
+                  strokeDasharray: "none",
+                }} // Set the color of the axis line to black
               />
             )}
             {showBottomAxis && (
               <XAxis
                 xAxisId="bottom"
-                dataKey="time"
+                dataKey="customerIndex"
                 orientation="bottom"
-                tickFormatter={() => ""} // Add tick formatter
-                stroke="transparent"
-                axisLine={{ stroke: "black" }} // Set the color of the axis line to black
+                // tickFormatter={() => ""} // Add tick formatter
+                // stroke="transparent"
+                tick={{
+                  // stroke: theme.palette.text.primary,
+                  fontSize: 12,
+                  
+                }}
+                axisLine={{
+                  stroke: theme.palette.text.primary,
+                  strokeWidth: 4,
+                }} // Set the color of the axis line to black
               />
             )}
             <YAxis
@@ -126,40 +135,47 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
               stroke="transparent"
             />
             <Tooltip />
+            
             {dataWithCustomers.map((entry, index) => (
               <ReferenceLine
-                key={index}
-                x={entry.time}
+                key={entry.customerIndex}
+                x={entry.customerIndex}
                 xAxisId={
                   showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
                 }
                 stroke={
-                  entry.time === "0"
+                  entry.customerIndex === ""
                     ? "transparent"
                     : entry.blocked
                       ? "red"
                       : colors[index % colors.length]
                 }
-                label={
-                  entry.blocked
-                    ? {
-                        value: entry.customerIndex,
-                        position: "bottom",
-                        fill: "red",
-                        fontSize: 12,
-                      }
-                    : {
-                        value: entry.customerIndex,
-                        position: "bottom",
-                        fill:
-                          entry.time === "0"
-                            ? "transparent"
-                            : entry.blocked
-                              ? "red"
-                              : colors[index % colors.length],
-                        fontSize: 12,
-                      }
-                }
+                strokeWidth={2}
+                strokeDasharray={entry.blocked ? "3 3" : "none"}
+                // label={
+                  // 
+                  // entry.blocked
+                  //   ? {
+                  //       value: entry.customerIndex,
+                  //       position: "bottom",
+                  //       fill: "red",
+                  //       fontSize: 12,
+                  //       orientation: "vertical",
+                  //       rotate: -90,
+                        
+                  //     }
+                  //   : {
+                  //       value: entry.customerIndex,
+                  //       position: "bottom",
+                  //       fill:
+                  //         entry.time === 0
+                  //           ? "transparent"
+                  //           : entry.blocked
+                  //             ? "red"
+                  //             : colors[entry.time % colors.length],
+                  //       fontSize: 12,
+                  //     }
+                // }
               />
             ))}
           </LineChart>
