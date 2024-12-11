@@ -1,5 +1,6 @@
 import { DD1KType } from "@/types/dd1k";
 import { Fraction } from "@/types/math";
+import { timeLineData } from "@/types/timeLineData";
 
 /**
  * Algorithm to analyze and solve the D/D/1/(k-1) queue system for both cases λ > μ and λ ≤ μ,
@@ -123,6 +124,8 @@ abstract class DD1K {
 
   type: DD1KType;
 
+  timeLineData: timeLineData[];
+
   /**
    * Computes the number of customers in the system at time t.
    * @param t - Current time
@@ -151,8 +154,10 @@ abstract class DD1K {
   abstract canCustomerEnterSystem(t: number): boolean;
 
   graphMaxTime(): number {
-    return Math.ceil(Math.max(this.t_i * 2, 10)); // Round up max time
+    return Math.ceil(Math.max(this.t_i * 2, 10)) + 1; // Round up max time
   }
+
+  abstract generateTimeData(xAxisMax?: number): timeLineData[];
 
   generateArrivalTimelineData(xAxisMax?: number): Array<{
     time: number;

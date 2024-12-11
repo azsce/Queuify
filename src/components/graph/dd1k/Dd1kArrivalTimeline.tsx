@@ -30,17 +30,8 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
   subGraph,
   showTopAxis,
   showBottomAxis,
-  xAxisMax,
 }) => {
-  console.log("Dd1kArrivalTimeline height", height);
-
-  const data = dd1k.generateArrivalTimelineData(xAxisMax);
-
-  // Add customer indices to data
-  const dataWithCustomers = data.map((point, index) => ({
-    ...point,
-    customerIndex: index > 0 ? `C${index}` : "", // First index is empty
-  }));
+  const data = dd1k.timeLineData;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -71,13 +62,13 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
       >
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={dataWithCustomers}
+            data={data}
             margin={{
               top: subGraph ? 0 : 20,
               right: 0,
               left: isMobile ? 0 : 90,
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
-            }}
+            }}            
           >
             <CartesianGrid strokeDasharray="3 3" />
             {/* Add default XAxis when neither custom axis is shown */}
@@ -90,36 +81,44 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                 orientation="top"
                 xAxisId="top"
                 label={{
-                  value: subGraph ? "" : "Time (t)",
+                  value:"Time (t)",
                   position: "insideTop",
-                  offset: -25, // Increased from -20
+                  offset: 0, // Increased from -20
                 }}
                 tickLine={false}
                 tickSize={subGraph ? 0 : 2}
-                tickFormatter={() => ""}
+                // tickFormatter={() => ""}
                 axisLine={{
                   stroke: "transparent",
-
-                  strokeDasharray: "none",
+                  strokeDasharray: "transparent",
                 }} // Set the color of the axis line to black
+                dy={ -3}
+                interval={0}                
               />
             )}
             {showBottomAxis && (
               <XAxis
                 xAxisId="bottom"
-                dataKey="customerIndex"
+                dataKey="time"
                 orientation="bottom"
-                // tickFormatter={() => ""} // Add tick formatter
-                // stroke="transparent"
-                tick={{
-                  // stroke: theme.palette.text.primary,
-                  fontSize: 12,
+                tickFormatter={(value) => {
+                  const r = data.find((entry) => entry.time === value)?.arrived
+                    ? `C${data.find((entry) => entry.time === value)?.arrivals}`
+                    : "";
 
+                  return r;
                 }}
+                tickSize={0}
+                tick={{
+                  fontSize: 8,
+                  dy: 5,
+                }}
+                tickLine={true}
                 axisLine={{
                   stroke: theme.palette.text.primary,
                   strokeWidth: 4,
                 }} // Set the color of the axis line to black
+                interval={dd1k.arrivalTime -1}
               />
             )}
             <YAxis
@@ -135,20 +134,20 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
               stroke="transparent"
             />
             <Tooltip />
-            
-            {dataWithCustomers.map((entry, index) => (
+
+            {data.map((entry, index) => (
               <ReferenceLine
                 key={entry.key}
-                x={entry.customerIndex}
+                x={entry.time}
                 xAxisId={
                   showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
                 }
                 stroke={
-                  entry.customerIndex === ""
-                    ? "transparent"
-                    : entry.blocked
+                  entry.arrived
+                    ? entry.blocked
                       ? "red"
                       : colors[index % colors.length]
+                    : "transparent"
                 }
                 strokeWidth={2}
                 strokeDasharray={entry.blocked ? "3 3" : "none"}

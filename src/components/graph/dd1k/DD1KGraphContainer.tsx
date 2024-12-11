@@ -33,7 +33,7 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ dd1k }) => {
         dd1k={dd1k}
         height={GRAPH_HEIGHT / 2}
         subGraph={true}
-        showTopAxis={false}
+        showTopAxis={true}
         showBottomAxis={true}
       />
 
