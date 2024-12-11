@@ -183,10 +183,25 @@ abstract class DD1K {
     return data;
   }
 
+  generateXAxisSteps(xAxisMax: number): Array<{
+    time: string;
+  }> {
+    const maxTime = xAxisMax ?? this.graphMaxTime();
+    const steps = [];
+    const timeStep = 1 / this.arrivalRate;
+    for (let t = 0; t <= maxTime; t += timeStep) {
+      steps.push({
+        time: t.toString(),
+      });
+    }
+    return steps;
+  }
+
   abstract generateServiceTimelineData(xAxisMax?: number): Array<{
     time: string;
     service: number;
     customerIndex: string;
+    isInitialCustomer?: boolean;
   }>;
 }
 

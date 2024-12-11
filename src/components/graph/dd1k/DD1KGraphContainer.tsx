@@ -7,9 +7,10 @@ import { DD1KType } from "@/types/dd1k";
 import { Box } from "@mui/material";
 import CustomerFlowDiagram from "./CustomerFlowDiagram";
 import Dd1kArrivalTimeline from "./Dd1kArrivalTimeline";
-import ServiceTimeline from "./ServiceTimeline";
+import Dd1kServiceTimeline from "./Dd1kServiceTimeline";
 import DepartureTimeline from "./DepartureTimeline";
 import DD1K from "@/class/dd1k/DD1K";
+import EmptyGraph from "./EmptyGraph";
 
 type DD1KGraphContainerProps = {
   dd1k: DD1K;
@@ -36,14 +37,22 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ dd1k }) => {
       /> */}
       <Dd1kArrivalTimeline
         dd1k={dd1k}
-        height={GRAPH_HEIGHT /2}
+        height={GRAPH_HEIGHT / 2}
         subGraph={true}
         showTopAxis={true}
         showBottomAxis={true}
       />
-      <ServiceTimeline
+      <EmptyGraph
         dd1k={dd1k}
-        height={GRAPH_HEIGHT/2}
+        height={GRAPH_HEIGHT / 2}
+        subGraph={true}
+        showTopAxis={true}
+        showBottomAxis={true}
+      />
+
+      <Dd1kServiceTimeline
+        dd1k={dd1k}
+        height={GRAPH_HEIGHT / 2}
         subGraph={true}
         showTopAxis={true}
         showBottomAxis={true}

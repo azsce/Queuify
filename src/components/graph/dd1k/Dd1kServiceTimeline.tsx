@@ -14,16 +14,16 @@ import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { colors } from "@/constants";
 import DD1K from "@/class/dd1k/DD1K";
 
-interface ServiceTimelineProps {
+type Dd1kServiceTimelineProps = {
   dd1k: DD1K;
   height?: number;
   subGraph?: boolean;
   showTopAxis?: boolean;
   showBottomAxis?: boolean;
   xAxisMax?: number;
-}
+};
 
-const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
+const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
   dd1k,
   height,
   subGraph,
@@ -31,6 +31,7 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
   showBottomAxis,
   xAxisMax,
 }) => {
+  console.log("Dd1kServiceTimeline height", height);
   const data = dd1k.generateServiceTimelineData(xAxisMax);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -87,9 +88,10 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
                 // tick={{ dy: -10 }}
                 tickSize={0} // Remove ticks
                 tickFormatter={() => ""}
+                stroke="transparent"
               />
             )}
-            {showBottomAxis && (
+            {/* {showBottomAxis && (
               <XAxis
                 xAxisId="bottom"
                 dataKey="customerIndex"
@@ -103,7 +105,7 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
                 height={40}
                 tick={{ dy: 10 }}
               />
-            )}
+            )} */}
             <YAxis
               label={{
                 value: "-> Service",
@@ -126,16 +128,24 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
                 stroke={
                   entry.customerIndex === ""
                     ? "transparent"
+                    : entry.isInitialCustomer
+                      ? "black"
+                      : colors[
+                          parseInt(entry.customerIndex.slice(1)) % colors.length
+                        ]
+                }
+                width={8}
+                strokeWidth={4}
+                label={{
+                  value: entry.customerIndex,
+                  position: "top",
+                  fill: entry.customerIndex === ""
+                  ? "transparent"
+                  : entry.isInitialCustomer
+                    ? "black"
                     : colors[
                         parseInt(entry.customerIndex.slice(1)) % colors.length
-                      ]
-                }
-                label={{
-                  value: "◆",
-                  position: "top",
-                  fill: colors[
-                    parseInt(entry.customerIndex.slice(1)) % colors.length
-                  ],
+                      ],
                   fontSize: 12,
                 }}
               />
@@ -152,4 +162,4 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
   );
 };
 
-export default ServiceTimeline;
+export default Dd1kServiceTimeline;

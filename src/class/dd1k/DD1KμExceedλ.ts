@@ -157,32 +157,28 @@ class DD1KμExceedλ extends DD1K {
     customerIndex: string;
   } {
     if (t < this.lastInitialCustomerDepartureTime) {
-      const mod = t % (this.serviceTime); 
-      console.log("t", t, "mod", mod);
-      if (mod === 0) {
+      if (t % (this.serviceTime) === 0) {
         return {
           entersService: true,
           isInitial: true,
           customerIndex: `M${Math.floor(t * this.serviceRate) + 1}`,
         };
       }
-    } else {
-      if (t <= this.transientTime) {
-        const n = this.computeNOfT(t);
-        if (n > 0) {
-          return {
-            entersService: true,
-            isInitial: false,
-            customerIndex: `C${Math.floor(t * this.serviceRate) + 1 - this.initialCustomers}`,
-          };
-        }
-      } else if (t % (1 / this.arrivalRate) === 0) {
+    } else if (t <= this.transientTime) {
+      const n = this.computeNOfT(t);
+      if (n > 0) {
         return {
           entersService: true,
           isInitial: false,
           customerIndex: `C${Math.floor(t * this.serviceRate) + 1 - this.initialCustomers}`,
         };
       }
+    } else if (t % (1 / this.arrivalRate) === 0) {
+      return {
+        entersService: true,
+        isInitial: false,
+        customerIndex: `C${Math.floor(t * this.serviceRate) + 1 - this.initialCustomers}`,
+      };
     }
 
     return {
@@ -190,6 +186,19 @@ class DD1KμExceedλ extends DD1K {
       isInitial: false,
       customerIndex: "",
     };
+  }
+
+  generateEmptyGraphData(xAxisMax?: number) {
+    const maxTime = xAxisMax ?? this.graphMaxTime();
+    const data = [];
+
+    for (let t = 0; t < maxTime; t++) {
+      data.push({
+        time: Math.round(t).toString(),
+      });
+    }
+
+    return data;
   }
 
   generateServiceTimelineData(
@@ -214,7 +223,7 @@ class DD1KμExceedλ extends DD1K {
           time: Math.round(t).toString(),
           service: currentCustomer,
           customerIndex: serviceEvent.customerIndex,
-          inital: serviceEvent.isInitial,
+          isInitialCustomer: serviceEvent.isInitial,
         });
         currentCustomer++;
       } else {
@@ -222,12 +231,11 @@ class DD1KμExceedλ extends DD1K {
           time: Math.round(t).toString(),
           service: 0,
           customerIndex: "",
-          inital: false,
+          isInitialCustomer: false,
         });
       }
 
-      // t += this.serviceTime;
-      t++;
+      t += this.serviceTime;
     }
 
     return data;

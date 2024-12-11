@@ -32,6 +32,8 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
   showBottomAxis,
   xAxisMax,
 }) => {
+  console.log("Dd1kArrivalTimeline height", height);
+
   const data = dd1k.generateArrivalTimelineData(xAxisMax);
 
   // Add customer indices to data
@@ -92,24 +94,23 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                   position: "insideTop",
                   offset: -25, // Increased from -20
                 }}
-                tick={{ dy: -10 }} // Add this line to move ticks up
-                tickSize={subGraph ? 0 : 2} // Remove ticks
-                tickFormatter={() => ""} // Add tick formatter
+                tickLine={false}
+                tick={{ dy: -10 }}
+                tickSize={subGraph ? 0 : 2}
+                tickFormatter={() => ""}
+                axisLine={{ stroke: "transparent",
+                  
+                  strokeDasharray: "none" }} // Set the color of the axis line to black
               />
             )}
             {showBottomAxis && (
               <XAxis
                 xAxisId="bottom"
-                dataKey="customerIndex"
+                dataKey="time"
                 orientation="bottom"
-                label={{
-                  value: subGraph ? "" : "Customer Index",
-                  position: "insideBottom",
-                  offset: -10,
-                  dy: 10,
-                }}
-                height={40} // Add height for better visibility
-                tick={{ dy: 10 }} // Move ticks down
+                tickFormatter={() => ""} // Add tick formatter
+                stroke="transparent"
+                axisLine={{ stroke: "black" }} // Set the color of the axis line to black
               />
             )}
             <YAxis
@@ -122,6 +123,7 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
               }}
               tickCount={1}
               tickFormatter={() => ""} // Add tick formatter
+              stroke="transparent"
             />
             <Tooltip />
             {dataWithCustomers.map((entry, index) => (
@@ -141,12 +143,22 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                 label={
                   entry.blocked
                     ? {
-                        value: "⊗",
-                        position: "top",
+                        value: entry.customerIndex,
+                        position: "bottom",
                         fill: "red",
                         fontSize: 12,
                       }
-                    : undefined
+                    : {
+                        value: entry.customerIndex,
+                        position: "bottom",
+                        fill:
+                          entry.time === "0"
+                            ? "transparent"
+                            : entry.blocked
+                              ? "red"
+                              : colors[index % colors.length],
+                        fontSize: 12,
+                      }
                 }
               />
             ))}
