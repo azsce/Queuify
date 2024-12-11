@@ -46,7 +46,6 @@ import DD1K from "./DD1K";
 
 class DD1KλExceedμ extends DD1K {
   constructor(arrivalRate: number, serviceRate: number, capacity: number) {
-    console.log("Constrctor DD1KλExceedμ: λ > μ");
     super();
 
     this.type = "λ > μ";
@@ -76,7 +75,6 @@ class DD1KλExceedμ extends DD1K {
    * @returns The first time the system reaches capacity.
    */
   findFirstBalkTime(): number {
-    console.log("DD1KλExceedμ: Finding first balk time");
     let firstBalkTime = 0;
     while (true) {
       firstBalkTime += 1 / this.arrivalRate; // Increment by inter-arrival time

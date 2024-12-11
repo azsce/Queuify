@@ -20,15 +20,12 @@ export default function dD1KFactoryMethod(
 ): DD1K {
   if (arrivalRate > serviceRate) {
     if (arrivalRate % serviceRate === 0) {
-      console.log("dD1KFactoryMethod: λ > μ and λ%μ = 0");
       // λ > μ and λ%μ = 0
       return new DD1KλMultipleAndExceedμ(arrivalRate, serviceRate, capacity);
     }
-    console.log("dD1KFactoryMethod: λ > μ and λ%μ != 0");
     // λ > μ
     return new DD1KλExceedμ(arrivalRate, serviceRate, capacity);
   } else if (arrivalRate === serviceRate) {
-    console.log("dD1KFactoryMethod: λ = μ");
     // λ = μ
     return new DD1KμEqualλ(
       arrivalRate,
@@ -37,7 +34,6 @@ export default function dD1KFactoryMethod(
       initialCustomers
     );
   } else {
-    console.log("dD1KFactoryMethod: λ < μ");
     // λ < μ
     return new DD1KμExceedλ(
       arrivalRate,

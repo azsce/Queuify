@@ -120,7 +120,6 @@ export default function DD1KCalculator() {
           capacity,
           initialCustomers
         );
-        console.log("dd1k", dd1k);
         setResults(<DD1KResults dd1k={dd1k} />);
       } else {
         setError("Unsupported queue configuration.");

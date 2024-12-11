@@ -171,7 +171,6 @@ abstract class DD1K {
     for (let t = timeStep; t <= maxTime + 0.5; t += timeStep) {
       const arrivals = Math.floor(t * this.arrivalRate);
       const blocked = !this.canCustomerEnterSystem(t);
-      console.log("generateArrivalTimelineData blocked" + blocked);
       data.push({
         time: Math.round(t).toString(), // Round time to whole numbers
         arrival: arrivals,

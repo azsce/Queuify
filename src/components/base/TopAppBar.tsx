@@ -121,7 +121,6 @@ export default function TopAppBar() {
               <IconButton
                 color="inherit"
                 onClick={() => {
-                  console.log("clicked");
                   router.push("/");
                 }}
               >
@@ -135,7 +134,6 @@ export default function TopAppBar() {
               <IconButton
                 color="inherit"
                 onClick={() => {
-                  console.log("clicked");
                   router.push("/");
                 }}
               >

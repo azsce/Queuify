@@ -130,7 +130,6 @@ class DD1KμExceedλ extends DD1K {
       return true;
     }
     const newCustomers = this.computeNewCustomersInSystem(t);
-    console.log("canCustomerEnterSystem newCustomers" + newCustomers);
     return newCustomers < this.capacity;
   }
 
@@ -143,12 +142,16 @@ class DD1KμExceedλ extends DD1K {
   }
 
   graphMaxTime(): number {
-    return Math.ceil(Math.max(this.transientTime * 2, 10)); // Round up max time
+    return Math.ceil(
+      Math.max(this.transientTime + 10 * (1 / this.arrivalRate), 10)
+    ); // Round up max time
   }
 
   generateServiceTimelineData(
     xAxisMax?: number
   ): Array<{ time: string; service: number; customerIndex: string }> {
+    console.log("generateServiceTimelineData xAxisMax", xAxisMax);
+    console.log("generateServiceTimelineData this.graphMaxTime()", this.graphMaxTime());
     const maxTime = xAxisMax ?? this.graphMaxTime();
 
     const data = [];
