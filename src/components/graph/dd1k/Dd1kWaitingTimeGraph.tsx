@@ -11,45 +11,25 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import { DD1KType } from "@/types/dd1k";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import DD1K from "@/class/dd1k/DD1K";
 
 interface WaitingTimeGraphProps {
-  arrivalRate: number;
-  serviceRate: number;
-  capacity: number;
-  t_i: number;
-  systemType: DD1KType;
+  dd1k: DD1K;
   height?: number;
   subGraph?: boolean;
   showTopAxis?: boolean;
   showBottomAxis?: boolean;
 }
 
-const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
-  arrivalRate,
-  t_i,
+const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
+  dd1k,
   height,
   subGraph,
   showTopAxis,
   showBottomAxis,
 }) => {
-  const maxCustomers = Math.ceil(arrivalRate * t_i * 2); // Ensure we show enough customers after t_i
-
-  const generateData = () => {
-    const data = [];
-
-    for (let n = 0; n <= maxCustomers; n++) {
-      const waitingTime = 50;
-      data.push({
-        customer: n,
-        waitingTime: waitingTime,
-      });
-    }
-    return data;
-  };
-
-  const data = generateData();
+  const data = dd1k.customerGraphData;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -98,7 +78,7 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                 xAxisId="top"
                 orientation="top"
                 label={{
-                  value: "Customer Number (n)",
+                  value: "nth Customer",
                   position: "insideTop",
                   offset: -25,
                 }}
@@ -111,13 +91,16 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                 xAxisId="bottom"
                 orientation="bottom"
                 label={{
-                  value: "Customer Number (n)",
+                  value: "nth Customer",
                   position: "insideBottom",
                   offset: -10,
                   dy: 10,
                 }}
                 height={40}
-                tick={{ dy: 10 }}
+                tick={{ 
+                  dy: 10 ,
+                  fontSize: 8
+                }}
                 stroke={theme.palette.primary.main}
               />
             )}
@@ -144,15 +127,15 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
               }
             />
             <ReferenceLine
-              x={arrivalRate * t_i}
+              x={dd1k.lambdaTiFloored}
               xAxisId={
                 showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
               }
-              stroke={theme.palette.warning.main}
+              stroke="red"
               label={{
-                value: `n = λ * t_i`,
+                value: `n = ⌊λ*t_i⌋`,
                 position: "top",
-                fill: theme.palette.warning.main,
+                fill: "red",
                 fontSize: 12,
               }}
             />
@@ -163,4 +146,4 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
   );
 };
 
-export default WaitingTimeGraph;
+export default Dd1kWaitingTimeGraph;

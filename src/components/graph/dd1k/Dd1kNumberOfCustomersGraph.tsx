@@ -130,11 +130,11 @@ const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
               xAxisId={
                 showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
               }
-              stroke={theme.palette.warning.main}
+              stroke="red"
               label={{
                 value: `t = t_i`,
                 position: "top",
-                fill: theme.palette.warning.main,
+                fill: "red",
                 fontSize: 12,
               }}
             />

@@ -125,6 +125,10 @@ abstract class DD1K {
   type: DD1KType;
 
   timeLineData: timeLineData[];
+  customerGraphData: Array<{
+    customer: number;
+    waitingTime: number;
+  }>;
 
   /**
    * Computes the number of customers in the system at time t.
@@ -157,64 +161,27 @@ abstract class DD1K {
     return Math.ceil(Math.max(this.t_i * 2, 10)) + 1; // Round up max time
   }
 
-  abstract generateTimeData(xAxisMax?: number): timeLineData[];
+  abstract generateTimeGraphData(): timeLineData[];
 
-  generateArrivalTimelineData(xAxisMax?: number): Array<{
-    time: number;
-    arrival: number;
-    blocked: boolean;
-    key: number;
+  generateCustomerGraphData(): Array<{
+    customer: number;
+    waitingTime: number;
   }> {
     const data = [];
-    const maxTime = xAxisMax ?? this.graphMaxTime();
-    const timeStep = 1 / this.arrivalRate;
+    const maxCustomers = Math.max(
+      Math.ceil(this.arrivalRate * this.t_i * 2),
+      10
+    );
 
-    let key = 0;
-
-    // Start with t=0 for initial state
-    data.push({
-      time: 0,
-      arrival: 0,
-      blocked: false,
-      key: key++,
-    });
-
-    // Generate rest of the timeline
-    for (let t = timeStep; t <= maxTime + 0.5; t += timeStep) {
-      const arrivals = Math.floor(t * this.arrivalRate);
-      const blocked = !this.canCustomerEnterSystem(t);
+    for (let n = 0; n <= maxCustomers; n++) {
+      const waitingTime = this.waitingTimeForNthCustomer(n);
       data.push({
-        time: Math.round(t), // Round time to whole numbers
-        arrival: arrivals,
-        blocked: blocked,
-        key: key++,
+        customer: n,
+        waitingTime: waitingTime,
       });
     }
-
     return data;
   }
-
-  generateXAxisSteps(xAxisMax: number): Array<{
-    time: string;
-  }> {
-    const maxTime = xAxisMax ?? this.graphMaxTime();
-    const steps = [];
-    const timeStep = 1 / this.arrivalRate;
-    for (let t = 0; t <= maxTime; t += timeStep) {
-      steps.push({
-        time: t.toString(),
-      });
-    }
-    return steps;
-  }
-
-  abstract generateServiceTimelineData(xAxisMax?: number): Array<{
-    time: string;
-    service: number;
-    customerIndex: string;
-    isInitialCustomer?: boolean;
-    key: number;
-  }>;
 }
 
 export default DD1K;

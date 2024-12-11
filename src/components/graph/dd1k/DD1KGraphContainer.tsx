@@ -8,6 +8,7 @@ import Dd1kDepartureTimeline from "./Dd1kDepartureTimeline";
 import DD1K from "@/class/dd1k/DD1K";
 import Dd1kNumberOfCustomersGraph from "./Dd1kNumberOfCustomersGraph";
 import Dd1kCustomerFlowDiagram from "./Dd1kCustomerFlowDiagram";
+import Dd1kWaitingTimeGraph from "./Dd1kWaitingTimeGraph";
 
 type DD1KGraphContainerProps = {
   dd1k: DD1K;
@@ -61,13 +62,13 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ dd1k }) => {
         showTopAxis={false}
         showBottomAxis={false}
       />
-      {/* <WaitingTimeGraph
-        {...props}
+      <Dd1kWaitingTimeGraph
+        dd1k={dd1k}
         height={GRAPH_HEIGHT}
         subGraph={true}
         showTopAxis={false}
         showBottomAxis={true}
-      /> */}
+      />
     </Box>
   );
 };

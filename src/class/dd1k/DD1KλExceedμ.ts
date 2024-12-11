@@ -70,7 +70,8 @@ class DD1KλExceedμ extends DD1K {
     this.muTi = this.serviceRate * this.firstBalkTime;
     this.muTiFloored = Math.floor(this.muTi);
 
-    this.timeLineData = this.generateTimeData();
+    this.timeLineData = this.generateTimeGraphData();
+    this.customerGraphData = this.generateCustomerGraphData();
   }
 
   /**
@@ -202,49 +203,10 @@ class DD1KλExceedμ extends DD1K {
     }
   }
 
-  // generateServiceTimelineData() {
-  //   const data = [];
-  //   const maxTime = DD1K.graphMaxTime(t_i);
-  //   const timeStep = 1 / arrivalRate; // Match arrival timeline step
-  //   const serviceTime = 1 / serviceRate;
-  //   const firstServiceTime = 1 / arrivalRate;
-
-  //   // Start with t=0 for initial state
-  //   data.push({
-  //     time: "0",
-  //     service: 0,
-  //     customerIndex: "",
-  //   });
-
-  //   let currentCustomer = 1;
-
-  //   // Generate data points for each time step
-  //   for (let t = timeStep; t <= maxTime; t += timeStep) {
-  //     const roundedTime = Math.round(t).toString();
-  //     if (
-  //       t >= firstServiceTime &&
-  //       (t - firstServiceTime) % serviceTime < timeStep
-  //     ) {
-  //       data.push({
-  //         time: roundedTime,
-  //         service: currentCustomer,
-  //         customerIndex: `C${currentCustomer++}`,
-  //       });
-  //     } else {
-  //       data.push({
-  //         time: roundedTime,
-  //         service: null,
-  //         customerIndex: "",
-  //       });
-  //     }
-  //   }
-  //   return data;
-  // }
-
-  generateTimeData(xAxisMax?: number): timeLineData[] {
+  generateTimeGraphData(): timeLineData[] {
     const timelineData: timeLineData[] = [];
 
-    const maxTime = xAxisMax ?? this.graphMaxTime();
+    const maxTime = this.graphMaxTime();
 
     let key = 0;
 
@@ -311,46 +273,6 @@ class DD1KλExceedμ extends DD1K {
     }
 
     return timelineData;
-  }
-
-  generateServiceTimelineData(xAxisMax?: number) {
-    const data = [];
-    const maxTime = xAxisMax ?? this.graphMaxTime();
-    const arrivalTime = 1 / this.arrivalRate; // Match arrival timeline step
-    const serviceTime = this.serviceTime;
-    let key = 0;
-    // Start with t=0 for initial state
-    data.push({
-      time: 0,
-      service: 0,
-      customerIndex: "",
-      key: key++,
-    });
-
-    let currentCustomer = 1;
-    let nextServiceTime = arrivalTime;
-
-    // Generate data points for each time step
-    for (let t = 0; t <= maxTime; t++) {
-      const roundedTime = Math.round(t);
-      if (t === nextServiceTime) {
-        data.push({
-          time: roundedTime,
-          service: currentCustomer,
-          customerIndex: `C${currentCustomer++}`,
-          key: key++,
-        });
-        nextServiceTime += serviceTime;
-      } else {
-        data.push({
-          time: roundedTime,
-          service: null,
-          customerIndex: "",
-          key: key++,
-        });
-      }
-    }
-    return data;
   }
 }
 

@@ -68,7 +68,7 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
             {/* Add time axis at the top */}
             {showTopAxis && (
               <XAxis
@@ -80,8 +80,12 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                   position: "insideTop",
                   offset: -25,
                 }}
-                tick={{ dy: -10 }}
+                tick={{
+                  dy: -10,
+                  fontSize: 8,
+                }}
                 stroke={theme.palette.primary.main}
+                interval={dd1k.arrivalTime -1}
               />
             )}
             {/* Keep existing bottom axis for customer index */}
@@ -118,7 +122,7 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
             <Line
               type="monotone"
               dataKey="arrivals"
-              stroke="#8884d8"
+              stroke="#ffc800"
               name="Arrivals"
               dot={false}
               strokeWidth={2}
@@ -129,7 +133,7 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
             <Line
               type="monotone"
               dataKey="departures"
-              stroke="#82ca9d"
+              stroke="#00a941"
               name="Departures"
               dot={false}
               strokeWidth={2}
@@ -140,7 +144,7 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
             <Line
               type="monotone"
               dataKey="blocks"
-              stroke="#ff7300"
+              stroke="#ff0000"
               name="Blocked"
               dot={false}
               strokeWidth={2}
@@ -153,11 +157,11 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
               xAxisId={
                 showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
               }
-              stroke={theme.palette.warning.main}
+              stroke="red"
               label={{
                 value: `t = t_i`,
                 position: "top",
-                fill: theme.palette.warning.main,
+                fill: "red",
                 fontSize: 12,
               }}
             />

@@ -30,7 +30,7 @@ class DD1KμEqualλ extends DD1K {
     this.t_i = this.transientTime;
 
     this.lastInitialCustomerDepartureTime =
-      this.initialCustomers * (this.serviceTime);
+      this.initialCustomers * this.serviceTime;
   }
 
   computeNOfT(initialCustomers) {
@@ -55,7 +55,7 @@ class DD1KμEqualλ extends DD1K {
     customerIndex: string;
   } {
     if (t < this.lastInitialCustomerDepartureTime) {
-      if (t % (this.serviceTime) === 0) {
+      if (t % this.serviceTime === 0) {
         return {
           entersService: true,
           isInitial: true,
@@ -86,15 +86,12 @@ class DD1KμEqualλ extends DD1K {
     };
   }
 
-  generateServiceTimelineData(
-    xAxisMax?: number
-  ): Array<{
+  generateServiceTimelineData(xAxisMax?: number): Array<{
     time: string;
     service: number;
     customerIndex: string;
     key: number;
   }> {
-
     const maxTime = xAxisMax ?? this.graphMaxTime();
 
     const data = [];
@@ -114,8 +111,7 @@ class DD1KμEqualλ extends DD1K {
           key: key++,
         });
         currentCustomer++;
-      } 
-      else {
+      } else {
         data.push({
           time: Math.round(t),
           service: 0,
