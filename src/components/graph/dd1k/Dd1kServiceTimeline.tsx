@@ -107,7 +107,7 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                   const d = data.find((entry) => entry.time === value);
                   if (d?.enteredService) {
                     if (d.initialEnteredService) {
-                      return `M${data.find((entry) => entry.time === value)?.initialServiceEnterancs}`;
+                      return `M${data.find((entry) => entry.time === value)?.initialServiceEnterances}`;
                     } else {
                       return `C${data.find((entry) => entry.time === value)?.serviceEnterancs}`;
                     }
@@ -151,9 +151,11 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                   showBottomAxis ? "bottom" : showTopAxis ? "top" : "default"
                 }
                 stroke={
-                  entry.enteredService
-                    ? colors[entry.serviceEnterancs % colors.length]
-                    : "transparent"
+                  entry.enteredService && entry.initialEnteredService
+                    ? "black"
+                    : entry.enteredService
+                      ? colors[entry.serviceEnterancs % colors.length]
+                      : "transparent"
                 }
                 strokeWidth={2}
               />

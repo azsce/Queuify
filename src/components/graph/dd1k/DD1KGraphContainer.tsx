@@ -60,7 +60,7 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ dd1k }) => {
         height={GRAPH_HEIGHT}
         subGraph={true}
         showTopAxis={false}
-        showBottomAxis={false}
+        showBottomAxis={true}
       />
       <Dd1kWaitingTimeGraph
         dd1k={dd1k}

@@ -10,7 +10,7 @@ export type timeLineData = {
     enteredService: boolean;
     serviceEnterancs: number;
     initialEnteredService?: boolean;
-    initialServiceEnterancs?: number;
+    initialServiceEnterances?: number;
 
     departured: boolean;
     departures: number;

@@ -31,6 +31,9 @@ class DD1KμEqualλ extends DD1K {
 
     this.lastInitialCustomerDepartureTime =
       this.initialCustomers * this.serviceTime;
+
+      this.timeLineData = this.generateTimeGraphData();
+      this.customerGraphData = this.generateCustomerGraphData();
   }
 
   computeNOfT(initialCustomers) {
@@ -39,92 +42,6 @@ class DD1KμEqualλ extends DD1K {
 
   waitingTimeForNthCustomer(n: number) {
     return (this.initialCustomers - 1) / (1 * this.serviceRate);
-  }
-
-  isServiceCompletion(t: number): boolean {
-    return t > 0 && t % this.serviceTime === 0;
-  }
-
-  canCustomerEnterSystem(t: number): boolean {
-    return true;
-  }
-
-  getServiceEventAtTime(t: number): {
-    entersService: boolean;
-    isInitial: boolean;
-    customerIndex: string;
-  } {
-    if (t < this.lastInitialCustomerDepartureTime) {
-      if (t % this.serviceTime === 0) {
-        return {
-          entersService: true,
-          isInitial: true,
-          customerIndex: `M${Math.floor(t * this.serviceRate) + 1}`,
-        };
-      }
-    } else if (t <= this.transientTime) {
-      const n = this.computeNOfT(t);
-      if (n > 0) {
-        return {
-          entersService: true,
-          isInitial: false,
-          customerIndex: `C${Math.floor(t * this.serviceRate) + 1 - this.initialCustomers}`,
-        };
-      }
-    } else if (t % (1 / this.arrivalRate) === 0) {
-      return {
-        entersService: true,
-        isInitial: false,
-        customerIndex: `C${Math.floor(t * this.serviceRate) + 1 - this.initialCustomers}`,
-      };
-    }
-
-    return {
-      entersService: false,
-      isInitial: false,
-      customerIndex: "",
-    };
-  }
-
-  generateServiceTimelineData(xAxisMax?: number): Array<{
-    time: string;
-    service: number;
-    customerIndex: string;
-    key: number;
-  }> {
-    const maxTime = xAxisMax ?? this.graphMaxTime();
-
-    const data = [];
-    let currentCustomer = 1;
-    let t = 0;
-    let key = 0;
-
-    while (t <= maxTime) {
-      const serviceEvent = this.getServiceEventAtTime(t);
-
-      if (serviceEvent.entersService) {
-        data.push({
-          time: Math.round(t),
-          service: currentCustomer,
-          customerIndex: serviceEvent.customerIndex,
-          isInitialCustomer: serviceEvent.isInitial,
-          key: key++,
-        });
-        currentCustomer++;
-      } else {
-        data.push({
-          time: Math.round(t),
-          service: 0,
-          customerIndex: "",
-          isInitialCustomer: false,
-          key: key++,
-        });
-      }
-
-      t += 1 / this.serviceRate;
-    }
-
-    return data;
   }
 
   graphMaxTime(): number {

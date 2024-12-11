@@ -68,7 +68,7 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
               bottom: isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="customer" xAxisId="default" hide={true} />
             )}
@@ -97,9 +97,9 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                   dy: 10,
                 }}
                 height={40}
-                tick={{ 
-                  dy: 10 ,
-                  fontSize: 8
+                tick={{
+                  dy: 10,
+                  fontSize: 8,
                 }}
                 stroke={theme.palette.primary.main}
               />

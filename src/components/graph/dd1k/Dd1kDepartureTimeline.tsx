@@ -145,7 +145,9 @@ const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
                   showBottomAxis ? "bottom" : showTopAxis ? "top" : "default"
                 }
                 stroke={
-                  entry.departured
+                  entry.departured && entry.initialDepartured
+                  ? "black"
+                  : entry.departured
                     ? colors[entry.departures % colors.length]
                     : "transparent"
                 }

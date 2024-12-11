@@ -148,7 +148,122 @@ abstract class DD1K {
     return Math.ceil(Math.max(this.t_i * 2, 10)) + 1; // Round up max time
   }
 
-  abstract generateTimeGraphData(): timeLineData[];
+  generateTimeGraphData(): timeLineData[] {
+    const timelineData: timeLineData[] = [];
+
+    const maxTime = this.graphMaxTime();
+
+    let key = 0;
+
+    let arrivals = 0;
+    let serviceEnterancs = 0;
+    let departures = 0;
+    let blocks = 0;
+
+    let initialServiceEnterances = 0; //how many till now (initial customers)
+    let initialDepartures = 0; // how many till now (initial customers)
+
+    let nextArrivalTime = this.arrivalTime;
+    let nextServiceEnteranceTime = this.initialCustomers ? 0 : this.arrivalTime;
+    let nextDepartureTime = nextServiceEnteranceTime + this.serviceTime;
+    let numberOfNewCustomers = 0;
+
+    let initialCustomersRemaining = this.initialCustomers ?? 0;
+
+    let totalDepartures = 0;
+    let totalServiceEnterances = 0;
+
+    for (let t = 0; t <= maxTime; t++) {
+      let arrived = false;
+      let blocked: boolean | null = null;
+      let departured = false;
+      let initialDepartured = false;
+      let enteredService = false;
+      let initialEnteredService = false;
+      const time = Math.round(t);
+
+      if (t === nextDepartureTime) {
+        if (
+          totalServiceEnterances > totalDepartures &&
+          initialCustomersRemaining + numberOfNewCustomers > 0
+        ) {
+          departured = true;
+          totalDepartures++;
+          if (initialCustomersRemaining > 0) {
+            initialDepartured = true;
+            initialCustomersRemaining--;
+            initialDepartures++;
+          } else {
+            departures++;
+            numberOfNewCustomers--;
+          }
+        }
+        nextDepartureTime += this.serviceTime;
+      }
+
+      if (t === nextArrivalTime) {
+        arrived = true;
+        blocked = numberOfNewCustomers >= this.capacity - 1;
+        console.log("blocked", blocked);
+        arrivals++;
+        nextArrivalTime += this.arrivalTime;
+        if (blocked) {
+          blocks++;
+        } else {
+          numberOfNewCustomers++;
+        }
+      }
+
+        console.log("initialCustomersRemaining", initialCustomersRemaining, "numberOfNewCustomers", numberOfNewCustomers);
+      if (t === nextServiceEnteranceTime) {
+        if (initialCustomersRemaining + numberOfNewCustomers > 0) {
+          enteredService = true;
+          totalServiceEnterances++;
+          if (initialCustomersRemaining > 0) {
+            initialEnteredService = true;
+            initialServiceEnterances++;
+          } else {
+            serviceEnterancs++;
+          }
+        }
+        nextServiceEnteranceTime += this.serviceTime;
+      }
+
+     
+
+      const numberOfCustomers =
+        numberOfNewCustomers + initialCustomersRemaining;
+
+      const d = {
+        time: time,
+
+        arrived: arrived,
+        arrivals: arrivals,
+
+        blocked: blocked,
+        blocks: blocks,
+
+        enteredService: enteredService,
+        serviceEnterancs: serviceEnterancs,
+        initialEnteredService: initialEnteredService,
+        initialServiceEnterances: initialServiceEnterances,
+
+        departured: departured,
+        departures: departures,
+        initialDepartured: initialDepartured,
+        initialDepartures: initialDepartures,
+
+        numberOfCustomers: numberOfCustomers,
+
+        key: key++,
+      };
+
+      console.log("d", d);
+      timelineData.push(d);
+    }
+
+    return timelineData;
+  }
 
   generateCustomerGraphData(): Array<{
     customer: number;

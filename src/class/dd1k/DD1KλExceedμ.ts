@@ -43,7 +43,6 @@
 import { EPSILON } from "@/constants";
 import { toProperFraction } from "@/lib/math";
 import DD1K from "./DD1K";
-import { timeLineData } from "@/types/timeLineData";
 class DD1KλExceedμ extends DD1K {
   constructor(arrivalRate: number, serviceRate: number, capacity: number) {
     super();
@@ -156,84 +155,6 @@ class DD1KλExceedμ extends DD1K {
         (this.arrivalRate * this.firstBalkTime - 2)
       );
     }
-  }
-
-  generateTimeGraphData(): timeLineData[] {
-    const timelineData: timeLineData[] = [];
-
-    const maxTime = this.graphMaxTime();
-
-    let key = 0;
-
-    let arrivals = 0;
-    let serviceEnterancs = 0;
-    let departures = 0;
-    let blocks = 0;
-
-    let nextArrivalTime = this.arrivalTime;
-    let nextServiceEnteranceTime = nextArrivalTime;
-    let nextDepartureTime = nextArrivalTime + this.serviceTime;
-
-    let numberOfCustomers = 0;
-
-    for (let t = 0; t <= maxTime; t++) {
-      let arrived = false;
-      let blocked: boolean | null = null;
-      let departured = false;
-      let enteredService = false;
-      const time = Math.round(t);
-
-      if (t === nextDepartureTime) {
-        departured = true;
-        departures++;
-        numberOfCustomers--;
-        nextDepartureTime += this.serviceTime;
-      }
-
-      if (t === nextServiceEnteranceTime) {
-        enteredService = true;
-        serviceEnterancs++;
-        nextServiceEnteranceTime += this.serviceTime;
-      }
-
-      if (t === nextArrivalTime) {
-        arrived = true;
-        blocked = numberOfCustomers >= this.capacity - 1;
-        arrivals++;
-        nextArrivalTime += this.arrivalTime;
-        if (blocked){
-          blocks++;
-        }else{
-          numberOfCustomers++;
-        }
-      }
-
-      const d = {
-        time: time,
-
-        arrived: arrived,
-        arrivals: arrivals,
-
-        blocked: blocked,
-        blocks: blocks,
-
-        enteredService: enteredService,
-        serviceEnterancs: serviceEnterancs,
-
-        departured: departured,
-        departures: departures,
-
-        numberOfCustomers: numberOfCustomers,
-        
-        key: key++,
-      };
-
-      console.log("generateTimeData t", t, "d", d);
-
-      timelineData.push(d);
-    }
-
-    return timelineData;
   }
 }
 

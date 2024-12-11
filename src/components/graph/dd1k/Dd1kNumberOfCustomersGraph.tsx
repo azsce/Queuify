@@ -23,14 +23,12 @@ interface NumberOfCustomersGraphProps {
 }
 
 const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
-  dd1k, 
+  dd1k,
   height,
   subGraph,
   showTopAxis,
   showBottomAxis,
 }) => {
-
-
   const data = dd1k.timeLineData;
 
   const theme = useTheme();
@@ -70,7 +68,7 @@ const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
               bottom: isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="time" xAxisId="default" hide={true} />
             )}
@@ -97,8 +95,10 @@ const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
                   value: "Time (t)",
                   position: "insideBottom",
                   offset: -10,
-                  dy: 10,
+                  dy: 5,
                 }}
+                tickSize={0}
+                tick={{ dy: 5 }}
                 interval={dd1k.arrivalTime - 1}
               />
             )}
