@@ -143,7 +143,7 @@ class DD1KμExceedλ extends DD1K {
 
   graphMaxTime(): number {
     return Math.ceil(
-      Math.max(this.transientTime + 10 * (1 / this.arrivalRate), 10)
+      Math.max(this.transientTime + 5 * (1 / this.arrivalRate), 10)
     ); // Round up max time
   }
 
@@ -151,7 +151,10 @@ class DD1KμExceedλ extends DD1K {
     xAxisMax?: number
   ): Array<{ time: string; service: number; customerIndex: string }> {
     console.log("generateServiceTimelineData xAxisMax", xAxisMax);
-    console.log("generateServiceTimelineData this.graphMaxTime()", this.graphMaxTime());
+    console.log(
+      "generateServiceTimelineData this.graphMaxTime()",
+      this.graphMaxTime()
+    );
     const maxTime = xAxisMax ?? this.graphMaxTime();
 
     const data = [];
@@ -169,12 +172,33 @@ class DD1KμExceedλ extends DD1K {
           inital: true,
         });
       } else {
-        const n = this.computeNOfT(t);
-        if (n > 0) {
+        let pushed = false;
+        if (t <= this.transientTime) {
+          const n = this.computeNOfT(t);
+          if (n > 0) {
+            data.push({
+              time: roundedTime,
+              service: currentCustomer,
+              customerIndex: `C${currentCustomer++ - this.initialCustomers}`,
+              inital: false,
+            });
+            pushed = true;
+          }
+        } else if (t % (1 / this.arrivalRate) === 0) {
           data.push({
             time: roundedTime,
             service: currentCustomer,
             customerIndex: `C${currentCustomer++ - this.initialCustomers}`,
+            inital: false,
+          });
+          pushed = true;
+        }
+
+        if (!pushed) {
+          data.push({
+            time: roundedTime,
+            service: 0,
+            customerIndex: "",
             inital: false,
           });
         }
@@ -182,8 +206,6 @@ class DD1KμExceedλ extends DD1K {
 
       t += 1 / this.serviceRate;
     }
-
-    console.log("generateServiceTimelineData data", data);
 
     return data;
   }
