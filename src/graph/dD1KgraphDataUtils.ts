@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { DD1KλExceedμ } from "@/lib/dd1k";
+import { DD1KλExceedμ } from "@/class/dd1k/dd1k";
 import { DD1KType } from "@/types/dd1k";
 
 export interface DD1KBasicData {

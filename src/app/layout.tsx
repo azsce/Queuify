@@ -2,14 +2,14 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Box } from "@mui/material";
-import TopAppBar from "@/components/TopAppBar";
-import { ThemeProvider } from "@/components/theme-provider";
+import TopAppBar from "@/components/base/TopAppBar";
+import { ThemeProvider } from "@/components/base/theme-provider";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
-import Loading from "@/components/Loading";
-import MuiThemeProvider from "@/components/MuiThemeProvider";
+import Loading from "@/components/base/Loading";
+import MuiThemeProvider from "@/components/base/MuiThemeProvider";
 import { Suspense } from "react";
-import OfflineIndicator from "@/components/OfflineIndicator";
-import { OfflineDataProvider } from "@/components/OfflineDataProvider";
+import OfflineIndicator from "@/components/base/OfflineIndicator";
+import { OfflineDataProvider } from "@/components/base/OfflineDataProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

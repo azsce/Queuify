@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext } from "react";
-import { OfflineDataContext } from "@/components/OfflineDataProvider";
+import { OfflineDataContext } from "@/components/base/OfflineDataProvider";
 
 export function useOfflineData() {
   const context = useContext(OfflineDataContext);
