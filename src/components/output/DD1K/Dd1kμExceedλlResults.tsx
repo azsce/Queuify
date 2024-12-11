@@ -13,7 +13,6 @@ const Dd1kμExceedλlResults: React.FC<Dd1kμExceedλlResultsProps> = ({
 }) => {
   const {
     capacity,
-    arrivalRate,
     serviceRate,
     arrivalRateFraction,
     serviceRateFraction,
@@ -27,19 +26,6 @@ const Dd1kμExceedλlResults: React.FC<Dd1kμExceedλlResultsProps> = ({
 
   const M = capacity;
   const initialWq = (M - 1) / (2 * serviceRate);
-
-  const computeNOfT = (t: number) => {
-    return M + Math.floor(arrivalRate * t) - Math.floor(serviceRate * t);
-  };
-
-  const computeWqOfN = (n: number) => {
-    const lambdaTi = Math.floor(arrivalRate * t_i);
-    if (n < lambdaTi) {
-      return (M - 1 + n) * (1 / serviceRate) - n * (1 / arrivalRate);
-    } else {
-      return 0;
-    }
-  };
 
   const isWholeNumber = (fraction: {
     numerator: number;
@@ -59,14 +45,14 @@ const Dd1kμExceedλlResults: React.FC<Dd1kμExceedλlResultsProps> = ({
   const handleTVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const t = parseFloat(e.target.value);
     setTVar(t);
-    const nOfT = computeNOfT(t);
+    const nOfT = dd1k.computeNOfT(t);
     setNOfTVar(nOfT);
   };
 
   const handleNVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const n = parseFloat(e.target.value);
     setNVar(n);
-    const wqOfN = computeWqOfN(n);
+    const wqOfN = dd1k.waitingTimeForNthCustomer(n);
     setWqOfNVar(wqOfN);
   };
 

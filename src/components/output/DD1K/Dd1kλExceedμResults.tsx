@@ -71,14 +71,14 @@ const Dd1kλExceedμResults: React.FC<Dd1kλExceedμResultsProps> = ({ dd1k }) =
   const handleTVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const t = parseFloat(e.target.value);
     setTVar(t);
-    const nOfT = 50;
+    const nOfT = dd1k.computeNOfT(t);
     setNOfTVar(nOfT);
   };
 
   const handleNVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const n = parseFloat(e.target.value);
     setNVar(n);
-    const wqOfN = 50;
+    const wqOfN = dd1k.waitingTimeForNthCustomer(n);
     setWqOfNVar(wqOfN);
   };
 

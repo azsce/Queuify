@@ -3,7 +3,7 @@ import { Divider } from "@mui/material";
 import DD1KGraphContainer from "../../graph/dd1k/DD1KGraphContainer";
 import Dd1kλExceedμResults from "./Dd1kλExceedμResults";
 import Dd1kλEqualμResults from "./Dd1kλEqualμResults";
-import Dd1kμExceedλlResults from "./ArrivalLessThanService";
+import Dd1kμExceedλlResults from "./Dd1kμExceedλlResults";
 import DD1K from "@/class/dd1k/DD1K";
 
 type Dd1kResultsProps = {
