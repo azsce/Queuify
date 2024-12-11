@@ -11,7 +11,6 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import DD1K, { DD1KλExceedμ } from "@/class/dd1k/dd1k";
 import { DD1KType } from "@/types/dd1k";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { getTimeAxisTicks } from "@/utils/graph";
@@ -30,10 +29,8 @@ interface NumberOfCustomersGraphProps {
 
 const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
   arrivalRate,
-  serviceRate,
   capacity,
   t_i,
-  systemType,
   height,
   subGraph,
   showTopAxis,
@@ -41,18 +38,11 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
 }) => {
   const generateData = () => {
     const data = [];
-    const maxTime = DD1K.graphMaxTime(t_i);
+    const maxTime = 50;
     const timeStep = 1;
 
     for (let t = 0; t <= maxTime; t += timeStep) {
-      const customers = DD1KλExceedμ.computeNOfT(
-        t,
-        arrivalRate,
-        serviceRate,
-        t_i,
-        capacity,
-        systemType
-      );
+      const customers = 50;
       data.push({
         time: t,
         customers: customers,
@@ -65,7 +55,7 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const maxTime = DD1K.graphMaxTime(t_i);
+  const maxTime = 50;
 
   return (
     <Box

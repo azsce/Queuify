@@ -71,14 +71,7 @@ const Dd1kλExceedμResults: React.FC<Dd1kλExceedμResultsProps> = ({ dd1k }) =
   const handleTVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const t = parseFloat(e.target.value);
     setTVar(t);
-    const nOfT = DD1KλExceedμ.computeNOfT(
-      t,
-      arrivalRate,
-      serviceRate,
-      t_i,
-      capacity,
-      type
-    );
+    const nOfT = 50;
     console.log(nOfT);
     setNOfTVar(nOfT);
   };
@@ -86,13 +79,7 @@ const Dd1kλExceedμResults: React.FC<Dd1kλExceedμResultsProps> = ({ dd1k }) =
   const handleNVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const n = parseFloat(e.target.value);
     setNVar(n);
-    const wqOfN = DD1KλExceedμ.computeWqOfN(
-      n,
-      arrivalRate,
-      serviceRate,
-      t_i,
-      type
-    );
+    const wqOfN = 50;
     setWqOfNVar(wqOfN);
   };
 

@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { DD1KλExceedμ } from "@/class/dd1k/dd1k";
-import { DD1KType } from "@/types/dd1k";
-
 export interface DD1KBasicData {
   time: number;
   customer: string;
@@ -22,9 +19,6 @@ export namespace DD1KμExceedλGraphUtils {
     maxTime: number,
     arrivalRate: number,
     serviceRate: number,
-    capacity: number,
-    t_i: number,
-    systemType: DD1KType
   ): DD1KBasicData[] => {
     const data = [];
     const timeStep = 1 / arrivalRate;
@@ -37,35 +31,15 @@ export namespace DD1KμExceedλGraphUtils {
     for (let t = 0; t <= maxTime; t += timeStep) {
       const arrivals = Math.floor(t * arrivalRate);
       const departures = Math.floor(t * serviceRate);
-      const isBlocked = DD1KλExceedμ.isCustomerBlocked(
-        t,
-        arrivalRate,
-        serviceRate,
-        capacity,
-        t_i,
-        systemType
-      );
+      const isBlocked = 50;
 
       if (isBlocked) {
         totalBlocked++;
       }
 
-      const customers = DD1KλExceedμ.computeNOfT(
-        t,
-        arrivalRate,
-        serviceRate,
-        t_i,
-        capacity,
-        systemType
-      );
+      const customers = 50;
 
-      const waitingTime = DD1KλExceedμ.computeWqOfN(
-        customers,
-        arrivalRate,
-        serviceRate,
-        t_i,
-        systemType
-      );
+      const waitingTime = 50;
 
       const customerNumber = Math.floor(t * arrivalRate) + 1;
 

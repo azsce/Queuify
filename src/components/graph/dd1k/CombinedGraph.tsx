@@ -12,7 +12,6 @@ import {
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { DD1KType } from "@/types/dd1k";
-import DD1K from "@/class/dd1k/dd1k";
 import { DD1KμExceedλGraphUtils } from "@/graph/dD1KgraphDataUtils";
 import renderTimeLines from "./TimelineUtils";
 
@@ -52,23 +51,17 @@ interface CombinedGraphProps {
 const CombinedGraph: React.FC<CombinedGraphProps> = ({
   arrivalRate,
   serviceRate,
-  capacity,
-  t_i,
-  systemType,
   height = 1000,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const arrivalTime = 1 / arrivalRate;
-  const maxTime = DD1K.graphMaxTime(t_i);
+  const maxTime = 50;
 
   const basicData = DD1KμExceedλGraphUtils.generateBasicData(
     maxTime,
     arrivalRate,
     serviceRate,
-    capacity,
-    t_i,
-    systemType
   );
 
   // Calculate section heights and related metrics

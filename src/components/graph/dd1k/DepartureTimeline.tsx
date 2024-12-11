@@ -29,7 +29,6 @@ interface DepartureTimelineProps {
 const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
   arrivalRate,
   serviceRate,
-  t_i,
   height,
   subGraph,
   showTopAxis,
@@ -37,7 +36,7 @@ const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
 }) => {
   const generateData = () => {
     const data = [];
-    const maxTime = DD1K.graphMaxTime(t_i);
+    const maxTime = 50;
     const timeStep = 1 / arrivalRate; // Match arrival timeline step
     const serviceTime = 1 / serviceRate;
     const firstDepartureTime = 1 / arrivalRate + serviceTime;
