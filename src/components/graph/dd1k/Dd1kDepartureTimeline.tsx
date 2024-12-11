@@ -63,11 +63,11 @@ const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
             margin={{
               top: subGraph ? 0 : 20,
               right: 0,
-              left: isMobile ? 0 : 90,
+              left: isMobile ? -20 : 90,
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
+            <CartesianGrid strokeDasharray="2 2" strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"} />
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="time" xAxisId="default" hide={true} />
             )}
@@ -124,7 +124,7 @@ const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
                 value: "Departure",
                 angle: -90,
                 position: "insideLeft",
-                dx: 5,
+                dx: 20,
                 dy: 30,
                 fontSize: 12,
               }}

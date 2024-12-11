@@ -6,23 +6,20 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import InputParameters from "@/components/input/InputParameters";
 import DD1KResults from "@/components/output/DD1K/DD1KResults";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Box,
-  Container,
-} from "@mui/material";
+import { Card, CardHeader, CardContent, Box, Container } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import dD1KFactoryMethod from "@/class/dd1k/DD1KFactoryMethod";
 import Dd1kSystemParameters from "./Dd1kSystemParameters";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
+import InputWithInfinity from "@/components/base/InputWithInfinity";
 
 export default function DD1KCalculator() {
   // dd1k
   const [capacity, setCapacity] = useState<number | undefined>(() => {
     const saved = localStorage.getItem("capacity");
-    return saved !== null && saved !== "undefined" ? JSON.parse(saved) : undefined;
+    return saved !== null && saved !== "undefined"
+      ? JSON.parse(saved)
+      : undefined;
   });
   const [arrivalRate, setArrivalRate] = useState(() => {
     const saved = localStorage.getItem("arrivalRate");
@@ -47,10 +44,15 @@ export default function DD1KCalculator() {
 
   const [isInitialCutsomersRequired, setIsInitialCutsomersRequired] =
     useState(false);
-  const [initialCustomers, setInitialCustomers] = useState<number | undefined>(() => {
-    const saved = localStorage.getItem("initialCustomers");
-    return saved !== null && saved !== "undefined" ? JSON.parse(saved) : undefined;
-  });
+
+  const [initialCustomers, setInitialCustomers] = useState<number | undefined>(
+    () => {
+      const saved = localStorage.getItem("initialCustomers");
+      return saved !== null && saved !== "undefined"
+        ? JSON.parse(saved)
+        : undefined;
+    }
+  );
 
   useEffect(() => {
     if (arrivalRate === "" || serviceRate === "") {
@@ -191,15 +193,37 @@ export default function DD1KCalculator() {
                   <Grid size={1} />
                   <Grid size={11}>
                     <NoNumberArrowsTextField
+                      value={isNaN(value) ? "∞" : value}
+                      placeholder={showInfinity ? "∞" : ""}
+                      label="Initial Customers: M"
+                      type="number"
+                      fullWidth
+                      required={required}
+                      autoComplete={"dd1k-initial-customers"}
+                      onChange={() => {setInitialCustomers(n)}}
+                      size="small"
+                      // error={required && isNaN(value)}
+                      onBlur={handleBlur}
+                      slotProps={{
+                        input: {
+                          endAdornment: showInfinity && (
+                            <IconButton
+                              color="primary"
+                              onClick={onInfinityClick}
+                              sx={{ minWidth: "40px" }}
+                            >
+                              <InfinityIcon />
+                            </IconButton>
+                          ),
+                        },
+                      }}
+                    />
+                    <InputWithInfinity
                       label="Initial Customers: M"
                       value={initialCustomers}
-                      onChange={(e) =>
-                        setInitialCustomers(parseInt(e.target.value))
-                      }
+                      onChange={(n) => setInitialCustomers(n)}
                       required
                       autoComplete="initial-customers"
-                      sx={{ width: "100%" }}
-                      error={isInitialCutsomersRequired && !initialCustomers}
                     />
                   </Grid>
                 </Grid>

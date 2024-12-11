@@ -65,13 +65,11 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
             margin={{
               top: subGraph ? 0 : 20,
               right: 0,
-              left: isMobile ? 0 : 90,
+              left: isMobile ? -20 : 90,
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3"
-            strokeOpacity={0.2}
-            />
+            <CartesianGrid strokeDasharray="2 2" strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"} />
             {/* Add default XAxis when neither custom axis is shown */}
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="time" xAxisId="default" hide={true} />
@@ -130,8 +128,8 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                 value: "Arrives",
                 angle: -90,
                 position: "insideLeft",
-                dx: 5,
-                dy: 30,
+                dx: 20,
+                dy: 25,
                 fontSize: 12,
               }}
               tickCount={1}
@@ -140,7 +138,7 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
             />
             <Tooltip />
 
-            {data.map((entry, index) => (
+            {data.map((entry) => (
               <ReferenceLine
                 key={entry.key}
                 x={entry.time}
@@ -151,7 +149,7 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                   entry.arrived
                     ? entry.blocked
                       ? "red"
-                      : colors[index % colors.length]
+                      : colors[entry.arrivals % colors.length]
                     : "transparent"
                 }
                 strokeWidth={2}

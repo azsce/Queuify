@@ -145,7 +145,7 @@ abstract class DD1K {
   abstract waitingTimeForNthCustomer(nth: number): number;
 
   graphMaxTime(): number {
-    return Math.ceil(Math.max(this.t_i * 2, 10)) + 1; // Round up max time
+    return Math.ceil(Math.min(this.t_i * 1.5, 60)) + 1; // Round up max time
   }
 
   generateTimeGraphData(): timeLineData[] {

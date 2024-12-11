@@ -64,11 +64,11 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
             margin={{
               top: 20,
               right: 0,
-              left: isMobile ? 0 : 90,
+              left: isMobile ? -20 : 90,
               bottom: isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
+            <CartesianGrid strokeDasharray="2 2" strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"} />
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="customer" xAxisId="default" hide={true} />
             )}
@@ -94,7 +94,8 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                   value: "nth Customer",
                   position: "insideBottom",
                   offset: -10,
-                  dy: 10,
+                  dy: -8,
+                  fontSize: 12,
                 }}
                 height={40}
                 tick={{
@@ -109,10 +110,13 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                 value: "Waiting Time Wq(n)",
                 angle: -90,
                 position: "insideLeft",
-                dx: isMobile ? 10 : -20,
-                dy: 85,
+                dx: 20,
+                dy: 40,
+                fontSize: isMobile ? 8 : 12,
               }}
+              stroke={theme.palette.text.primary}
               allowDecimals={false}
+              tick={{ fontSize: 8 }}
             />
             <Tooltip />
             <Line

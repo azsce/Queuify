@@ -70,3 +70,11 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition-delay: 5000s, 5000s;
+}

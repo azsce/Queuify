@@ -10,8 +10,8 @@ const nextJsTheme = createTheme({
       main: "#333333", // A dark grey for contrast
     },
     background: {
-      default: "#ffffff", // White background
-      paper: "#f7f7f7", // Slightly grey for elevated surfaces
+      default: "#f0f0f0", // White background
+      paper: "#dcdbdb", // Slightly grey for elevated surfaces
     },
     text: {
       primary: "#333333", // Dark grey for readability
@@ -64,6 +64,8 @@ const nextJsTheme = createTheme({
         },
       },
     },
+
+    
   },
 });
 

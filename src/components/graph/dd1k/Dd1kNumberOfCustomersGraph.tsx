@@ -64,11 +64,11 @@ const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
             margin={{
               top: 20,
               right: 0,
-              left: isMobile ? 0 : 90,
+              left: isMobile ? -20 : 90,
               bottom: isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
+            <CartesianGrid strokeDasharray="2 2" strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"} />
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="time" xAxisId="default" hide={true} />
             )}
@@ -95,10 +95,11 @@ const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
                   value: "Time (t)",
                   position: "insideBottom",
                   offset: -10,
-                  dy: 5,
+                  dy: -8,
+                  fontSize: 12,
                 }}
                 tickSize={0}
-                tick={{ dy: 5 }}
+                tick={{ dy: 5, fontSize: 8 }}
                 interval={dd1k.arrivalTime - 1}
               />
             )}
@@ -107,9 +108,13 @@ const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
                 value: "Number of Customers n(t)",
                 angle: -90,
                 position: "insideLeft",
-                dx: isMobile ? 10 : -20,
-                dy: 105,
+                dx: 20,
+                dy: isMobile ? 50 : 105,
+                fontSize: isMobile ? 8 : 12,
               }}
+              tick={{ fontSize: 8 }}
+              tickSize={0}
+              stroke={theme.palette.text.primary}
               allowDecimals={false}
               domain={[0, dd1k.capacity]}
             />

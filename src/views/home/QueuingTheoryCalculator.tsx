@@ -50,7 +50,12 @@ export default function QueuingTheoryCalculator() {
         }}
       >
         <CardHeader></CardHeader>
-        <CardContent>
+        <CardContent
+          sx={{
+            p: 0,
+            m: 0,
+          }}
+        >
           <Typography
             variant="h4"
             component="h1"

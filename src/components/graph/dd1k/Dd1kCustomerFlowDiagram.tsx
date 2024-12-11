@@ -64,11 +64,11 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
             margin={{
               top: 30,
               right: 0,
-              left: isMobile ? 0 : 90,
+              left: isMobile ? -20 : 90,
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
+            <CartesianGrid strokeDasharray="2 2" strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"} />
             {/* Add time axis at the top */}
             {showTopAxis && (
               <XAxis
@@ -85,7 +85,7 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                   fontSize: 8,
                 }}
                 stroke={theme.palette.primary.main}
-                interval={dd1k.arrivalTime -1}
+                interval={dd1k.arrivalTime - 1}
               />
             )}
             {/* Keep existing bottom axis for customer index */}
@@ -101,7 +101,9 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                   dy: 10,
                 }}
                 height={40}
-                tick={{ dy: 10 }}
+                tickSize={0}
+                tickLine={false}
+                tick={{ dy: 10, fontSize: 8 }}
                 stroke={theme.palette.primary.main}
               />
             )}
@@ -113,10 +115,13 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                 value: "Customer Flow",
                 angle: -90,
                 position: "insideLeft",
-                dx: isMobile ? 10 : -20,
-                dy: 60,
+                dx: 20,
+                dy: 50,
+                fontSize: 12,
               }}
+              tick={{ fontSize: 8 }}
               allowDecimals={false}
+              stroke={theme.palette.primary.main}
             />
             <Tooltip />
             <Line
