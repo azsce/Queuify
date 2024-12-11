@@ -244,12 +244,13 @@ class DD1KλExceedμ extends DD1K {
     const maxTime = xAxisMax ?? this.graphMaxTime();
     const arrivalTime = 1 / this.arrivalRate; // Match arrival timeline step
     const serviceTime = this.serviceTime;
-
+    let key = 0;
     // Start with t=0 for initial state
     data.push({
       time: "0",
       service: 0,
       customerIndex: "",
+      key: key++,
     });
 
     let currentCustomer = 1;
@@ -261,6 +262,7 @@ class DD1KλExceedμ extends DD1K {
         time: roundedTime,
         service: currentCustomer,
         customerIndex: `C${currentCustomer++}`,
+        key: key++,
       });
     }
     return data;

@@ -203,39 +203,39 @@ class DD1KμExceedλ extends DD1K {
 
   generateServiceTimelineData(
     xAxisMax?: number
-  ): Array<{ time: string; service: number; customerIndex: string }> {
-    console.log("generateServiceTimelineData xAxisMax", xAxisMax);
-    console.log(
-      "generateServiceTimelineData this.graphMaxTime()",
-      this.graphMaxTime()
-    );
+  ): Array<{ time: string; service: number; customerIndex: string, key: number }> {
+
     const maxTime = xAxisMax ?? this.graphMaxTime();
 
     const data = [];
     let currentCustomer = 1;
     let t = 0;
+    let key = 0;
 
     while (t < maxTime) {
       const serviceEvent = this.getServiceEventAtTime(t);
 
       if (serviceEvent.entersService) {
         data.push({
-          time: Math.round(t).toString(),
+          time: Math.round(t),
           service: currentCustomer,
           customerIndex: serviceEvent.customerIndex,
           isInitialCustomer: serviceEvent.isInitial,
+          key: key++,
         });
         currentCustomer++;
-      } else {
+      } 
+      else {
         data.push({
-          time: Math.round(t).toString(),
+          time: Math.round(t),
           service: 0,
           customerIndex: "",
           isInitialCustomer: false,
+          key: key++,
         });
       }
 
-      t += this.serviceTime;
+      t += 1 / this.serviceRate;
     }
 
     return data;

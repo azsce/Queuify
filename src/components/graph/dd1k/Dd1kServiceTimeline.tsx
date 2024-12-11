@@ -97,7 +97,7 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                 dataKey="time"
                 orientation="bottom"
                 tickFormatter={() => ""} // Add tick formatter
-                stroke="transparent"
+                // stroke="transparent"
                 axisLine={{
                   stroke: theme.palette.text.primary,
                   strokeWidth: 4,
@@ -119,10 +119,10 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
             <Tooltip />
             {data.map((entry) => (
               <ReferenceLine
-                key={entry.time}
+                key={entry.key}
                 x={entry.time}
                 xAxisId={
-                  showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+                  showBottomAxis ? "bottom" : showTopAxis ? "top" : "default"
                 }
                 stroke={
                   entry.customerIndex === ""

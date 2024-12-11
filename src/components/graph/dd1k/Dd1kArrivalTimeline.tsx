@@ -114,7 +114,7 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                 tick={{
                   // stroke: theme.palette.text.primary,
                   fontSize: 12,
-                  
+
                 }}
                 axisLine={{
                   stroke: theme.palette.text.primary,
@@ -138,7 +138,7 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
             
             {dataWithCustomers.map((entry, index) => (
               <ReferenceLine
-                key={entry.customerIndex}
+                key={entry.key}
                 x={entry.customerIndex}
                 xAxisId={
                   showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
@@ -152,30 +152,6 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                 }
                 strokeWidth={2}
                 strokeDasharray={entry.blocked ? "3 3" : "none"}
-                // label={
-                  // 
-                  // entry.blocked
-                  //   ? {
-                  //       value: entry.customerIndex,
-                  //       position: "bottom",
-                  //       fill: "red",
-                  //       fontSize: 12,
-                  //       orientation: "vertical",
-                  //       rotate: -90,
-                        
-                  //     }
-                  //   : {
-                  //       value: entry.customerIndex,
-                  //       position: "bottom",
-                  //       fill:
-                  //         entry.time === 0
-                  //           ? "transparent"
-                  //           : entry.blocked
-                  //             ? "red"
-                  //             : colors[entry.time % colors.length],
-                  //       fontSize: 12,
-                  //     }
-                // }
               />
             ))}
           </LineChart>

@@ -158,16 +158,20 @@ abstract class DD1K {
     time: number;
     arrival: number;
     blocked: boolean;
+    key: number;
   }> {
     const data = [];
     const maxTime = xAxisMax ?? this.graphMaxTime();
     const timeStep = 1 / this.arrivalRate;
+
+    let key = 0;
 
     // Start with t=0 for initial state
     data.push({
       time: 0,
       arrival: 0,
       blocked: false,
+      key: key++,
     });
 
     // Generate rest of the timeline
@@ -178,8 +182,11 @@ abstract class DD1K {
         time: Math.round(t), // Round time to whole numbers
         arrival: arrivals,
         blocked: blocked,
+        key: key++,
       });
     }
+
+    console.log("generateArrivalTimelineData data", data);
     return data;
   }
 
@@ -202,6 +209,7 @@ abstract class DD1K {
     service: number;
     customerIndex: string;
     isInitialCustomer?: boolean;
+    key: number;
   }>;
 }
 
