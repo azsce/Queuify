@@ -12,7 +12,6 @@ import {
   CardContent,
   Box,
   Container,
-  Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import dD1KFactoryMethod from "@/class/dd1k/DD1KFactoryMethod";
