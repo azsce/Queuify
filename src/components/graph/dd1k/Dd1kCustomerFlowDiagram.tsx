@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { DD1KType } from "@/types/dd1k";
 import {
   LineChart,
   Line,
@@ -13,62 +12,24 @@ import {
   ReferenceLine,
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import DD1K from "@/class/dd1k/DD1K";
 
 interface CustomerFlowDiagramProps {
-  arrivalRate: number;
-  serviceRate: number;
-  capacity: number;
-  t_i: number;
-  systemType: DD1KType;
+  dd1k: DD1K;
   height?: number;
   subGraph?: boolean;
   showTopAxis?: boolean;
   showBottomAxis?: boolean;
 }
 
-const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
-  arrivalRate,
-  serviceRate,
-  t_i,
+const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
+  dd1k,
   height,
   subGraph,
   showTopAxis,
   showBottomAxis,
 }) => {
-  const generateData = () => {
-    const data = [];
-    const maxTime = 50;
-    const timeStep = 1 / Math.max(arrivalRate, serviceRate); // More precise step size
-    let totalBlocked = 0;
-
-    for (let t = 0; t <= maxTime; t += timeStep) {
-      const arrivals = Math.floor(t * arrivalRate);
-      const departures = Math.floor(t * serviceRate);
-      const isBlocked = false;
-      //  DD1KλExceedμ.isCustomerBlocked(
-      //   t,
-      //   arrivalRate,
-      //   serviceRate,
-      //   capacity,
-      //   t_i,
-      //   systemType
-      // );
-
-      if (isBlocked) {
-        totalBlocked++;
-      }
-
-      data.push({
-        time: t,
-        arrivals: arrivals,
-        departures: departures,
-        blocked: totalBlocked,
-      });
-    }
-    return data;
-  };
-
-  const data = generateData();
+  const data = dd1k.timeLineData;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -178,7 +139,7 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
             />
             <Line
               type="monotone"
-              dataKey="blocked"
+              dataKey="blocks"
               stroke="#ff7300"
               name="Blocked"
               dot={false}
@@ -188,7 +149,7 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
               }
             />
             <ReferenceLine
-              x={t_i}
+              x={dd1k.t_i}
               xAxisId={
                 showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
               }
@@ -207,4 +168,4 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
   );
 };
 
-export default CustomerFlowDiagram;
+export default Dd1kCustomerFlowDiagram;

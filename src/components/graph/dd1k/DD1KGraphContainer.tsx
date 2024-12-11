@@ -4,7 +4,10 @@ import React from "react";
 import { Box } from "@mui/material";
 import Dd1kArrivalTimeline from "./Dd1kArrivalTimeline";
 import Dd1kServiceTimeline from "./Dd1kServiceTimeline";
+import Dd1kDepartureTimeline from "./Dd1kDepartureTimeline";
 import DD1K from "@/class/dd1k/DD1K";
+import Dd1kNumberOfCustomersGraph from "./Dd1kNumberOfCustomersGraph";
+import Dd1kCustomerFlowDiagram from "./Dd1kCustomerFlowDiagram";
 
 type DD1KGraphContainerProps = {
   dd1k: DD1K;
@@ -22,13 +25,13 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ dd1k }) => {
       ></Box>
 
       {/* <CombinedGraph {...props} height={1000} /> Add CombinedGraph */}
-      {/* <CustomerFlowDiagram
-        {...props}
+      <Dd1kCustomerFlowDiagram
+        dd1k={dd1k}
         height={GRAPH_HEIGHT}
         subGraph={true}
         showTopAxis={true}
         showBottomAxis={false}
-      /> */}
+      />
       <Dd1kArrivalTimeline
         dd1k={dd1k}
         height={GRAPH_HEIGHT / 2}
@@ -39,25 +42,25 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ dd1k }) => {
 
       <Dd1kServiceTimeline
         dd1k={dd1k}
-        height={GRAPH_HEIGHT / 2}
+        height={GRAPH_HEIGHT / 3}
         subGraph={true}
         showTopAxis={false}
         showBottomAxis={true}
       />
-      {/* <DepartureTimeline
-        {...props}
-        height={GRAPH_HEIGHT}
+      <Dd1kDepartureTimeline
+        dd1k={dd1k}
+        height={GRAPH_HEIGHT / 3}
         subGraph={true}
-        showTopAxis={true}
+        showTopAxis={false}
         showBottomAxis={true}
-      /> */}
-      {/* <NumberOfCustomersGraph
-        {...props}
+      />
+      <Dd1kNumberOfCustomersGraph
+        dd1k={dd1k}
         height={GRAPH_HEIGHT}
         subGraph={true}
         showTopAxis={false}
         showBottomAxis={false}
-      /> */}
+      />
       {/* <WaitingTimeGraph
         {...props}
         height={GRAPH_HEIGHT}

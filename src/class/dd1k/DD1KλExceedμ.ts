@@ -251,6 +251,7 @@ class DD1KλExceedμ extends DD1K {
     let arrivals = 0;
     let serviceEnterancs = 0;
     let departures = 0;
+    let blocks = 0;
 
     let nextArrivalTime = this.arrivalTime;
     let nextServiceEnteranceTime = nextArrivalTime;
@@ -272,32 +273,41 @@ class DD1KλExceedμ extends DD1K {
         nextDepartureTime += this.serviceTime;
       }
 
-      if (t === nextArrivalTime) {
-        arrived = true;
-        arrivals++;
-        numberOfCustomers++;
-        nextArrivalTime += this.arrivalTime;
-        blocked = numberOfCustomers >= this.capacity;
-      }
-
       if (t === nextServiceEnteranceTime) {
         enteredService = true;
         serviceEnterancs++;
         nextServiceEnteranceTime += this.serviceTime;
       }
 
-      timelineData.push({
+      if (t === nextArrivalTime) {
+        arrived = true;
+        blocked = numberOfCustomers >= this.capacity - 1;
+        arrivals++;
+        nextArrivalTime += this.arrivalTime;
+        if (blocked){
+          blocks++;
+        }else{
+          numberOfCustomers++;
+        }
+      }
+
+      const d = {
         time: time,
         arrived: arrived,
-        blocked: blocked,
         arrivals: arrivals,
+        blocked: blocked,
+        blocks: blocks,
         enteredService: enteredService,
         serviceEnterancs: serviceEnterancs,
         departured: departured,
         departures: departures,
         numberOfCustomers: numberOfCustomers,
         key: key++,
-      });
+      };
+
+      console.log("generateTimeData t", t, "d", d);
+
+      timelineData.push(d);
     }
 
     return timelineData;

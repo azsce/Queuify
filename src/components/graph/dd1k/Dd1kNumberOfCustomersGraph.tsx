@@ -11,51 +11,30 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import { DD1KType } from "@/types/dd1k";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { getTimeAxisTicks } from "@/utils/graph";
+import DD1K from "@/class/dd1k/DD1K";
 
 interface NumberOfCustomersGraphProps {
-  arrivalRate: number;
-  serviceRate: number;
-  capacity: number;
-  t_i: number;
-  systemType: DD1KType;
+  dd1k: DD1K;
   height?: number;
   subGraph?: boolean;
   showTopAxis?: boolean;
   showBottomAxis?: boolean;
 }
 
-const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
-  arrivalRate,
-  capacity,
-  t_i,
+const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
+  dd1k, 
   height,
   subGraph,
   showTopAxis,
   showBottomAxis,
 }) => {
-  const generateData = () => {
-    const data = [];
-    const maxTime = 50;
-    const timeStep = 1;
 
-    for (let t = 0; t <= maxTime; t += timeStep) {
-      const customers = 50;
-      data.push({
-        time: t,
-        customers: customers,
-      });
-    }
-    return data;
-  };
 
-  const data = generateData();
+  const data = dd1k.timeLineData;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const maxTime = 50;
 
   return (
     <Box
@@ -106,7 +85,7 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
                   offset: -25,
                 }}
                 tick={{ dy: -10 }}
-                ticks={getTimeAxisTicks(maxTime, arrivalRate)}
+                interval={dd1k.arrivalTime - 1}
               />
             )}
             {showBottomAxis && (
@@ -120,7 +99,7 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
                   offset: -10,
                   dy: 10,
                 }}
-                ticks={getTimeAxisTicks(maxTime, arrivalRate)}
+                interval={dd1k.arrivalTime - 1}
               />
             )}
             <YAxis
@@ -132,12 +111,12 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
                 dy: 105,
               }}
               allowDecimals={false}
-              domain={[0, capacity]}
+              domain={[0, dd1k.capacity]}
             />
             <Tooltip />
             <Line
               type="stepAfter"
-              dataKey="customers"
+              dataKey="numberOfCustomers"
               stroke="#8884d8"
               name="Customers in System"
               dot={false}
@@ -147,7 +126,7 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
               } // Add this line
             />
             <ReferenceLine
-              x={t_i}
+              x={dd1k.t_i}
               xAxisId={
                 showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
               }
@@ -166,4 +145,4 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
   );
 };
 
-export default NumberOfCustomersGraph;
+export default Dd1kNumberOfCustomersGraph;

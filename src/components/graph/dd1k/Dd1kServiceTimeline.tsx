@@ -20,7 +20,6 @@ type Dd1kServiceTimelineProps = {
   subGraph?: boolean;
   showTopAxis?: boolean;
   showBottomAxis?: boolean;
-  xAxisMax?: number;
 };
 
 const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
@@ -29,10 +28,9 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
   subGraph,
   showTopAxis,
   showBottomAxis,
-  xAxisMax,
 }) => {
   console.log("Dd1kServiceTimeline height", height);
-  const data = dd1k.generateServiceTimelineData(xAxisMax);
+  const data = dd1k.timeLineData;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   // Remove timeAxisTicks as we'll use same configuration as ArrivalTimeline
@@ -71,7 +69,9 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3"
+            strokeOpacity={0.2}
+            />
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="time" xAxisId="default" hide={true} />
             )}
@@ -80,15 +80,24 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                 dataKey="time"
                 orientation="top"
                 xAxisId="top"
-                // label={{
-                //   value: "Time (t)",
-                //   position: "insideTop",
-                //   offset: -25,
-                // }}
-                // tick={{ dy: -10 }}
-                tickSize={0} // Remove ticks
-                tickFormatter={() => ""}
-                stroke="transparent"
+                tickLine={false}
+                tickSize={subGraph ? 0 : 2}
+                axisLine={{
+                  stroke: "transparent",
+                  strokeDasharray: "transparent",
+                }}
+                tickFormatter={(value) => {
+                  if (value % dd1k.arrivalTime === 0 && value !== 0) {
+                    return value;
+                  }
+                  return "";
+                }}
+                dy={-3}
+                interval={dd1k.arrivalTime - 1}
+                tick={{
+                  fontSize: 8,
+                  color: theme.palette.text.primary,
+                }}
               />
             )}
             {showBottomAxis && (
@@ -96,12 +105,27 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                 xAxisId="bottom"
                 dataKey="time"
                 orientation="bottom"
-                tickFormatter={() => ""} // Add tick formatter
-                // stroke="transparent"
+                tickFormatter={(value) => {
+                  const r = data.find((entry) => entry.time === value)?.enteredService
+                    ? `C${data.find((entry) => entry.time === value)?.serviceEnterancs}`
+                    : "";
+
+                  return r;
+                }}
+                tickSize={0}
+                tick={{
+                  fontSize: 8,
+                  dy: 5,
+                  color: theme.palette.secondary.main,
+                }}
+                colorRendering="optimizeQuality"
+                tickLine={true}
                 axisLine={{
-                  stroke: theme.palette.text.primary,
+                  stroke: theme.palette.secondary.main,
                   strokeWidth: 4,
                 }}
+                
+                interval={0}
               />
             )}
             <YAxis
@@ -109,8 +133,9 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                 value: "-> Service",
                 angle: -90,
                 position: "insideLeft",
-                dx: isMobile ? 10 : -20,
-                dy: 50,
+                dx: 5,
+                dy: 40,
+                fontSize: 12,
               }}
               tickCount={1}
               stroke="transparent"
@@ -125,29 +150,19 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                   showBottomAxis ? "bottom" : showTopAxis ? "top" : "default"
                 }
                 stroke={
-                  entry.customerIndex === ""
-                    ? "transparent"
-                    : entry.isInitialCustomer
-                      ? "black"
-                      : colors[
-                          parseInt(entry.customerIndex.slice(1)) % colors.length
-                        ]
+                  entry.enteredService
+                    ? colors[entry.serviceEnterancs % colors.length]
+                    : "transparent"
                 }
                 strokeWidth={2}
-                label={{
-                  value: entry.customerIndex,
-                  position: "bottom",
-                  fill:
-                    entry.customerIndex === ""
-                      ? "transparent"
-                      : entry.isInitialCustomer
-                        ? "black"
-                        : colors[
-                            parseInt(entry.customerIndex.slice(1)) %
-                              colors.length
-                          ],
-                  fontSize: 12,
-                }}
+                // label={{
+                //   value: entry.enteredService ? `C${entry.serviceEnterancs}` : "",
+                //   position: "bottom",
+                //   fill: entry.enteredService
+                //     ? colors[entry.serviceEnterancs % colors.length]
+                //     : "transparent",
+                //   fontSize: 12,
+                // }}
               />
             ))}
           </LineChart>

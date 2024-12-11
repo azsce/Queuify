@@ -128,7 +128,6 @@ class DD1KμEqualλ extends DD1K {
       t += 1 / this.serviceRate;
     }
 
-    console.log("generateServiceTimelineData data", data);
     return data;
   }
 

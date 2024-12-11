@@ -191,7 +191,6 @@ abstract class DD1K {
       });
     }
 
-    console.log("generateArrivalTimelineData data", data);
     return data;
   }
 

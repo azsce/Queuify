@@ -5,25 +5,23 @@ import {
   LineChart,
   XAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
   ReferenceLine,
   YAxis,
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-
 import { colors } from "@/constants";
 import DD1K from "@/class/dd1k/DD1K";
 
-type Dd1kArrivalTimelineProps = {
+interface DepartureTimelineProps {
   dd1k: DD1K;
   height?: number;
   subGraph?: boolean;
   showTopAxis?: boolean;
   showBottomAxis?: boolean;
-};
+}
 
-const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
+const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
   dd1k,
   height,
   subGraph,
@@ -31,9 +29,9 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
   showBottomAxis,
 }) => {
   const data = dd1k.timeLineData;
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  // Remove timeAxisTicks as we'll use same configuration as ArrivalTimeline
 
   return (
     <Box
@@ -46,7 +44,7 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
     >
       {!subGraph && (
         <Typography variant="h6" component="h3">
-          Arrival Timeline
+          Departure Timeline
         </Typography>
       )}
       <Box
@@ -69,10 +67,7 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3"
-            strokeOpacity={0.2}
-            />
-            {/* Add default XAxis when neither custom axis is shown */}
+            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="time" xAxisId="default" hide={true} />
             )}
@@ -86,17 +81,12 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                 axisLine={{
                   stroke: "transparent",
                   strokeDasharray: "transparent",
-                }} // Set the color of the axis line to black
-                dy={-3}
-                tickFormatter={(value) => {
-                  if (value % dd1k.arrivalTime === 0 && value !== 0) {
-                    return value;
-                  }
-                  return "";
                 }}
-                interval={0}
+                dy={-3}
+                interval={dd1k.arrivalTime - 1}
                 tick={{
                   fontSize: 8,
+                  startOffset: dd1k.arrivalTime,
                 }}
               />
             )}
@@ -106,8 +96,9 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                 dataKey="time"
                 orientation="bottom"
                 tickFormatter={(value) => {
-                  const r = data.find((entry) => entry.time === value)?.arrived
-                    ? `C${data.find((entry) => entry.time === value)?.arrivals}`
+                  const r = data.find((entry) => entry.time === value)
+                    ?.departured
+                    ? `C${data.find((entry) => entry.time === value)?.departures}`
                     : "";
 
                   return r;
@@ -119,58 +110,63 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                 }}
                 tickLine={true}
                 axisLine={{
-                  stroke: theme.palette.secondary.main,
+                  stroke: theme.palette.text.primary,
                   strokeWidth: 4,
-                }} // Set the color of the axis line to black
-                interval={dd1k.arrivalTime - 1}
+                }}
+                interval={0}
               />
             )}
             <YAxis
               label={{
-                value: "Arrives",
+                value: "Departure",
                 angle: -90,
                 position: "insideLeft",
                 dx: 5,
                 dy: 30,
                 fontSize: 12,
               }}
+              tickLine={false}
+              tickSize={subGraph ? 0 : 2}
+              axisLine={{
+                stroke: "transparent",
+                strokeDasharray: "transparent",
+              }}
               tickCount={1}
               tickFormatter={() => ""} // Add tick formatter
-              stroke="transparent"
             />
-            <Tooltip />
-
-            {data.map((entry, index) => (
+            {data.map((entry) => (
               <ReferenceLine
                 key={entry.key}
                 x={entry.time}
                 xAxisId={
-                  showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+                  showBottomAxis ? "bottom" : showTopAxis ? "top" : "default"
                 }
                 stroke={
-                  entry.arrived
-                    ? entry.blocked
-                      ? "red"
-                      : colors[index % colors.length]
+                  entry.departured
+                    ? colors[entry.departures % colors.length]
                     : "transparent"
                 }
                 strokeWidth={2}
-                strokeDasharray={entry.blocked ? "3 3" : "none"}
+                // label={{
+                //   value: entry.departured ? `C${entry.departures}` : "",
+                //   position: "bottom",
+                //   fill: entry.departured
+                //     ? colors[entry.departures % colors.length]
+                //     : "transparent",
+                //   fontSize: 12,
+                // }}
               />
             ))}
           </LineChart>
         </ResponsiveContainer>
       </Box>
       {!subGraph && (
-        <Typography
-          variant="caption"
-          sx={{ color: "red", mt: 1, textAlign: "center" }}
-        >
-          ⊗ Red lines indicate blocked customers
+        <Typography variant="caption" sx={{ mt: 1, textAlign: "center" }}>
+          ◆ Indicates departure times
         </Typography>
       )}
     </Box>
   );
 };
 
-export default Dd1kArrivalTimeline;
+export default Dd1kDepartureTimeline;

@@ -72,7 +72,6 @@ const Dd1kλExceedμResults: React.FC<Dd1kλExceedμResultsProps> = ({ dd1k }) =
     const t = parseFloat(e.target.value);
     setTVar(t);
     const nOfT = 50;
-    console.log(nOfT);
     setNOfTVar(nOfT);
   };
 
