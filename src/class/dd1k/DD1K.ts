@@ -144,19 +144,6 @@ abstract class DD1K {
    */
   abstract waitingTimeForNthCustomer(nth: number): number;
 
-  /**
-   * Checks if a service completion occurs at time t
-   * @returns True if a service completion occurs at time t
-   */
-  abstract isServiceCompletion(t: number): boolean;
-
-  /**
-   * Checks if a customer can enter the system at time t.
-   * @param t - Time at which customer arrives
-   * @returns True if customer is blocked
-   */
-  abstract canCustomerEnterSystem(t: number): boolean;
-
   graphMaxTime(): number {
     return Math.ceil(Math.max(this.t_i * 2, 10)) + 1; // Round up max time
   }

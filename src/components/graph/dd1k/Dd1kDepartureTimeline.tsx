@@ -96,12 +96,15 @@ const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
                 dataKey="time"
                 orientation="bottom"
                 tickFormatter={(value) => {
-                  const r = data.find((entry) => entry.time === value)
-                    ?.departured
-                    ? `C${data.find((entry) => entry.time === value)?.departures}`
-                    : "";
-
-                  return r;
+                  const d = data.find((entry) => entry.time === value);
+                  if (d?.departured) {
+                    if (d.initialDepartured) {
+                      return `M${data.find((entry) => entry.time === value)?.initialDepartures}`;
+                    } else {
+                      return `C${data.find((entry) => entry.time === value)?.departures}`;
+                    }
+                  }
+                  return "";
                 }}
                 tickSize={0}
                 tick={{
@@ -147,14 +150,6 @@ const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
                     : "transparent"
                 }
                 strokeWidth={2}
-                // label={{
-                //   value: entry.departured ? `C${entry.departures}` : "",
-                //   position: "bottom",
-                //   fill: entry.departured
-                //     ? colors[entry.departures % colors.length]
-                //     : "transparent",
-                //   fontSize: 12,
-                // }}
               />
             ))}
           </LineChart>

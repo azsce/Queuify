@@ -69,9 +69,7 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3"
-            strokeOpacity={0.2}
-            />
+            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="time" xAxisId="default" hide={true} />
             )}
@@ -106,11 +104,15 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                 dataKey="time"
                 orientation="bottom"
                 tickFormatter={(value) => {
-                  const r = data.find((entry) => entry.time === value)?.enteredService
-                    ? `C${data.find((entry) => entry.time === value)?.serviceEnterancs}`
-                    : "";
-
-                  return r;
+                  const d = data.find((entry) => entry.time === value);
+                  if (d?.enteredService) {
+                    if (d.initialEnteredService) {
+                      return `M${data.find((entry) => entry.time === value)?.initialServiceEnterancs}`;
+                    } else {
+                      return `C${data.find((entry) => entry.time === value)?.serviceEnterancs}`;
+                    }
+                  }
+                  return "";
                 }}
                 tickSize={0}
                 tick={{
@@ -124,7 +126,6 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                   stroke: theme.palette.secondary.main,
                   strokeWidth: 4,
                 }}
-                
                 interval={0}
               />
             )}
@@ -155,14 +156,6 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                     : "transparent"
                 }
                 strokeWidth={2}
-                // label={{
-                //   value: entry.enteredService ? `C${entry.serviceEnterancs}` : "",
-                //   position: "bottom",
-                //   fill: entry.enteredService
-                //     ? colors[entry.serviceEnterancs % colors.length]
-                //     : "transparent",
-                //   fontSize: 12,
-                // }}
               />
             ))}
           </LineChart>

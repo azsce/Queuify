@@ -133,51 +133,6 @@ class DD1KλExceedμ extends DD1K {
     }
   }
 
-  isServiceCompletion(t: number): boolean {
-    const serviceTime = this.serviceTime;
-
-    // Check if time t is a service completion time by seeing if (t - 1/λ) is a multiple of service time
-    const timeFromFirstService = t - 1 / this.arrivalRate;
-
-    // Using Math.round to handle floating point precision
-    return (
-      Math.abs(
-        Math.round(timeFromFirstService / serviceTime) -
-          timeFromFirstService / serviceTime
-      ) < EPSILON
-    );
-  }
-
-  /**
-   * Checks if a customer can enter the system at time t (i.e., not blocked).
-   * * A customer is blocked if:
-   * 1. Time t is less than t_i: customer is never blocked
-   * 2. Time t equals t_i: customer is blocked (first blocking)
-   * 3. Time t > t_i:
-   *    - Current queue state is at capacity (k-1) AND no service completion occurs at time t
-   *    - Current queue state is at capacity (k)
-   * @param t - Time at which customer arrives
-   * @returns True if customer is blocked
-   */
-  canCustomerEnterSystem(t: number): boolean {
-    // Early time checks
-    if (t < this.firstBalkTime) return true;
-    if (Math.abs(t - this.firstBalkTime) < EPSILON) return false;
-
-    // For t > t_i, check queue state and service completion
-    const currentState = this.computeNOfT(t);
-
-    if (currentState < this.capacity - 1) {
-      return true;
-    }
-
-    if (currentState === this.capacity - 1) {
-      return this.isServiceCompletion(t);
-    }
-
-    return false;
-  }
-
   waitingTimeForNthCustomer(n: number): number {
     if (n === 0) {
       return 0;
@@ -255,15 +210,21 @@ class DD1KλExceedμ extends DD1K {
 
       const d = {
         time: time,
+
         arrived: arrived,
         arrivals: arrivals,
+
         blocked: blocked,
         blocks: blocks,
+
         enteredService: enteredService,
         serviceEnterancs: serviceEnterancs,
+
         departured: departured,
         departures: departures,
+
         numberOfCustomers: numberOfCustomers,
+        
         key: key++,
       };
 

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { timeLineData } from "@/types/timeLineData";
 import DD1K from "./DD1K";
 import { toProperFraction } from "@/lib/math";
 
@@ -37,7 +38,10 @@ class DD1KμExceedλ extends DD1K {
     this.muTiFloored = Math.floor(this.muTi);
 
     this.lastInitialCustomerDepartureTime =
-      this.initialCustomers * (this.serviceTime);
+      this.initialCustomers * this.serviceTime;
+
+    this.timeLineData = this.generateTimeGraphData();
+    this.customerGraphData = this.generateCustomerGraphData();
   }
 
   /**
@@ -93,7 +97,7 @@ class DD1KμExceedλ extends DD1K {
   waitingTimeForNthCustomer(n: number): number {
     if (n < Math.floor(this.arrivalRate * this.transientTime)) {
       return (
-        (this.initialCustomers - 1 + n) * (this.serviceTime) -
+        (this.initialCustomers - 1 + n) * this.serviceTime -
         n * (1 / this.arrivalRate)
       );
     } else {
@@ -137,108 +141,109 @@ class DD1KμExceedλ extends DD1K {
     return newCustomers < this.capacity;
   }
 
-  /**
-   * Checks if a service completion occurs at time t
-   * @returns True if a service completion occurs at time t
-   */
-  isServiceCompletion(t: number): boolean {
-    throw new Error("Method not implemented.");
-  }
-
   graphMaxTime(): number {
     return Math.ceil(
       Math.max(this.transientTime + 5 * (1 / this.arrivalRate), 10)
     ); // Round up max time
   }
 
-  getServiceEventAtTime(t: number): {
-    entersService: boolean;
-    isInitial: boolean;
-    customerIndex: string;
-  } {
-    if (t < this.lastInitialCustomerDepartureTime) {
-      if (t % (this.serviceTime) === 0) {
-        return {
-          entersService: true,
-          isInitial: true,
-          customerIndex: `M${Math.floor(t * this.serviceRate) + 1}`,
-        };
-      }
-    } else if (t <= this.transientTime) {
-      const n = this.computeNOfT(t);
-      if (n > 0) {
-        return {
-          entersService: true,
-          isInitial: false,
-          customerIndex: `C${Math.floor(t * this.serviceRate) + 1 - this.initialCustomers}`,
-        };
-      }
-    } else if (t % (1 / this.arrivalRate) === 0) {
-      return {
-        entersService: true,
-        isInitial: false,
-        customerIndex: `C${Math.floor(t * this.serviceRate) + 1 - this.initialCustomers}`,
-      };
-    }
+  generateTimeGraphData(): timeLineData[] {
+    const timelineData: timeLineData[] = [];
 
-    return {
-      entersService: false,
-      isInitial: false,
-      customerIndex: "",
-    };
-  }
+    const maxTime = this.graphMaxTime();
 
-  generateEmptyGraphData(xAxisMax?: number) {
-    const maxTime = xAxisMax ?? this.graphMaxTime();
-    const data = [];
-
-    for (let t = 0; t < maxTime; t++) {
-      data.push({
-        time: Math.round(t).toString(),
-      });
-    }
-
-    return data;
-  }
-
-  generateServiceTimelineData(
-    xAxisMax?: number
-  ): Array<{ time: string; service: number; customerIndex: string, key: number }> {
-
-    const maxTime = xAxisMax ?? this.graphMaxTime();
-
-    const data = [];
-    let currentCustomer = 1;
-    let t = 0;
     let key = 0;
 
-    while (t < maxTime) {
-      const serviceEvent = this.getServiceEventAtTime(t);
+    let arrivals = 0;
+    let serviceEnterancs = 0;
+    let departures = 0;
+    let blocks = 0;
 
-      if (serviceEvent.entersService) {
-        data.push({
-          time: Math.round(t),
-          service: currentCustomer,
-          customerIndex: serviceEvent.customerIndex,
-          isInitialCustomer: serviceEvent.isInitial,
-          key: key++,
-        });
-        currentCustomer++;
-      } 
-      else {
-        data.push({
-          time: Math.round(t),
-          service: 0,
-          customerIndex: "",
-          isInitialCustomer: false,
-          key: key++,
-        });
+    let initialServiceEnterancs = 0; //how many till now (initial customers)
+    let initialDepartures = 0; // how many till now (initial customers)
+
+    let nextArrivalTime = this.arrivalTime;
+    let nextServiceEnteranceTime = 0;
+    let nextDepartureTime = this.serviceTime;
+
+    let numberOfNewCustomers = 0;
+
+    let initialCustomersRemaining = this.initialCustomers;
+
+    for (let t = 0; t <= maxTime; t++) {
+      let arrived = false;
+      let blocked: boolean | null = null;
+      let departured = false;
+      let initialDepartured = false;
+      let enteredService = false;
+      let initialEnteredService = false;
+      const time = Math.round(t);
+
+      if (t === nextDepartureTime) {
+        departured = true;
+        departures++;
+        nextDepartureTime += this.serviceTime;
+        if (initialCustomersRemaining > 0) {
+          initialDepartured = true;
+          initialCustomersRemaining--;
+          initialDepartures++;
+        } else {
+          numberOfNewCustomers--;
+        }
       }
 
-      t += 1 / this.serviceRate;
+      if (t === nextServiceEnteranceTime) {
+        enteredService = true;
+        serviceEnterancs++;
+        nextServiceEnteranceTime += this.serviceTime;
+        if (initialCustomersRemaining > 0) {
+          initialEnteredService = true;
+          initialServiceEnterancs++;
+        }
+      }
+
+      if (t === nextArrivalTime) {
+        arrived = true;
+        blocked = numberOfNewCustomers >= this.capacity - 1;
+        arrivals++;
+        nextArrivalTime += this.arrivalTime;
+        if (blocked) {
+          blocks++;
+        } else {
+          numberOfNewCustomers++;
+        }
+      }
+
+      const d = {
+        time: time,
+
+        arrived: arrived,
+        arrivals: arrivals,
+
+        blocked: blocked,
+        blocks: blocks,
+
+        enteredService: enteredService,
+        serviceEnterancs: serviceEnterancs,
+        initialEnteredService: initialEnteredService,
+        initialServiceEnterancs: initialServiceEnterancs,
+
+        departured: departured,
+        departures: departures,
+        initialDepartured: initialDepartured,
+        initialDepartures: initialDepartures,
+
+        numberOfCustomers: numberOfNewCustomers,
+        
+        key: key++,
+      };
+
+      console.log("generateTimeData t", t, "d", d);
+
+      timelineData.push(d);
     }
 
-    return data;
+    return timelineData;
   }
 }
 
