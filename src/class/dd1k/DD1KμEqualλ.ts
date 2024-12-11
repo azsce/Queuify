@@ -26,14 +26,14 @@ class DD1KμEqualλ extends DD1K {
     this.arrivalRateFraction = toProperFraction(arrivalRate);
     this.serviceRateFraction = toProperFraction(serviceRate);
 
-    this.transientTime = 0;
-    this.t_i = this.transientTime;
+    this.transientTime = undefined;
+    this.t_i = undefined;
 
     this.lastInitialCustomerDepartureTime =
       this.initialCustomers * this.serviceTime;
 
-      this.timeLineData = this.generateTimeGraphData();
-      this.customerGraphData = this.generateCustomerGraphData();
+    this.timeLineData = this.generateTimeGraphData();
+    this.customerGraphData = this.generateCustomerGraphData();
   }
 
   computeNOfT(initialCustomers) {
