@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid2";
 import InfinityLinkIndicator from "../base/InfinityLinkIndicator";
 import { Box } from "@mui/material";
 import { evaluate, fraction, format } from "mathjs"; // Import mathjs
-import { isValidPositiveValue } from "@/lib/math";
+import { isValidPositiveNumber } from "@/lib/math";
 
 type InputParametersProps = {
   setArrivalRate: (value: string) => void;
@@ -35,13 +35,13 @@ const InputParameters: React.FC<InputParametersProps> = ({
       return;
     }
     try {
+      setServiceRate(value);
       const evaluatedValue = evaluate(value);
       console.log(evaluatedValue);
-      if (isValidPositiveValue(evaluatedValue)) {
-        setServiceRate(value);
+      if (isValidPositiveNumber(evaluatedValue)) {
         const serviceTime = 1 / evaluatedValue;
-        if (evaluatedValue === 1) {
-          setServiceTime("1");
+        if (Number.isInteger(serviceTime)) {
+          setServiceTime(serviceTime.toString());
         } else {
           setServiceTime(format(fraction(serviceTime), { fraction: "ratio" }));
         }
@@ -58,12 +58,12 @@ const InputParameters: React.FC<InputParametersProps> = ({
       return;
     }
     try {
+      setServiceTime(value);
       const evaluatedValue = evaluate(value);
-      if (isValidPositiveValue(evaluatedValue)) {
-        setServiceTime(value);
+      if (isValidPositiveNumber(evaluatedValue)) {
         const serviceRate = 1 / evaluatedValue;
-        if (evaluatedValue === 1) {
-          setServiceRate("1");
+        if (Number.isInteger(serviceRate)) {
+          setServiceRate(serviceRate.toString());
         } else {
           setServiceRate(format(fraction(serviceRate), { fraction: "ratio" }));
         }
@@ -80,13 +80,12 @@ const InputParameters: React.FC<InputParametersProps> = ({
       return;
     }
     try {
+      setArrivalRate(value);
       const evaluatedValue = evaluate(value);
-
-      if (isValidPositiveValue(evaluatedValue)) {
-        setArrivalRate(value);
+      if (isValidPositiveNumber(evaluatedValue)) {
         const arrivalTime = 1 / evaluatedValue;
-        if (evaluatedValue === 1) {
-          setArrivalTime("1");
+        if (Number.isInteger(arrivalTime)) {
+          setArrivalTime(arrivalTime.toString());
         } else {
           setArrivalTime(format(fraction(arrivalTime), { fraction: "ratio" }));
         }
@@ -103,13 +102,13 @@ const InputParameters: React.FC<InputParametersProps> = ({
       return;
     }
     try {
+      setArrivalTime(value);
       const evaluatedValue = evaluate(value);
 
-      if (isValidPositiveValue(evaluatedValue)) {
-        setArrivalTime(value);
+      if (isValidPositiveNumber(evaluatedValue)) {
         const arrivalRate = 1 / evaluatedValue;
-        if (evaluatedValue === 1) {
-          setArrivalRate("1");
+        if (Number.isInteger(arrivalRate)) {
+          setArrivalRate(arrivalRate.toString());
         } else {
           setArrivalRate(format(fraction(arrivalRate), { fraction: "ratio" }));
         }

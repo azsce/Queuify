@@ -1,69 +1,64 @@
 import { Box } from "@mui/material";
-import { useState, Dispatch, SetStateAction } from "react";
+import { useState, Dispatch, SetStateAction, useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import InfinityLinkIndicator from "@/components/base/InfinityLinkIndicator";
 import { evaluate } from "mathjs"; // Import evaluate from mathjs
-import { isValidPositiveValue } from "@/lib/math";
+import {
+  isValidNaturalNumber,
+  isValidPositiveInteger,
+  isValidPositiveNumber,
+} from "@/lib/math";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
+import { dd1kCapacityKey, getFromLocalStorage } from "./Dd1kCalculator";
 
 type Dd1kSystemParametersProps = {
-  setCapacity: Dispatch<SetStateAction<number>>;
-  capacity: number;
+  setCapacity: Dispatch<SetStateAction<string>>;
+  capacity: string;
 };
 
 const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
   setCapacity,
   capacity,
 }) => {
-  const [capacityMinusOne, setCapacityMinusOne] = useState<number | undefined>(
-    () => {
-      if (capacity) {
-        return capacity - 1;
-      }
-      return undefined;
+  const [buffer, setBuffer] = useState<string>("");
+
+  useEffect(() => {
+    const capacity = getFromLocalStorage(dd1kCapacityKey, null, true);
+    console.log("capacity", capacity);
+    const evaluatedCapacity = evaluate(capacity);
+    if (isValidPositiveInteger(evaluatedCapacity)) {
+      setBuffer((evaluatedCapacity - 1).toString());
     }
-  );
+  }, [localStorage]);
 
   const onCapacityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
+    setCapacity(value);
     try {
       if (value === "") {
-        setCapacity(undefined);
-        setCapacityMinusOne(undefined);
+        setBuffer("");
         return;
       }
-      const evaluatedValue = evaluate(value.toString());
-      if (
-        isValidPositiveValue(evaluatedValue) &&
-        Number.isInteger(evaluatedValue) &&
-        evaluatedValue > 1
-      ) {
-        setCapacity(evaluatedValue);
-        setCapacityMinusOne(evaluatedValue - 1);
+      const evaluatedCapacity = evaluate(value);
+      if (isValidPositiveInteger(evaluatedCapacity)) {
+        setBuffer((evaluatedCapacity - 1).toString());
       }
     } catch {
       return; // Do not update state if evaluation fails
     }
   };
 
-  const onCapacityMinusOneChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const onBufferChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
+    setBuffer(value);
     try {
       if (value === "") {
-        setCapacityMinusOne(undefined);
-        setCapacity(undefined);
+        setCapacity("");
         return;
       }
-      const evaluatedValue = evaluate(value.toString());
-      if (
-        isValidPositiveValue(evaluatedValue) &&
-        Number.isInteger(evaluatedValue) &&
-        evaluatedValue >= 0
-      ) {
-        setCapacityMinusOne(evaluatedValue);
-        setCapacity(evaluatedValue + 1);
+      const evaluatedBuffer = evaluate(value.toString());
+      if (isValidNaturalNumber(evaluatedBuffer)) {
+        setCapacity((evaluatedBuffer + 1).toString());
       }
     } catch {
       return; // Do not update state if evaluation fails
@@ -109,8 +104,8 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
             <NoNumberArrowsTextField
               id="capacityMinusOne"
               label="K-1"
-              value={isNaN(capacityMinusOne) ? "" : capacityMinusOne}
-              onChange={onCapacityMinusOneChange}
+              value={isNaN(buffer) ? "" : buffer}
+              onChange={onBufferChange}
               autoComplete="dd1k-capacity-1"
               required={true}
               fullWidth

@@ -27,11 +27,15 @@ export function toProperFraction(decimal: number): Fraction {
   return { numerator: h1, denominator: k1 };
 }
 
-export const isValidPositiveValue = (value: any): boolean => {
-  if (value <= 0 || isNaN(value) || value.value === null) return false;
-  return true;
+// works with mathjs.evaluate(value)
+export const isValidNaturalNumber = (value: any): boolean => {
+  return !isNaN(value) && value.value === null;
+};
+
+export const isValidPositiveNumber = (value: any): boolean => {
+  return isValidNaturalNumber(value) && value > 0;
 };
 
 export const isValidPositiveInteger = (value: any): boolean => {
-  return isValidPositiveValue(value) && Number.isInteger(value);
+  return isValidPositiveNumber(value) && Number.isInteger(value);
 };

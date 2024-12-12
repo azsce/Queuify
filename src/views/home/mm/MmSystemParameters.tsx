@@ -57,7 +57,9 @@ const MmSystemParameters: React.FC<SystemParametersProps> = ({
             id="capacity"
             label="System Capacity (K)"
             value={capacity}
-            onChange={onCapacityChange}
+            onChange={(v) => {
+              onCapacityChange(parseInt(v));
+            }}
             showInfinity={true}
             onInfinityClick={handleCapacityInfinityClick}
             autoComplete="capacity"
