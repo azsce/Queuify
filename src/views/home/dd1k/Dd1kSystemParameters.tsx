@@ -16,7 +16,12 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
   capacity,
 }) => {
   const [capacityMinusOne, setCapacityMinusOne] = useState<number | undefined>(
-    capacity - 1
+    () => {
+      if (capacity) {
+        return capacity - 1;
+      }
+      return undefined;
+    }
   );
 
   const onCapacityChange = (event: React.ChangeEvent<HTMLInputElement>) => {

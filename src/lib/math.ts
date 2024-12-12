@@ -28,6 +28,10 @@ export function toProperFraction(decimal: number): Fraction {
 }
 
 export const isValidPositiveValue = (value: any): boolean => {
-  if (value <= 0 || isNaN(value) || value.value === null) return;
+  if (value <= 0 || isNaN(value) || value.value === null) return false;
   return true;
+};
+
+export const isValidPositiveInteger = (value: any): boolean => {
+  return isValidPositiveValue(value) && Number.isInteger(value);
 };

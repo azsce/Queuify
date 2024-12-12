@@ -1,6 +1,6 @@
 "use client";
 
-import React, {JSX, useEffect, useState } from "react";
+import React, { JSX, useEffect, useState } from "react";
 import { evaluate } from "mathjs"; // Import evaluate from mathjs
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
@@ -12,40 +12,45 @@ import Grid from "@mui/material/Grid2";
 import dd1kFactoryMethod from "@/class/dd1k/dd1kFactoryMethod";
 import Dd1kSystemParameters from "./Dd1kSystemParameters";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
-import { isValidPositiveValue } from "@/lib/math";
+import { isValidPositiveInteger, isValidPositiveValue } from "@/lib/math";
 
-const  Dd1kCalculator: React.FC = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getFromLocalStorage = (key: string, defaultValue: any = "") => {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem(key);
+    return saved ?? defaultValue;
+  }
+  return defaultValue;
+};
+
+const Dd1kCalculator: React.FC = () => {
   // dd1k
-  const [capacity, setCapacity] = useState<number | undefined>(
-    () => localStorage.getItem("capacity") as unknown as number
+  const [capacity, setCapacity] = useState<number | undefined>(() =>
+    getFromLocalStorage("dd1k-capacity", undefined)
   );
-  const [arrivalRate, setArrivalRate] = useState(() => {
-    const saved = localStorage.getItem("arrivalRate");
-    return saved ?? "";
-  });
-  const [serviceRate, setServiceRate] = useState(() => {
-    const saved = localStorage.getItem("serviceRate");
-    return saved ?? "";
-  });
-  const [arrivalTime, setArrivalTime] = useState(() => {
-    const saved = localStorage.getItem("arrivalTime");
-    return saved ?? "";
-  });
-  const [serviceTime, setServiceTime] = useState(() => {
-    const saved = localStorage.getItem("serviceTime");
-    return saved ?? "";
-  });
 
-  // mmxy
-  const [error, setError] = useState("");
-  const [results, setResults] = useState<JSX.Element | null>(null);
+  const [arrivalRate, setArrivalRate] = useState<string>(() =>
+    getFromLocalStorage("dd1k-arrivalRate", "")
+  );
+
+  const [serviceRate, setServiceRate] = useState<string>(() =>
+    getFromLocalStorage("dd1k-serviceRate", "")
+  );
+
+  const [initialCustomers, setInitialCustomers] = useState<number | undefined>(
+    () => getFromLocalStorage("dd1k-initialCustomers", undefined)
+  );
 
   const [isInitialCutsomersRequired, setIsInitialCutsomersRequired] =
     useState(false);
 
-  const [initialCustomers, setInitialCustomers] = useState<number | undefined>(
-    () => localStorage.getItem("initialCustomers") as unknown as number
-  );
+  const [arrivalTime, setArrivalTime] = useState("");
+
+  const [serviceTime, setServiceTime] = useState("");
+
+  // mmxy
+  const [error, setError] = useState("");
+  const [results, setResults] = useState<JSX.Element | null>(null);
 
   useEffect(() => {
     if (arrivalRate === "" || serviceRate === "") {
@@ -69,56 +74,65 @@ const  Dd1kCalculator: React.FC = () => {
   }, [arrivalRate, serviceRate]);
 
   useEffect(() => {
-    localStorage.setItem("capacity", JSON.stringify(capacity));
+    localStorage.setItem("dd1k-capacity", capacity?.toString());
   }, [capacity]);
 
   useEffect(() => {
-    localStorage.setItem("arrivalRate", arrivalRate);
+    localStorage.setItem("dd1k-arrivalRate", arrivalRate);
   }, [arrivalRate]);
 
   useEffect(() => {
-    localStorage.setItem("serviceRate", serviceRate);
+    localStorage.setItem("dd1k-serviceRate", serviceRate);
   }, [serviceRate]);
 
   useEffect(() => {
-    localStorage.setItem("arrivalTime", arrivalTime);
-  }, [arrivalTime]);
-
-  useEffect(() => {
-    localStorage.setItem("serviceTime", serviceTime);
-  }, [serviceTime]);
-
-  useEffect(() => {
-    localStorage.setItem("initialCustomers", JSON.stringify(initialCustomers));
+    localStorage.setItem("dd1k-initialCustomers", initialCustomers?.toString());
   }, [initialCustomers]);
 
   const handleInitialCustomersChange = (value: string) => {
     try {
-      if (value === "") {
+      if (value === "" || isNaN(parseInt(value))) {
+        console.log("undefuned");
         setInitialCustomers(undefined);
         return;
       }
       const evaluatedValue = evaluate(value);
-      if (
-        isValidPositiveValue(evaluatedValue) &&
-        Number.isInteger(evaluatedValue)
-      ) {
+      if (isValidPositiveInteger(evaluatedValue)) {
         setInitialCustomers(evaluatedValue);
       }
     } catch {
+      console.log("carch");
       return; // Do not update state if evaluation fails
     }
   };
 
   const handleCalculate = () => {
-    const evaluatedArrivalRate = evaluate(arrivalRate);
-    const evaluatedServiceRate = evaluate(serviceRate);
-    // Clear previous errors and results
-    setError("");
-    setResults(null);
+    if (isNaN(capacity) || !isValidPositiveValue(capacity)) {
+      setError("Please enter a positive Capacity.");
+      return;
+    }
 
-    // Basic input validation
+    const evaluatedArrivalRate = evaluate(arrivalRate);
+
+    if (!isValidPositiveValue(evaluatedArrivalRate)) {
+      setError("Please enter a positive Arrival Rate.");
+      return;
+    }
+
+    const evaluatedServiceRate = evaluate(serviceRate);
+    if (!isValidPositiveValue(evaluatedServiceRate)) {
+      setError("Please enter a positive Service Rate.");
+      return;
+    }
+
+    if (isInitialCutsomersRequired) {
+      if (!isValidPositiveInteger(initialCustomers)) {
+        setError("Please enter a positive Initial Customers Value.");
+        return;
+      }
+    }
     if (!arrivalRate || !serviceRate) {
+      // Basic input validation
       setError("Please enter both arrival rate and service rate.");
       return;
     }
@@ -135,15 +149,14 @@ const  Dd1kCalculator: React.FC = () => {
       return;
     }
 
-    if (capacity !== undefined && capacity <= 0) {
-      setError("Capacity must be a positive value.");
-      return;
-    }
-
     if (initialCustomers !== undefined && initialCustomers <= 0) {
       setError("Initial customers must be a positive value.");
       return;
     }
+
+    // Clear previous errors and results
+    setError("");
+    setResults(null);
 
     try {
       if (capacity !== null) {
@@ -239,9 +252,11 @@ const  Dd1kCalculator: React.FC = () => {
                       placeholder={"Initial Customers: M"}
                       label="Initial Customers: M"
                       fullWidth
+                      type="number"
                       required={isInitialCutsomersRequired}
                       autoComplete={"dd1k-initial-customers"}
                       onChange={(e) => {
+                        console.log("onChange", e.target.value);
                         handleInitialCustomersChange(e.target.value);
                       }}
                     />
@@ -291,7 +306,6 @@ const  Dd1kCalculator: React.FC = () => {
       </Card>
     </Container>
   );
-}
-
+};
 
 export default Dd1kCalculator;
