@@ -1,8 +1,8 @@
-import DD1K from "./DD1K";
-import DD1KλExceedμ from "./DD1KλExceedμ";
-import DD1KλMultipleAndExceedμ from "./DD1KλMultipleAndExceedμ";
-import DD1KμEqualλ from "./DD1KμEqualλ";
-import DD1KμExceedλ from "./DD1KμExceedλ";
+import Dd1k from "./Dd1k";
+import Dd1kLambdaExceedNew from "./Dd1kLambdaExceedNew";
+import Dd1kLambdaMultipleAndExceedNew from "./Dd1kLambdaMultipleAndExceedNew";
+import Dd1kLambdaEqualNew from "./Dd1kLambdaEqualNew";
+import Dd1kNewExceedLambda from "./Dd1kNewExceedLambda";
 
 /**
  * @param arrivalRate - The rate at which customers arrive.
@@ -12,22 +12,22 @@ import DD1KμExceedλ from "./DD1KμExceedλ";
  *
  * @returns An instance of the D/D/1/(k-1) queue system.
  */
-export default function dD1KFactoryMethod(
+export default function dd1kFactoryMethod(
   arrivalRate: number,
   serviceRate: number,
   capacity: number,
   initialCustomers?: number
-): DD1K {
+): Dd1k {
   if (arrivalRate > serviceRate) {
     if (arrivalRate % serviceRate === 0) {
       // λ > μ and λ%μ = 0
-      return new DD1KλMultipleAndExceedμ(arrivalRate, serviceRate, capacity);
+      return new Dd1kLambdaMultipleAndExceedNew(arrivalRate, serviceRate, capacity);
     }
     // λ > μ
-    return new DD1KλExceedμ(arrivalRate, serviceRate, capacity);
+    return new Dd1kLambdaExceedNew(arrivalRate, serviceRate, capacity);
   } else if (arrivalRate === serviceRate) {
     // λ = μ
-    return new DD1KμEqualλ(
+    return new Dd1kLambdaEqualNew(
       arrivalRate,
       serviceRate,
       capacity,
@@ -35,7 +35,7 @@ export default function dD1KFactoryMethod(
     );
   } else {
     // λ < μ
-    return new DD1KμExceedλ(
+    return new Dd1kNewExceedLambda(
       arrivalRate,
       serviceRate,
       capacity,

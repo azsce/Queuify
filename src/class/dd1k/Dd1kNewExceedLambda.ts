@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { timeLineData } from "@/types/timeLineData";
-import DD1K from "./DD1K";
+import Dd1k from "./Dd1k";
 import { toProperFraction } from "@/lib/math";
 
-class DD1KμExceedλ extends DD1K {
+class Dd1kNewExceedLambda extends Dd1k {
   lastInitialCustomerDepartureTime: number;
 
   constructor(
@@ -148,4 +148,4 @@ class DD1KμExceedλ extends DD1K {
   }
 }
 
-export default DD1KμExceedλ;
+export default Dd1kNewExceedLambda;

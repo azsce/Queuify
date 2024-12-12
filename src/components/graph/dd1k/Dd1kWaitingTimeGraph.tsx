@@ -12,10 +12,10 @@ import {
   ReferenceLine,
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import DD1K from "@/class/dd1k/DD1K";
+import Dd1k from "@/class/dd1k/Dd1k";
 
 interface WaitingTimeGraphProps {
-  dd1k: DD1K;
+  dd1k: Dd1k;
   height?: number;
   subGraph?: boolean;
   showTopAxis?: boolean;

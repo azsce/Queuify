@@ -2,10 +2,10 @@ import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { Box, Divider, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
-import DD1K from "@/class/dd1k/DD1K";
+import Dd1k from "@/class/dd1k/Dd1k";
 
 type Dd1kLambdaExceedNewlResultsProps = {
-  dd1k: DD1K;
+  dd1k: Dd1k;
 };
 
 const Dd1kLambdaExceedNewlResults: React.FC<Dd1kLambdaExceedNewlResultsProps> = ({

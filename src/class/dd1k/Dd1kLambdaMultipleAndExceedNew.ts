@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import DD1KλExceedμ from "./DD1KλExceedμ";
+import Dd1kLambdaExceedNew from "./Dd1kLambdaExceedNew";
 
-class DD1KλMultipleAndExceedμ extends DD1KλExceedμ {
+class Dd1kLambdaMultipleAndExceedNew extends Dd1kLambdaExceedNew {
   constructor(arrivalRate: number, serviceRate: number, capacity: number) {
     super(arrivalRate, serviceRate, capacity);
     this.type = "(λ > μ) && λ%μ = 0";
@@ -19,4 +19,4 @@ class DD1KλMultipleAndExceedμ extends DD1KλExceedμ {
   }
 }
 
-export default DD1KλMultipleAndExceedμ;
+export default Dd1kLambdaMultipleAndExceedNew;

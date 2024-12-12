@@ -9,7 +9,7 @@ import InputParameters from "@/components/input/InputParameters";
 import DD1KResults from "@/components/output/DD1K/DD1KResults";
 import { Card, CardHeader, CardContent, Box, Container } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import dD1KFactoryMethod from "@/class/dd1k/DD1KFactoryMethod";
+import dd1kFactoryMethod from "@/class/dd1k/dd1kFactoryMethod";
 import Dd1kSystemParameters from "./Dd1kSystemParameters";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 
@@ -169,7 +169,7 @@ export default function Dd1kCalculator() {
             return;
           }
         }
-        const dd1k = dD1KFactoryMethod(
+        const dd1k = dd1kFactoryMethod(
           evaluatedArrivalRate,
           evaluatedServiceRate,
           capacity,

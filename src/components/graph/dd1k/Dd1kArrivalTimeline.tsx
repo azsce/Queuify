@@ -13,10 +13,10 @@ import {
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 
 import { colors } from "@/constants";
-import DD1K from "@/class/dd1k/DD1K";
+import Dd1k from "@/class/dd1k/Dd1k";
 
 type Dd1kArrivalTimelineProps = {
-  dd1k: DD1K;
+  dd1k: Dd1k;
   height?: number;
   subGraph?: boolean;
   showTopAxis?: boolean;

@@ -42,8 +42,8 @@
 
 import { EPSILON } from "@/constants";
 import { toProperFraction } from "@/lib/math";
-import DD1K from "./DD1K";
-class DD1KλExceedμ extends DD1K {
+import Dd1k from "./Dd1k";
+class Dd1kLambdaExceedNew extends Dd1k {
   constructor(arrivalRate: number, serviceRate: number, capacity: number) {
     super();
 
@@ -158,4 +158,4 @@ class DD1KλExceedμ extends DD1K {
   }
 }
 
-export default DD1KλExceedμ;
+export default Dd1kLambdaExceedNew;

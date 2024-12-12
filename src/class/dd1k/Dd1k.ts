@@ -101,7 +101,7 @@ import { timeLineData } from "@/types/timeLineData";
  *
  */
 
-abstract class DD1K {
+abstract class Dd1k {
   arrivalRate: number;
   serviceRate: number;
   capacity: number;
@@ -293,4 +293,4 @@ abstract class DD1K {
   }
 }
 
-export default DD1K;
+export default Dd1k;

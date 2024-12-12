@@ -1,10 +1,10 @@
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { Box, Divider, Typography } from "@mui/material";
 import { useEffect } from "react";
-import DD1K from "@/class/dd1k/DD1K";
+import Dd1k from "@/class/dd1k/Dd1k";
 
 type Dd1kLambdaEqualNewResultsProps = {
-  dd1k: DD1K;
+  dd1k: Dd1k;
 };
 
 const Dd1kLambdaEqualNewResults: React.FC<Dd1kLambdaEqualNewResultsProps> = ({ dd1k }) => {

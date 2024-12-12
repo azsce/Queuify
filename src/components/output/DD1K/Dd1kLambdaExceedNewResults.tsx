@@ -4,7 +4,7 @@ import { N_Of_T } from "@/types/dd1k";
 
 import { NoNumberArrowsTextField } from "../../base/NoNumberArrowsTextField";
 import { useEffect, useState } from "react";
-import DD1K from "@/class/dd1k/DD1K";
+import Dd1k from "@/class/dd1k/Dd1k";
 
 type Wq_Of_N = {
   n0: string; // n = 0
@@ -13,8 +13,9 @@ type Wq_Of_N = {
 };
 
 type Dd1kLambdaExceedNewResultsProps = {
-  dd1k: DD1K;
+  dd1k: Dd1k;
 };
+
 const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
   dd1k,
 }) => {

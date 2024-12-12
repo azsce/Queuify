@@ -5,13 +5,13 @@ import { Box } from "@mui/material";
 import Dd1kArrivalTimeline from "./Dd1kArrivalTimeline";
 import Dd1kServiceTimeline from "./Dd1kServiceTimeline";
 import Dd1kDepartureTimeline from "./Dd1kDepartureTimeline";
-import DD1K from "@/class/dd1k/DD1K";
+import Dd1k from "@/class/dd1k/Dd1k";
 import Dd1kNumberOfCustomersGraph from "./Dd1kNumberOfCustomersGraph";
 import Dd1kCustomerFlowDiagram from "./Dd1kCustomerFlowDiagram";
 import Dd1kWaitingTimeGraph from "./Dd1kWaitingTimeGraph";
 
 type DD1KGraphContainerProps = {
-  dd1k: DD1K;
+  dd1k: Dd1k;
 };
 
 const GRAPH_HEIGHT = 300; // Height for each sub-graph

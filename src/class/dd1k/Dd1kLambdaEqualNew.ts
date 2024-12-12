@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import DD1K from "./DD1K";
+import Dd1k from "./Dd1k";
 import { toProperFraction } from "@/lib/math";
 
-class DD1KμEqualλ extends DD1K {
+class Dd1kLambdaEqualNew extends Dd1k {
   lastInitialCustomerDepartureTime: number;
   constructor(
     arrivalRate: number,
@@ -49,4 +49,4 @@ class DD1KμEqualλ extends DD1K {
   }
 }
 
-export default DD1KμEqualλ;
+export default Dd1kLambdaEqualNew;
