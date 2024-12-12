@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import { useState, Dispatch, SetStateAction } from "react";
 import Grid from "@mui/material/Grid2";
-import InputWithInfinity from "@/components/base/InputWithInfinity";
 import InfinityLinkIndicator from "@/components/base/InfinityLinkIndicator";
 import { evaluate } from "mathjs"; // Import evaluate from mathjs
 import { isValidPositiveValue } from "@/lib/math";
+import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 
 type Dd1kSystemParametersProps = {
   setCapacity: Dispatch<SetStateAction<number>>;
@@ -19,9 +19,10 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
     capacity - 1
   );
 
-  const onCapacityChange = (value: string) => {
+  const onCapacityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
     try {
-      if (value === "" || isNaN(parseInt(value))) {
+      if (value === "") {
         setCapacity(undefined);
         setCapacityMinusOne(undefined);
         return;
@@ -40,10 +41,12 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
     }
   };
 
-  const onCapacityMinusOneChange = (value: string) => {
+  const onCapacityMinusOneChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
     try {
-      if (value === "" || isNaN(parseInt(value))) {
-        console.log(" (value === '' || isNaN(parseInt(value)))  value", value);
+      if (value === "") {
         setCapacityMinusOne(undefined);
         setCapacity(undefined);
         return;
@@ -98,26 +101,26 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
         <Grid container spacing={2}>
           {/* System Capacity - 1 */}
           <Grid size={{ xs: 12 }}>
-            <InputWithInfinity
+            <NoNumberArrowsTextField
               id="capacityMinusOne"
               label="K-1"
-              value={capacityMinusOne}
+              value={isNaN(capacityMinusOne) ? "" : capacityMinusOne}
               onChange={onCapacityMinusOneChange}
-              autoComplete="capacity - 1"
+              autoComplete="dd1k-capacity-1"
               required={true}
-              showInfinity={false}
+              fullWidth
             />
           </Grid>
           {/* System Capacity */}
           <Grid size={{ xs: 12 }}>
-            <InputWithInfinity
+            <NoNumberArrowsTextField
               id="capacity"
               label="K (System Capacity)"
-              value={capacity}
+              value={isNaN(capacity) ? "" : capacity}
               onChange={onCapacityChange}
-              autoComplete="capacity"
+              autoComplete="dd1k-capacity"
               required={true}
-              showInfinity={false}
+              fullWidth
             />
           </Grid>
         </Grid>

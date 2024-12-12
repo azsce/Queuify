@@ -94,7 +94,7 @@ export default function Dd1kCalculator() {
 
   const handleInitialCustomersChange = (value: string) => {
     try {
-      if (value === "" || isNaN(parseInt(value))) {
+      if (value === "") {
         setInitialCustomers(undefined);
         return;
       }
