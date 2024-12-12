@@ -26,7 +26,7 @@ const getFromLocalStorage = (key: string, defaultValue: any = "") => {
 const Dd1kCalculator: React.FC = () => {
   // dd1k
   const [capacity, setCapacity] = useState<number | undefined>(() =>
-    getFromLocalStorage("dd1k-capacity", undefined)
+    getFromLocalStorage("dd1k-capacity", null)
   );
 
   const [arrivalRate, setArrivalRate] = useState<string>(() =>
@@ -38,7 +38,7 @@ const Dd1kCalculator: React.FC = () => {
   );
 
   const [initialCustomers, setInitialCustomers] = useState<number | undefined>(
-    () => getFromLocalStorage("dd1k-initialCustomers", undefined)
+    () => getFromLocalStorage("dd1k-initialCustomers", null)
   );
 
   const [isInitialCutsomersRequired, setIsInitialCutsomersRequired] =
@@ -157,6 +157,10 @@ const Dd1kCalculator: React.FC = () => {
     // Clear previous errors and results
     setError("");
     setResults(null);
+
+    if (!localStorage) {
+      return null;
+    }
 
     try {
       if (capacity !== null) {

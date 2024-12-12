@@ -1,4 +1,4 @@
-import {  Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import Grid from "@mui/material/Grid2";
 import InputWithInfinity from "@/components/base/InputWithInfinity";
 
@@ -15,8 +15,7 @@ const MmSystemParameters: React.FC<SystemParametersProps> = ({
   servers,
   capacity,
 }) => {
-
-  const onCapacityChange = (value: number| undefined) => {
+  const onCapacityChange = (value: number | undefined) => {
     setCapacity(value);
   };
 
@@ -25,7 +24,7 @@ const MmSystemParameters: React.FC<SystemParametersProps> = ({
   };
 
   const handleCapacityInfinityClick = () => {
-      setCapacity(undefined);
+    setCapacity(undefined);
   };
 
   return (
@@ -39,7 +38,9 @@ const MmSystemParameters: React.FC<SystemParametersProps> = ({
             id="servers"
             label="Number of Servers (C)"
             value={servers}
-            onChange={setServers}
+            onChange={(v) => {
+              setServers(parseInt(v));
+            }}
             showInfinity={true}
             onInfinityClick={handleServersInfinityClick}
             autoComplete="servers"
@@ -49,21 +50,21 @@ const MmSystemParameters: React.FC<SystemParametersProps> = ({
       </Grid>
 
       <Grid size={{ xs: 12, sm: 6 }} container spacing={0} alignItems="start">
-          {/* Empty Column */}
-          <Grid size={1} />
-          <Grid size={11}>
-            <InputWithInfinity
-              id="capacity"
-              label="System Capacity (K)"
-              value={capacity}
-              onChange={onCapacityChange}
-              showInfinity={true}
-              onInfinityClick={handleCapacityInfinityClick}
-              autoComplete="capacity"
-              required={false}
-            />
-          </Grid>
+        {/* Empty Column */}
+        <Grid size={1} />
+        <Grid size={11}>
+          <InputWithInfinity
+            id="capacity"
+            label="System Capacity (K)"
+            value={capacity}
+            onChange={onCapacityChange}
+            showInfinity={true}
+            onInfinityClick={handleCapacityInfinityClick}
+            autoComplete="capacity"
+            required={false}
+          />
         </Grid>
+      </Grid>
     </Grid>
   );
 };
