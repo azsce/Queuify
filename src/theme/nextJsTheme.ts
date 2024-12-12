@@ -64,8 +64,6 @@ const nextJsTheme = createTheme({
         },
       },
     },
-
-    
   },
 });
 

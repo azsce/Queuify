@@ -1,8 +1,7 @@
 "use client";
-import React, { useEffect } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material";
+import { useTheme as nextUseTheme } from "next-themes";
 
 interface LoadingProps {
   children: React.ReactNode;
@@ -10,29 +9,23 @@ interface LoadingProps {
 
 const Loading: React.FC<LoadingProps> = ({ children }) => {
   const theme = useTheme();
-  const [loading, setLoading] = React.useState(true);
+  const { theme: nextTheme } = nextUseTheme();
 
-  useEffect(() => {
-    if (theme) {
-      setLoading(false);
-    }
-  }, [theme]);
-  let c = null;
-  if (loading) {
-    c = (
+  const backgroundColor = nextTheme === "dark" ? "#000" : "#eee";
+
+  if (nextTheme && theme) {
+    return (
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
+        sx={{
+          backgroundColor: backgroundColor,
+        }}
       >
-        <CircularProgress />
+        {children}
       </Box>
     );
   } else {
-    c = children;
+    return null;
   }
-  return c;
 };
 
 export default Loading;

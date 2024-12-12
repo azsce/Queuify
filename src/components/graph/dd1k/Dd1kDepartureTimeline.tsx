@@ -67,7 +67,10 @@ const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="2 2" strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"} />
+            <CartesianGrid
+              strokeDasharray="2 2"
+              strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"}
+            />
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="time" xAxisId="default" hide={true} />
             )}
@@ -87,6 +90,7 @@ const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
                 tick={{
                   fontSize: 8,
                   startOffset: dd1k.arrivalTime,
+                  fill: theme.palette.text.primary,
                 }}
               />
             )}
@@ -110,11 +114,12 @@ const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
                 tick={{
                   fontSize: 8,
                   dy: 5,
+                  fill: theme.palette.text.primary,
                 }}
                 tickLine={true}
                 axisLine={{
                   stroke: theme.palette.text.primary,
-                  strokeWidth: 4,
+                  // strokeWidth: 2,
                 }}
                 interval={0}
               />
@@ -127,6 +132,7 @@ const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
                 dx: 20,
                 dy: 30,
                 fontSize: 12,
+                fill: theme.palette.text.primary,
               }}
               tickLine={false}
               tickSize={subGraph ? 0 : 2}
@@ -146,10 +152,10 @@ const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
                 }
                 stroke={
                   entry.departured && entry.initialDepartured
-                  ? "black"
-                  : entry.departured
-                    ? colors[entry.departures % colors.length]
-                    : "transparent"
+                    ? "black"
+                    : entry.departured
+                      ? colors[entry.departures % colors.length]
+                      : "transparent"
                 }
                 strokeWidth={2}
               />

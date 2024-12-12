@@ -68,7 +68,10 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="2 2" strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"} />
+            <CartesianGrid
+              strokeDasharray="2 2"
+              strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"}
+            />
             {/* Add time axis at the top */}
             {showTopAxis && (
               <XAxis
@@ -121,11 +124,11 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                 dx: 20,
                 dy: 50,
                 fontSize: 12,
-                fill: theme.palette.primary.main,
+                fill: theme.palette.text.primary,
               }}
               tick={{ fontSize: 8 }}
               allowDecimals={false}
-              stroke={theme.palette.primary.main}
+              stroke={theme.palette.text.primary}
             />
             <Tooltip />
             <Line

@@ -61,7 +61,6 @@ export default function RootLayout({
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    backgroundColor: "background.default",
                   }}
                 >
                   <Loading>

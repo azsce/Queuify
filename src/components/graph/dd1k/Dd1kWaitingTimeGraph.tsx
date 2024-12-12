@@ -84,6 +84,7 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                   value: "nth Customer",
                   position: "insideTop",
                   offset: -25,
+                  fill: theme.palette.text.primary,
                 }}
                 tick={{ dy: -10 }}
               />
@@ -99,11 +100,13 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                   offset: -10,
                   dy: -8,
                   fontSize: 12,
+                  fill: theme.palette.text.primary,
                 }}
                 height={40}
                 tick={{
                   dy: 10,
                   fontSize: 8,
+                  fill: theme.palette.text.primary,
                 }}
                 stroke={theme.palette.primary.main}
               />
@@ -116,10 +119,11 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                 dx: 20,
                 dy: 40,
                 fontSize: isMobile ? 8 : 12,
+                fill: theme.palette.text.primary,
               }}
               stroke={theme.palette.text.primary}
               allowDecimals={false}
-              tick={{ fontSize: 8 }}
+              tick={{ fontSize: 8, fill: theme.palette.text.primary }}
             />
             <Tooltip />
             <Line
