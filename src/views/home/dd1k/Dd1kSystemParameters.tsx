@@ -19,13 +19,12 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
   );
 
   const onCapacityChange = (value: number | string) => {
-    console.log("value", value);
-    if (value === "" || isNaN(value as number)) {
+    try {
+      if (value === "" || isNaN(value as number)) {
       setCapacity(undefined);
       setCapacityMinusOne(undefined);
       return;
     }
-    try {
       const evaluatedValue = evaluate(value.toString());
       if (!Number.isInteger(evaluatedValue) || evaluatedValue <= 1) {
         return; // Ensure the value is a positive integer greater than 1
@@ -38,13 +37,12 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
   };
 
   const onCapacityMinusOneChange = (value: number | string) => {
-    console.log("value", value);
-    if (value === "" || isNaN(value as number)) {
+    try {
+      if (value === "" || isNaN(value as number)) {
       setCapacityMinusOne(undefined);
       setCapacity(undefined);
       return;
     }
-    try {
       const evaluatedValue = evaluate(value.toString());
       if (!Number.isInteger(evaluatedValue) || evaluatedValue < 0) {
         return; // Ensure the value is a non-negative integer

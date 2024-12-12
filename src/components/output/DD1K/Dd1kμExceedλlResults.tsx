@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 import DD1K from "@/class/dd1k/DD1K";
 
-type Dd1kμExceedλlResultsProps = {
+type Dd1kLambdaExceedNewlResultsProps = {
   dd1k: DD1K;
 };
 
-const Dd1kμExceedλlResults: React.FC<Dd1kμExceedλlResultsProps> = ({
+const Dd1kLambdaExceedNewlResults: React.FC<Dd1kLambdaExceedNewlResultsProps> = ({
   dd1k,
 }) => {
   const {
@@ -305,4 +305,4 @@ const Dd1kμExceedλlResults: React.FC<Dd1kμExceedλlResultsProps> = ({
   );
 };
 
-export default Dd1kμExceedλlResults;
+export default Dd1kLambdaExceedNewlResults;

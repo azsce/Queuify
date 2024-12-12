@@ -13,7 +13,7 @@ import dD1KFactoryMethod from "@/class/dd1k/DD1KFactoryMethod";
 import Dd1kSystemParameters from "./Dd1kSystemParameters";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 
-export default function DD1KCalculator() {
+export default function Dd1kCalculator() {
   // dd1k
   const [capacity, setCapacity] = useState<number | undefined>(() => {
     const saved = localStorage.getItem("capacity");
@@ -55,7 +55,12 @@ export default function DD1KCalculator() {
   );
 
   useEffect(() => {
-    console.log("DD1KCalculator useEffect arrivalRate", arrivalRate, "serviceRate", serviceRate);
+    console.log(
+      "DD1KCalculator useEffect arrivalRate",
+      arrivalRate,
+      "serviceRate",
+      serviceRate
+    );
     if (arrivalRate === "" || serviceRate === "") {
       setIsInitialCutsomersRequired(false);
       setInitialCustomers(undefined);
@@ -100,14 +105,21 @@ export default function DD1KCalculator() {
     localStorage.setItem("initialCustomers", JSON.stringify(initialCustomers));
   }, [initialCustomers]);
 
-  const handleInitialCustomersChange = (value: number) => {
-    if (value === null || value === undefined || isNaN(value) || value <= 0) {
-      setInitialCustomers(undefined);
-      return;
-    }
-    console.log("handleInitialCustomersChange value", value);
+  const handleInitialCustomersChange = (value: string) => {
+    try {
+      if (value === "" || isNaN(parseInt(value))) {
+        setInitialCustomers(undefined);
+        return;
+      }
+      const evaluatedValue = evaluate(value);
+      if (!Number.isInteger(evaluatedValue) || evaluatedValue <= 0) {
+        return; // Ensure the value is a positive integer greater than 1
+      }
 
-    setInitialCustomers(value);
+      setInitialCustomers(evaluatedValue);
+    } catch {
+      return; // Do not update state if evaluation fails
+    }
   };
 
   const handleCalculate = () => {
@@ -147,7 +159,10 @@ export default function DD1KCalculator() {
 
     try {
       if (capacity !== null) {
-        if (evaluatedArrivalRate === evaluatedServiceRate || evaluatedArrivalRate < evaluatedServiceRate) {
+        if (
+          evaluatedArrivalRate === evaluatedServiceRate ||
+          evaluatedArrivalRate < evaluatedServiceRate
+        ) {
           setIsInitialCutsomersRequired(true);
           if (!initialCustomers) {
             setError("Please enter initial customers.");
@@ -235,12 +250,11 @@ export default function DD1KCalculator() {
                       value={isNaN(initialCustomers) ? "" : initialCustomers}
                       placeholder={"Initial Customers: M"}
                       label="Initial Customers: M"
-                      type="number"
                       fullWidth
                       required={isInitialCutsomersRequired}
                       autoComplete={"dd1k-initial-customers"}
                       onChange={(e) => {
-                        handleInitialCustomersChange(parseInt(e.target.value));
+                        handleInitialCustomersChange(e.target.value);
                       }}
                       size="small"
                       error={isNaN(initialCustomers)}

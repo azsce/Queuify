@@ -12,10 +12,12 @@ type Wq_Of_N = {
   nGreaterThanOrEqualLambdaTi: string; // n ≥ λ*t_i
 };
 
-type Dd1kλExceedμResultsProps = {
+type Dd1kLambdaExceedNewResultsProps = {
   dd1k: DD1K;
 };
-const Dd1kλExceedμResults: React.FC<Dd1kλExceedμResultsProps> = ({ dd1k }) => {
+const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
+  dd1k,
+}) => {
   const { arrivalRateFraction, serviceRateFraction, capacity, t_i, type } =
     dd1k;
 
@@ -309,4 +311,4 @@ const Dd1kλExceedμResults: React.FC<Dd1kλExceedμResultsProps> = ({ dd1k }) =
   );
 };
 
-export default Dd1kλExceedμResults;
+export default Dd1kLambdaExceedNewResults;

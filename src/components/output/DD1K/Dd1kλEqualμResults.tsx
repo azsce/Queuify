@@ -3,11 +3,11 @@ import { Box, Divider, Typography } from "@mui/material";
 import { useEffect } from "react";
 import DD1K from "@/class/dd1k/DD1K";
 
-type Dd1kλEqualμResultsProps = {
+type Dd1kLambdaEqualNewResultsProps = {
   dd1k: DD1K;
 };
 
-const Dd1kλEqualμResults: React.FC<Dd1kλEqualμResultsProps> = ({ dd1k }) => {
+const Dd1kLambdaEqualNewResults: React.FC<Dd1kLambdaEqualNewResultsProps> = ({ dd1k }) => {
   const { capacity, serviceRate, serviceRateFraction } = dd1k;
 
   useEffect(() => {
@@ -100,4 +100,4 @@ const Dd1kλEqualμResults: React.FC<Dd1kλEqualμResultsProps> = ({ dd1k }) => 
   );
 };
 
-export default Dd1kλEqualμResults;
+export default Dd1kLambdaEqualNewResults;

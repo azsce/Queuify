@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Process } from "@/types/queue";
-import DD1KCalculator from "./dd1k/DD1KCalculator";
+import Dd1kCalculator from "./dd1k/Dd1kCalculator";
 import MMCalculator from "./mm/MMCalculator";
 
 export default function QueuingTheoryCalculator() {
@@ -82,7 +82,7 @@ export default function QueuingTheoryCalculator() {
           >
             <ProcessTypeSelector setProcessType={setProcessType} />
             {processType === "D/D/1/K-1" ? (
-              <DD1KCalculator />
+              <Dd1kCalculator />
             ) : (
               <MMCalculator />
             )}
