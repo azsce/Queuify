@@ -28,74 +28,70 @@ const InputParameters: React.FC<InputParametersProps> = ({
   serviceTime,
 }) => {
   const handleServiceRateChange = (value: string) => {
-    setServiceRate(value);
     if (value === "") {
+      setServiceRate("");
       setServiceTime("");
       return;
     }
     try {
-      const serviceTime = 1 / evaluate(value);
-      if (!isNaN(serviceTime)) {
-        setServiceTime(format(fraction(serviceTime), { fraction: 'ratio' }));
-      } else {
-        setServiceTime("");
-      }
+      const evaluatedValue = evaluate(value);
+      if (evaluatedValue <= 0 || isNaN(evaluatedValue)) return; // Prohibit non-positive values
+      setServiceRate(value);
+      const serviceTime = 1 / evaluatedValue;
+      setServiceTime(format(fraction(serviceTime), { fraction: 'ratio' }));
     } catch {
-      setServiceTime("");
+      return; // Do not update state if evaluation fails
     }
   };
 
   const handleServiceTimeChange = (value: string) => {
-    setServiceTime(value);
     if (value === "") {
+      setServiceTime("");
       setServiceRate("");
       return;
     }
     try {
-      const serviceRate = 1 / evaluate(value);
-      if (!isNaN(serviceRate)) {
-        setServiceRate(format(fraction(serviceRate), { fraction: 'ratio' }));
-      } else {
-        setServiceRate("");
-      }
+      const evaluatedValue = evaluate(value);
+      if (evaluatedValue <= 0 || isNaN(evaluatedValue)) return; // Prohibit non-positive values
+      setServiceTime(value);
+      const serviceRate = 1 / evaluatedValue;
+      setServiceRate(format(fraction(serviceRate), { fraction: 'ratio' }));
     } catch {
-      setServiceRate("");
+      return; // Do not update state if evaluation fails
     }
   };
 
   const handleArrivalRateChange = (value: string) => {
-    setArrivalRate(value);
     if (value === "") {
+      setArrivalRate("");
       setArrivalTime("");
       return;
     }
     try {
-      const arrivalTime = 1 / evaluate(value);
-      if (!isNaN(arrivalTime)) {
-        setArrivalTime(format(fraction(arrivalTime), { fraction: 'ratio' }));
-      } else {
-        setArrivalTime("");
-      }
+      const evaluatedValue = evaluate(value);
+      if (evaluatedValue <= 0 || isNaN(evaluatedValue)) return; // Prohibit non-positive values
+      setArrivalRate(value);
+      const arrivalTime = 1 / evaluatedValue;
+      setArrivalTime(format(fraction(arrivalTime), { fraction: 'ratio' }));
     } catch {
-      setArrivalTime("");
+      return; // Do not update state if evaluation fails
     }
   };
 
   const handleArrivalTimeChange = (value: string) => {
-    setArrivalTime(value);
     if (value === "") {
+      setArrivalTime("");
       setArrivalRate("");
       return;
     }
     try {
-      const arrivalRate = 1 / evaluate(value);
-      if (!isNaN(arrivalRate)) {
-        setArrivalRate(format(fraction(arrivalRate), { fraction: 'ratio' }));
-      } else {
-        setArrivalRate("");
-      }
+      const evaluatedValue = evaluate(value);
+      if (evaluatedValue <= 0 || isNaN(evaluatedValue)) return; // Prohibit non-positive values
+      setArrivalTime(value);
+      const arrivalRate = 1 / evaluatedValue;
+      setArrivalRate(format(fraction(arrivalRate), { fraction: 'ratio' }));
     } catch {
-      setArrivalRate("");
+      return; // Do not update state if evaluation fails
     }
   };
 

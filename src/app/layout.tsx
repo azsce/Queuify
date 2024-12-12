@@ -7,9 +7,6 @@ import { ThemeProvider } from "@/components/base/theme-provider";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import Loading from "@/components/base/Loading";
 import MuiThemeProvider from "@/components/base/MuiThemeProvider";
-import { Suspense } from "react";
-import OfflineIndicator from "@/components/base/OfflineIndicator";
-import { OfflineDataProvider } from "@/components/base/OfflineDataProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,7 +27,6 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Queuing Theory Calculator",
-  manifest: "/manifest.json",
   icons: {
     apple: "/icon-192x192.png",
   },
@@ -47,34 +43,29 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <OfflineDataProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-            storageKey="theme-mode"
-          >
-            <AppRouterCacheProvider>
-              <MuiThemeProvider defaultMode="dark">
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <Loading>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <OfflineIndicator />
-                      <TopAppBar />
-                      {children}
-                    </Suspense>
-                  </Loading>
-                </Box>
-              </MuiThemeProvider>
-            </AppRouterCacheProvider>
-          </ThemeProvider>
-        </OfflineDataProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+          storageKey="theme-mode"
+        >
+          <AppRouterCacheProvider>
+            <MuiThemeProvider defaultMode="dark">
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Loading>
+                  <TopAppBar />
+                  {children}
+                </Loading>
+              </Box>
+            </MuiThemeProvider>
+          </AppRouterCacheProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

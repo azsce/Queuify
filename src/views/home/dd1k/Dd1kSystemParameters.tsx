@@ -3,6 +3,7 @@ import { useState, Dispatch, SetStateAction } from "react";
 import Grid from "@mui/material/Grid2";
 import InputWithInfinity from "@/components/base/InputWithInfinity";
 import InfinityLinkIndicator from "@/components/base/InfinityLinkIndicator";
+import { evaluate } from "mathjs"; // Import evaluate from mathjs
 
 type Dd1kSystemParametersProps = {
   setCapacity: Dispatch<SetStateAction<number>>;
@@ -13,30 +14,45 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
   setCapacity,
   capacity,
 }) => {
-  const [capacityMinusOne, setCapacityMinusOne] = useState<number| undefined>(
+  const [capacityMinusOne, setCapacityMinusOne] = useState<number | undefined>(
     capacity - 1
   );
 
-  const onCapacityChange = (value: number) => {
-    setCapacity(value);
-
-    if (isNaN(value)) {
+  const onCapacityChange = (value: number | string) => {
+    console.log("value", value);
+    if (value === "" || isNaN(value as number)) {
+      setCapacity(undefined);
       setCapacityMinusOne(undefined);
+      return;
     }
-
-    if (!isNaN(value) && value > 1) {
-      setCapacityMinusOne(value - 1);
+    try {
+      const evaluatedValue = evaluate(value.toString());
+      if (!Number.isInteger(evaluatedValue) || evaluatedValue <= 1) {
+        return; // Ensure the value is a positive integer greater than 1
+      }
+      setCapacity(evaluatedValue);
+      setCapacityMinusOne(evaluatedValue - 1);
+    } catch {
+      return; // Do not update state if evaluation fails
     }
   };
 
-  const onCapacityMinusOneChange = (value: number) => {
-    setCapacityMinusOne(value);
-    if (isNaN(value)) {
+  const onCapacityMinusOneChange = (value: number | string) => {
+    console.log("value", value);
+    if (value === "" || isNaN(value as number)) {
+      setCapacityMinusOne(undefined);
       setCapacity(undefined);
+      return;
     }
-
-    if (!isNaN(value) && value >= 0) {
-      setCapacity(value + 1);
+    try {
+      const evaluatedValue = evaluate(value.toString());
+      if (!Number.isInteger(evaluatedValue) || evaluatedValue < 0) {
+        return; // Ensure the value is a non-negative integer
+      }
+      setCapacityMinusOne(evaluatedValue);
+      setCapacity(evaluatedValue + 1);
+    } catch {
+      return; // Do not update state if evaluation fails
     }
   };
 

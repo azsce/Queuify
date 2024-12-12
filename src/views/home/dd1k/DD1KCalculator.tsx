@@ -100,6 +100,16 @@ export default function DD1KCalculator() {
     localStorage.setItem("initialCustomers", JSON.stringify(initialCustomers));
   }, [initialCustomers]);
 
+  const handleInitialCustomersChange = (value: number) => {
+    if (value === null || value === undefined || isNaN(value) || value <= 0) {
+      setInitialCustomers(undefined);
+      return;
+    }
+    console.log("handleInitialCustomersChange value", value);
+
+    setInitialCustomers(value);
+  };
+
   const handleCalculate = () => {
     const evaluatedArrivalRate = evaluate(arrivalRate);
     const evaluatedServiceRate = evaluate(serviceRate);
@@ -113,10 +123,25 @@ export default function DD1KCalculator() {
       return;
     }
 
+    if (evaluatedArrivalRate <= 0 || evaluatedServiceRate <= 0) {
+      setError("Arrival rate and service rate must be positive values.");
+      return;
+    }
+
     if (isNaN(capacity) && evaluatedArrivalRate > evaluatedServiceRate) {
       setError(
         "System is unstable without finite capacity. Please enter a finite capacity."
       );
+      return;
+    }
+
+    if (capacity !== undefined && capacity <= 0) {
+      setError("Capacity must be a positive value.");
+      return;
+    }
+
+    if (initialCustomers !== undefined && initialCustomers <= 0) {
+      setError("Initial customers must be a positive value.");
       return;
     }
 
@@ -215,7 +240,7 @@ export default function DD1KCalculator() {
                       required={isInitialCutsomersRequired}
                       autoComplete={"dd1k-initial-customers"}
                       onChange={(e) => {
-                        setInitialCustomers(parseInt(e.target.value));
+                        handleInitialCustomersChange(parseInt(e.target.value));
                       }}
                       size="small"
                       error={isNaN(initialCustomers)}
