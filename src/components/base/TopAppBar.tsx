@@ -16,7 +16,6 @@ import {
   Menu as MenuIcon,
   LightMode,
 } from "@mui/icons-material";
-import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import LabelIcon from "@mui/icons-material/Label";
@@ -33,7 +32,6 @@ const links = [
 ];
 
 export default function TopAppBar() {
-  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const appBarRef = useRef<HTMLDivElement>(null);

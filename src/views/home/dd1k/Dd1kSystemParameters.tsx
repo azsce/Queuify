@@ -5,7 +5,8 @@ import InfinityLinkIndicator from "@/components/base/InfinityLinkIndicator";
 import { evaluate } from "mathjs"; // Import evaluate from mathjs
 import { isValidNaturalNumber, isValidPositiveInteger } from "@/lib/math";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
-import { dd1kCapacityKey, getFromLocalStorage } from "./Dd1kCalculator";
+import { dd1kCapacityKey } from "./Dd1kCalculator";
+import { getFromLocalStorage } from "@/utils/localstorage";
 
 type Dd1kSystemParametersProps = {
   setCapacity: Dispatch<SetStateAction<string>>;

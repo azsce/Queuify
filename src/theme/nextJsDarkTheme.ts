@@ -54,10 +54,10 @@ const nextJsDarkTheme = createTheme({
           textTransform: "none", // Avoid uppercase
         },
         contained: {
-          backgroundColor: "#111",
+          backgroundColor: "#444",
           color: "#ffffff",
           "&:hover": {
-            backgroundColor: "#000",
+            backgroundColor: "#333",
           },
         },
       },

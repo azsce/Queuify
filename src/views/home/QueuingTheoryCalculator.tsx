@@ -1,21 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProcessTypeSelector from "@/components/input/ProcessTypeSelector";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Box,
-  Container,
-  Typography,
-} from "@mui/material";
-import { Process } from "@/types/queue";
+import { Box, Container, Typography } from "@mui/material";
 import Dd1kCalculator from "./dd1k/Dd1kCalculator";
 import MMCalculator from "./mm/MMCalculator";
+import { Process } from "@/types/queue";
 
 const QueuingTheoryCalculator: React.FC = () => {
-  const [processType, setProcessType] = useState<Process>("D/D/1/K-1");
+  const [processType, setProcessType] = useState<Process>(() => {
+    const storedValue = localStorage.getItem("processType") as Process;
+    return storedValue ? storedValue : ("M/M/X/Y" as Process); // Default value if nothing is in localStorage
+  });
+
+  useEffect(() => {
+    localStorage.setItem("processType", processType);
+  }, [processType]);
 
   return (
     <Container
@@ -63,7 +63,10 @@ const QueuingTheoryCalculator: React.FC = () => {
           gap: 2,
         }}
       >
-        <ProcessTypeSelector setProcessType={setProcessType} />
+        <ProcessTypeSelector
+          processType={processType}
+          setProcessType={setProcessType}
+        />
         {processType === "D/D/1/K-1" ? <Dd1kCalculator /> : <MMCalculator />}
       </Box>
     </Container>

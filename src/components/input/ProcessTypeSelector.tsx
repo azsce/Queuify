@@ -1,4 +1,3 @@
-import { Process } from "@/types/queue";
 import {
   FormControl,
   FormLabel,
@@ -7,16 +6,20 @@ import {
   FormControlLabel,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@mui/material/Grid2";
+import { Process } from "@/types/queue";
 
 type ProcessTypeSelectorProps = {
+  processType: Process;
   setProcessType: (type: Process) => void;
 };
 
 const ProcessTypeSelector: React.FC<ProcessTypeSelectorProps> = ({
+  processType,
   setProcessType,
 }) => {
+  const [defaultProcess] = useState(processType);
   return (
     <Grid size={{ xs: 12, sm: 6 }} container spacing={0} alignItems="start">
       {/* Empty Column */}
@@ -45,7 +48,7 @@ const ProcessTypeSelector: React.FC<ProcessTypeSelectorProps> = ({
             Type
           </FormLabel>
           <RadioGroup
-            defaultValue="D/D/1/K-1"
+            defaultValue={defaultProcess}
             onChange={(e) => setProcessType(e.target.value as Process)}
             row
             sx={{ justifyContent: "flex-end" }}

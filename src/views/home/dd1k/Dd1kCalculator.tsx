@@ -4,36 +4,20 @@ import React, { JSX, useEffect, useState } from "react";
 import { evaluate, format, fraction } from "mathjs"; // Import evaluate from mathjs
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
 import InputParameters from "@/components/input/InputParameters";
 import DD1KResults from "@/components/output/DD1K/DD1KResults";
-import { Card, CardHeader, CardContent, Box, Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import dd1kFactoryMethod from "@/class/dd1k/dd1kFactoryMethod";
 import Dd1kSystemParameters from "./Dd1kSystemParameters";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 import { isValidPositiveInteger, isValidPositiveNumber } from "@/lib/math";
+import { getFromLocalStorage } from "@/utils/localstorage";
 
 export const dd1kCapacityKey = "dd1k-capacity";
 const serviceRateKey = "dd1k-serviceRate";
 const arrivalRateKey = "dd1k-arrivalRate";
 const initialCustomersKey = "dd1k-initialCustomers";
-
-export const getFromLocalStorage = (
-  key: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  defaultValue: any = "",
-  parse?: boolean
-) => {
-  if (typeof window !== "undefined") {
-    const saved = localStorage.getItem(key);
-    if (saved) {
-      return parse ? parseInt(saved) : saved;
-    }
-    return defaultValue;
-  }
-  return defaultValue;
-};
 
 let init = true;
 
@@ -51,8 +35,8 @@ const Dd1kCalculator: React.FC = () => {
   useEffect(() => {
     if (init) {
       init = false;
-      const serviceRate = getFromLocalStorage(serviceRateKey, "");
-      const evaluatedServiceRate = evaluate(serviceRate + "");
+      const savedServiceRate = getFromLocalStorage(serviceRateKey, "");
+      const evaluatedServiceRate = evaluate(savedServiceRate + "");
       if (isValidPositiveNumber(evaluatedServiceRate)) {
         setServiceRate(
           Number.isInteger(evaluatedServiceRate)
@@ -67,8 +51,8 @@ const Dd1kCalculator: React.FC = () => {
         );
       }
 
-      const arrivalRate = getFromLocalStorage(arrivalRateKey, "");
-      const evaluatedArrivalRate = evaluate(arrivalRate + "");
+      const savedArrivalRate = getFromLocalStorage(arrivalRateKey, "");
+      const evaluatedArrivalRate = evaluate(savedArrivalRate + "");
       if (isValidPositiveNumber(evaluatedArrivalRate)) {
         setArrivalRate(
           Number.isInteger(evaluatedArrivalRate)
@@ -83,12 +67,6 @@ const Dd1kCalculator: React.FC = () => {
         );
       }
 
-      console.log(
-        "evaluatedArrivalRate",
-        evaluatedArrivalRate,
-        "evaluatedServiceRate",
-        evaluatedServiceRate
-      );
       if (evaluatedArrivalRate <= evaluatedServiceRate) {
         console.log("isInitialCutsomersRequired", true);
         setIsInitialCutsomersRequired(true);
@@ -96,11 +74,11 @@ const Dd1kCalculator: React.FC = () => {
         setIsInitialCutsomersRequired(false);
       }
 
-      const initialCustomers = getFromLocalStorage(
-        "dd1k-initialCustomers",
+      const savedInitialCustomers = getFromLocalStorage(
+        initialCustomersKey,
         null
       );
-      const evaluateInitialCustomers = evaluate(initialCustomers + "");
+      const evaluateInitialCustomers = evaluate(savedInitialCustomers + "");
       if (isValidPositiveInteger(evaluateInitialCustomers)) {
         setInitialCustomers(evaluateInitialCustomers);
       }
@@ -136,7 +114,7 @@ const Dd1kCalculator: React.FC = () => {
   }, [arrivalRate, serviceRate]);
 
   useEffect(() => {
-    localStorage.setItem(dd1kCapacityKey, capacity?.toString());
+    localStorage.setItem(dd1kCapacityKey, capacity);
   }, [capacity]);
 
   useEffect(() => {
@@ -148,7 +126,7 @@ const Dd1kCalculator: React.FC = () => {
   }, [serviceRate]);
 
   useEffect(() => {
-    localStorage.setItem(initialCustomersKey, initialCustomers?.toString());
+    localStorage.setItem(initialCustomersKey, initialCustomers);
   }, [initialCustomers]);
 
   const handleCalculate = () => {

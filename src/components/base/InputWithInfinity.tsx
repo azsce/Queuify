@@ -1,18 +1,17 @@
 import { IconButton } from "@mui/material";
 import { InfinityIcon } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 import { NoNumberArrowsTextField } from "./NoNumberArrowsTextField";
 
 type InputWithInfinityProps = {
   id: string;
   label: string;
-  value: number;
+  value: string;
   onChange: (value: string) => void;
   showInfinity?: boolean;
   onInfinityClick?: () => void;
   required?: boolean;
   autoComplete?: string;
-  onBlur?: () => void;
 };
 
 const InputWithInfinity: React.FC<InputWithInfinityProps> = ({
@@ -24,35 +23,22 @@ const InputWithInfinity: React.FC<InputWithInfinityProps> = ({
   onInfinityClick = () => {},
   required = false,
   autoComplete,
-  onBlur,
 }) => {
-  const [error, setError] = useState(false);
-
-  const handleBlur = () => {
-    setError(required && isNaN(value));
-    if (onBlur) {
-      onBlur();
-    }
-  };
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("InputWithInfinity", event.target.value);
     onChange(event.target.value);
   };
 
   return (
     <NoNumberArrowsTextField
       id={id}
-      value={isNaN(value) ? "∞" : value}
+      value={value}
       placeholder={showInfinity ? "∞" : ""}
       label={label}
-      type="number"
       fullWidth
       required={required}
       autoComplete={autoComplete}
       onChange={handleChange}
-      size="small"
-      error={error}
-      onBlur={handleBlur}
       slotProps={{
         input: {
           endAdornment: showInfinity && (
