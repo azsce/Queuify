@@ -3,11 +3,7 @@ import { useState, Dispatch, SetStateAction, useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import InfinityLinkIndicator from "@/components/base/InfinityLinkIndicator";
 import { evaluate } from "mathjs"; // Import evaluate from mathjs
-import {
-  isValidNaturalNumber,
-  isValidPositiveInteger,
-  isValidPositiveNumber,
-} from "@/lib/math";
+import { isValidNaturalNumber, isValidPositiveInteger } from "@/lib/math";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 import { dd1kCapacityKey, getFromLocalStorage } from "./Dd1kCalculator";
 
@@ -23,13 +19,14 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
   const [buffer, setBuffer] = useState<string>("");
 
   useEffect(() => {
-    const capacity = getFromLocalStorage(dd1kCapacityKey, null, true);
+    const capacity = getFromLocalStorage(dd1kCapacityKey, "");
     console.log("capacity", capacity);
     const evaluatedCapacity = evaluate(capacity);
     if (isValidPositiveInteger(evaluatedCapacity)) {
+      setCapacity(evaluatedCapacity);
       setBuffer((evaluatedCapacity - 1).toString());
     }
-  }, [localStorage]);
+  }, []);
 
   const onCapacityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -102,11 +99,11 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
           {/* System Capacity - 1 */}
           <Grid size={{ xs: 12 }}>
             <NoNumberArrowsTextField
-              id="capacityMinusOne"
-              label="K-1"
-              value={isNaN(buffer) ? "" : buffer}
+              id="buffer"
+              label="Buffer (K-1)"
+              value={buffer}
               onChange={onBufferChange}
-              autoComplete="dd1k-capacity-1"
+              autoComplete="dd1k-buffer"
               required={true}
               fullWidth
             />
@@ -115,8 +112,8 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
           <Grid size={{ xs: 12 }}>
             <NoNumberArrowsTextField
               id="capacity"
-              label="K (System Capacity)"
-              value={isNaN(capacity) ? "" : capacity}
+              label="Capacity (K)"
+              value={capacity}
               onChange={onCapacityChange}
               autoComplete="dd1k-capacity"
               required={true}

@@ -15,10 +15,7 @@ const darkTheme = nextJsDarkTheme;
 
 const lightTheme = nextJsTheme;
 
-const MuiThemeProvider: React.FC<MuiThemeProviderProps> = ({
-  children,
-  defaultMode = "dark",
-}) => {
+const MuiThemeProvider: React.FC<MuiThemeProviderProps> = ({ children }) => {
   const { theme } = useTheme();
   const muiTheme = useMemo(() => {
     if (theme === "dark") {
@@ -26,9 +23,11 @@ const MuiThemeProvider: React.FC<MuiThemeProviderProps> = ({
     } else if (theme === "light") {
       return lightTheme;
     }
+  }, [theme]);
 
-    return defaultMode === "dark" ? darkTheme : lightTheme;
-  }, [theme, defaultMode]);
+  if (!theme || !muiTheme) {
+    return null;
+  }
 
   return <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>;
 };

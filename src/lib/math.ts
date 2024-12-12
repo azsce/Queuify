@@ -29,7 +29,7 @@ export function toProperFraction(decimal: number): Fraction {
 
 // works with mathjs.evaluate(value)
 export const isValidNaturalNumber = (value: any): boolean => {
-  return !isNaN(value) && value.value === null;
+  return !isNaN(value) && value.value !== null && value >= 0;
 };
 
 export const isValidPositiveNumber = (value: any): boolean => {

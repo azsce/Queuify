@@ -46,8 +46,6 @@ const Dd1kCalculator: React.FC = () => {
   const [initialCustomers, setInitialCustomers] = useState<string>("");
 
   useEffect(() => {
-    setCapacity(getFromLocalStorage(dd1kCapacityKey, null, true));
-
     const serviceRate = getFromLocalStorage(serviceRateKey, "");
     const evaluatedServiceRate = evaluate(serviceRate);
     if (isValidPositiveNumber(evaluatedServiceRate)) {
@@ -89,7 +87,7 @@ const Dd1kCalculator: React.FC = () => {
     setInitialCustomers(
       getFromLocalStorage("dd1k-initialCustomers", null, true)
     );
-  }, [localStorage]);
+  }, []);
 
   const [isInitialCutsomersRequired, setIsInitialCutsomersRequired] =
     useState(false);
@@ -133,80 +131,70 @@ const Dd1kCalculator: React.FC = () => {
   }, [initialCustomers]);
 
   const handleCalculate = () => {
-    if (isNaN(capacity) || !isValidPositiveNumber(capacity)) {
-      setError("Please enter a positive Capacity.");
-      return;
-    }
-
-    const evaluatedArrivalRate = evaluate(arrivalRate);
-
-    if (!isValidPositiveNumber(evaluatedArrivalRate)) {
-      setError("Please enter a positive Arrival Rate.");
-      return;
-    }
-
-    const evaluatedServiceRate = evaluate(serviceRate);
-    if (!isValidPositiveNumber(evaluatedServiceRate)) {
-      setError("Please enter a positive Service Rate.");
-      return;
-    }
-
-    if (isInitialCutsomersRequired) {
-      if (!isValidPositiveInteger(initialCustomers)) {
-        setError("Please enter a positive Initial Customers Value.");
+    let evaluatedCapacity;
+    try {
+      evaluatedCapacity = evaluate(capacity.toString());
+      if (!isValidPositiveNumber(evaluatedCapacity)) {
+        setError("K: must be +Integer");
         return;
       }
-    }
-    if (!arrivalRate || !serviceRate) {
-      // Basic input validation
-      setError("Please enter both arrival rate and service rate.");
+    } catch {
+      setError("K: must be +Integer");
       return;
     }
 
-    if (evaluatedArrivalRate <= 0 || evaluatedServiceRate <= 0) {
-      setError("Arrival rate and service rate must be positive values.");
+    let evaluatedServiceRate;
+    try {
+      evaluatedServiceRate = evaluate(serviceRate);
+      if (!isValidPositiveNumber(evaluatedServiceRate)) {
+        setError("μ: must be +Integer");
+        return;
+      }
+    } catch {
+      setError("μ: must be +Integer");
       return;
     }
 
-    if (isNaN(capacity) && evaluatedArrivalRate > evaluatedServiceRate) {
-      setError(
-        "System is unstable without finite capacity. Please enter a finite capacity."
-      );
+    let evaluatedArrivalRate;
+    try {
+      evaluatedArrivalRate = evaluate(arrivalRate);
+      if (!isValidPositiveNumber(evaluatedArrivalRate)) {
+        setError("λ: must be +Integer");
+        return;
+      }
+    } catch {
+      setError("λ: must be +Integer");
       return;
     }
 
-    if (initialCustomers !== undefined && initialCustomers <= 0) {
-      setError("Initial customers must be a positive value.");
-      return;
+    let evaluateInitialCustomers;
+
+    if (isInitialCutsomersRequired) {
+      try {
+        evaluateInitialCustomers = evaluate(initialCustomers);
+        if (!isValidPositiveInteger(evaluateInitialCustomers)) {
+          setError("M: must be +Integer");
+          return;
+        }
+      } catch {
+        setError("M: must be +Integer");
+        return;
+      }
     }
 
     // Clear previous errors and results
     setError("");
     setResults(null);
 
+    const M = isInitialCutsomersRequired ? evaluateInitialCustomers : undefined;
     try {
-      if (capacity !== null) {
-        if (
-          evaluatedArrivalRate === evaluatedServiceRate ||
-          evaluatedArrivalRate < evaluatedServiceRate
-        ) {
-          setIsInitialCutsomersRequired(true);
-          if (!initialCustomers) {
-            setError("Please enter initial customers.");
-            return;
-          }
-        }
-        const dd1k = dd1kFactoryMethod(
-          evaluatedArrivalRate,
-          evaluatedServiceRate,
-          capacity,
-          initialCustomers
-        );
-        setResults(<DD1KResults dd1k={dd1k} />);
-      } else {
-        setError("Unsupported queue configuration.");
-        return;
-      }
+      const dd1k = dd1kFactoryMethod(
+        evaluatedArrivalRate,
+        evaluatedServiceRate,
+        evaluatedCapacity,
+        M
+      );
+      setResults(<DD1KResults dd1k={dd1k} />);
     } catch (e) {
       setError(e.message);
     }
@@ -278,7 +266,6 @@ const Dd1kCalculator: React.FC = () => {
                       placeholder={"Initial Customers: M"}
                       label="Initial Customers: M"
                       fullWidth
-                      type="number"
                       required={isInitialCutsomersRequired}
                       autoComplete={"dd1k-initial-customers"}
                       onChange={(e) => {
