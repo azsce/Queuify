@@ -64,7 +64,7 @@ const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
             margin={{
               top: 20,
               right: 0,
-              left: isMobile ? -20 : 90,
+              left: -20,
               bottom: isMobile ? 30 : 50,
             }}
           >

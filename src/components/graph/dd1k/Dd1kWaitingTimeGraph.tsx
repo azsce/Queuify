@@ -64,11 +64,14 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
             margin={{
               top: 20,
               right: 0,
-              left: isMobile ? -20 : 90,
+              left: -20,
               bottom: isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="2 2" strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"} />
+            <CartesianGrid
+              strokeDasharray="2 2"
+              strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"}
+            />
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="customer" xAxisId="default" hide={true} />
             )}

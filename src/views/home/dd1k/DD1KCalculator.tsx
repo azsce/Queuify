@@ -1,6 +1,7 @@
 "use client";
 
 import { JSX, useEffect, useState } from "react";
+import { evaluate } from "mathjs"; // Import evaluate from mathjs
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -54,12 +55,24 @@ export default function DD1KCalculator() {
   );
 
   useEffect(() => {
+    console.log("DD1KCalculator useEffect arrivalRate", arrivalRate, "serviceRate", serviceRate);
     if (arrivalRate === "" || serviceRate === "") {
       setIsInitialCutsomersRequired(false);
-    } else if (arrivalRate === serviceRate || arrivalRate < serviceRate) {
-      setIsInitialCutsomersRequired(true);
+      setInitialCustomers(undefined);
     } else {
-      setIsInitialCutsomersRequired(false);
+      try {
+        const evaluatedArrivalRate = evaluate(arrivalRate);
+        const evaluatedServiceRate = evaluate(serviceRate);
+        if (evaluatedArrivalRate <= evaluatedServiceRate) {
+          setIsInitialCutsomersRequired(true);
+        } else {
+          setIsInitialCutsomersRequired(false);
+          setInitialCustomers(undefined);
+        }
+      } catch {
+        setIsInitialCutsomersRequired(false);
+        setInitialCustomers(undefined);
+      }
     }
   }, [arrivalRate, serviceRate]);
 
@@ -88,6 +101,8 @@ export default function DD1KCalculator() {
   }, [initialCustomers]);
 
   const handleCalculate = () => {
+    const evaluatedArrivalRate = evaluate(arrivalRate);
+    const evaluatedServiceRate = evaluate(serviceRate);
     // Clear previous errors and results
     setError("");
     setResults(null);
@@ -98,7 +113,7 @@ export default function DD1KCalculator() {
       return;
     }
 
-    if (isNaN(capacity) && parseFloat(arrivalRate) > parseFloat(serviceRate)) {
+    if (isNaN(capacity) && evaluatedArrivalRate > evaluatedServiceRate) {
       setError(
         "System is unstable without finite capacity. Please enter a finite capacity."
       );
@@ -107,7 +122,7 @@ export default function DD1KCalculator() {
 
     try {
       if (capacity !== null) {
-        if (arrivalRate === serviceRate || arrivalRate < serviceRate) {
+        if (evaluatedArrivalRate === evaluatedServiceRate || evaluatedArrivalRate < evaluatedServiceRate) {
           setIsInitialCutsomersRequired(true);
           if (!initialCustomers) {
             setError("Please enter initial customers.");
@@ -115,8 +130,8 @@ export default function DD1KCalculator() {
           }
         }
         const dd1k = dD1KFactoryMethod(
-          parseFloat(arrivalRate),
-          parseFloat(serviceRate),
+          evaluatedArrivalRate,
+          evaluatedServiceRate,
           capacity,
           initialCustomers
         );

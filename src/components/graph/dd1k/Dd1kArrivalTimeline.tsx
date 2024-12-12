@@ -65,11 +65,14 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
             margin={{
               top: subGraph ? 0 : 20,
               right: 0,
-              left: isMobile ? -20 : 90,
+              left: -20,
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="2 2" strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"} />
+            <CartesianGrid
+              strokeDasharray="2 2"
+              strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"}
+            />
             {/* Add default XAxis when neither custom axis is shown */}
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="time" xAxisId="default" hide={true} />
@@ -95,6 +98,7 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                 interval={0}
                 tick={{
                   fontSize: 8,
+                  fill: theme.palette.text.primary,
                 }}
               />
             )}
@@ -114,11 +118,12 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                 tick={{
                   fontSize: 8,
                   dy: 5,
+                  fill: theme.palette.text.primary,
                 }}
                 tickLine={true}
                 axisLine={{
-                  stroke: theme.palette.secondary.main,
-                  strokeWidth: 4,
+                  stroke: theme.palette.text.primary,
+                  // strokeWidth: 2,
                 }} // Set the color of the axis line to black
                 interval={dd1k.arrivalTime - 1}
               />
@@ -131,6 +136,7 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                 dx: 20,
                 dy: 25,
                 fontSize: 12,
+                fill: theme.palette.text.primary,
               }}
               tickCount={1}
               tickFormatter={() => ""} // Add tick formatter

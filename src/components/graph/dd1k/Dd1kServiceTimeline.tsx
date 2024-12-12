@@ -65,11 +65,14 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
             margin={{
               top: subGraph ? 0 : 20,
               right: 0,
-              left: isMobile ? -20 : 90,
+              left: -20,
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
-            <CartesianGrid strokeDasharray="2 2" strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"} />
+            <CartesianGrid
+              strokeDasharray="2 2"
+              strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"}
+            />
             {!showTopAxis && !showBottomAxis && (
               <XAxis dataKey="time" xAxisId="default" hide={true} />
             )}
@@ -94,7 +97,7 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                 interval={dd1k.arrivalTime - 1}
                 tick={{
                   fontSize: 8,
-                  color: theme.palette.text.primary,
+                  fill: theme.palette.text.primary,
                 }}
               />
             )}
@@ -118,13 +121,13 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                 tick={{
                   fontSize: 8,
                   dy: 5,
-                  color: theme.palette.secondary.main,
+                  fill: theme.palette.text.primary,
                 }}
                 colorRendering="optimizeQuality"
                 tickLine={true}
                 axisLine={{
-                  stroke: theme.palette.secondary.main,
-                  strokeWidth: 4,
+                  stroke: theme.palette.text.primary,
+                  // strokeWidth: 4,
                 }}
                 interval={0}
               />
@@ -137,6 +140,7 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                 dx: 20,
                 dy: 40,
                 fontSize: 12,
+                fill: theme.palette.text.primary,
               }}
               tickCount={1}
               stroke="transparent"

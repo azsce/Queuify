@@ -45,7 +45,7 @@ class DD1KμEqualλ extends DD1K {
   }
 
   graphMaxTime(): number {
-    return Math.ceil(Math.max((1 / this.arrivalRate) * 10, 10));
+    return Math.ceil(Math.max(this.arrivalTime * 10, 10));
   }
 }
 

@@ -64,7 +64,7 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
             margin={{
               top: 30,
               right: 0,
-              left: isMobile ? -20 : 90,
+              left: -20,
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
@@ -79,12 +79,14 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                   value: "Time (t)",
                   position: "insideTop",
                   offset: -25,
+                  fill: theme.palette.text.primary,
                 }}
                 tick={{
                   dy: -10,
                   fontSize: 8,
+                  fill: theme.palette.text.primary,
                 }}
-                stroke={theme.palette.primary.main}
+                stroke={theme.palette.text.primary}
                 interval={dd1k.arrivalTime - 1}
               />
             )}
@@ -99,12 +101,13 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                   position: "insideBottom",
                   offset: -10,
                   dy: 10,
+                  fill: theme.palette.text.primary,
                 }}
                 height={40}
                 tickSize={0}
                 tickLine={false}
                 tick={{ dy: 10, fontSize: 8 }}
-                stroke={theme.palette.primary.main}
+                stroke={theme.palette.text.primary}
               />
             )}
             {!showTopAxis && !showBottomAxis && (
@@ -118,6 +121,7 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
                 dx: 20,
                 dy: 50,
                 fontSize: 12,
+                fill: theme.palette.primary.main,
               }}
               tick={{ fontSize: 8 }}
               allowDecimals={false}

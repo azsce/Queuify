@@ -144,7 +144,7 @@ class DD1KμExceedλ extends DD1K {
   graphMaxTime(): number {
     return Math.ceil(
       Math.max(this.transientTime + 5 * (1 / this.arrivalRate), 10)
-    ); // Round up max time
+    );
   }
 }
 

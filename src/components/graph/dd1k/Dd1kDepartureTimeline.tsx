@@ -63,7 +63,7 @@ const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
             margin={{
               top: subGraph ? 0 : 20,
               right: 0,
-              left: isMobile ? -20 : 90,
+              left: -20,
               bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
