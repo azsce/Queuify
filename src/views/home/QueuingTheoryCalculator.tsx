@@ -39,56 +39,33 @@ const QueuingTheoryCalculator: React.FC = () => {
         borderRadius: 0,
       })}
     >
-      <Card
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
         sx={{
+          fontWeight: 600,
+          fontSize: { xs: "1.2rem", sm: "1.8rem", md: "2.25rem" },
+          textAlign: "center",
           mt: 0,
-          p: 0,
-          borderRadius: 0,
-          height: "100%",
-          minHeight: "100vh",
-          boxShadow: "none",
+          mb: 2,
+          borderBottom: 1,
+          borderColor: "divider",
+          pb: 2,
         }}
       >
-        <CardHeader></CardHeader>
-        <CardContent
-          sx={{
-            p: 0,
-            m: 0,
-          }}
-        >
-          <Typography
-            variant="h4"
-            component="h1"
-            gutterBottom
-            sx={{
-              fontWeight: 600,
-              fontSize: { xs: "1.2rem", sm: "1.8rem", md: "2.25rem" },
-              textAlign: "center",
-              mt: 0,
-              mb: 2,
-              borderBottom: 1,
-              borderColor: "divider",
-              pb: 2,
-            }}
-          >
-            Queuing Theory Calculator
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-            }}
-          >
-            <ProcessTypeSelector setProcessType={setProcessType} />
-            {processType === "D/D/1/K-1" ? (
-              <Dd1kCalculator />
-            ) : (
-              <MMCalculator />
-            )}
-          </Box>
-        </CardContent>
-      </Card>
+        Queuing Theory Calculator
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
+        <ProcessTypeSelector setProcessType={setProcessType} />
+        {processType === "D/D/1/K-1" ? <Dd1kCalculator /> : <MMCalculator />}
+      </Box>
     </Container>
   );
 };

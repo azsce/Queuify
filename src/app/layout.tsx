@@ -25,7 +25,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Queuing Theory Calculator",
+  title: "Queuify",
   icons: {
     apple: "/icon-192x192.png",
   },

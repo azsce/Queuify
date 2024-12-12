@@ -18,6 +18,7 @@ export const dd1kCapacityKey = "dd1k-capacity";
 const serviceRateKey = "dd1k-serviceRate";
 const arrivalRateKey = "dd1k-arrivalRate";
 const initialCustomersKey = "dd1k-initialCustomers";
+
 export const getFromLocalStorage = (
   key: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,6 +35,8 @@ export const getFromLocalStorage = (
   return defaultValue;
 };
 
+let init = true;
+
 const Dd1kCalculator: React.FC = () => {
   // dd1k
   const [capacity, setCapacity] = useState<string>("");
@@ -46,47 +49,62 @@ const Dd1kCalculator: React.FC = () => {
   const [initialCustomers, setInitialCustomers] = useState<string>("");
 
   useEffect(() => {
-    const serviceRate = getFromLocalStorage(serviceRateKey, "");
-    const evaluatedServiceRate = evaluate(serviceRate);
-    if (isValidPositiveNumber(evaluatedServiceRate)) {
-      setServiceRate(
-        Number.isInteger(evaluatedServiceRate)
-          ? evaluatedServiceRate
-          : format(fraction(evaluatedServiceRate), { fraction: "ratio" })
-      );
-      const serviceTime = 1 / evaluatedServiceRate;
-      setServiceTime(
-        Number.isInteger(serviceTime)
-          ? serviceTime.toString()
-          : format(fraction(serviceTime), { fraction: "ratio" })
-      );
-    }
+    if (init) {
+      init = false;
+      const serviceRate = getFromLocalStorage(serviceRateKey, "");
+      const evaluatedServiceRate = evaluate(serviceRate + "");
+      if (isValidPositiveNumber(evaluatedServiceRate)) {
+        setServiceRate(
+          Number.isInteger(evaluatedServiceRate)
+            ? evaluatedServiceRate
+            : format(fraction(evaluatedServiceRate), { fraction: "ratio" })
+        );
+        const serviceTime = 1 / evaluatedServiceRate;
+        setServiceTime(
+          Number.isInteger(serviceTime)
+            ? serviceTime.toString()
+            : format(fraction(serviceTime), { fraction: "ratio" })
+        );
+      }
 
-    const arrivalRate = getFromLocalStorage(arrivalRateKey, "");
-    const evaluatedArrivalRate = evaluate(arrivalRate);
-    if (isValidPositiveNumber(evaluatedArrivalRate)) {
-      setArrivalRate(
-        Number.isInteger(evaluatedArrivalRate)
-          ? evaluatedArrivalRate
-          : format(fraction(evaluatedArrivalRate), { fraction: "ratio" })
-      );
-      const arrivalTime = 1 / evaluatedArrivalRate;
-      setArrivalTime(
-        Number.isInteger(arrivalTime)
-          ? arrivalTime.toString()
-          : format(fraction(arrivalTime), { fraction: "ratio" })
-      );
-    }
+      const arrivalRate = getFromLocalStorage(arrivalRateKey, "");
+      const evaluatedArrivalRate = evaluate(arrivalRate + "");
+      if (isValidPositiveNumber(evaluatedArrivalRate)) {
+        setArrivalRate(
+          Number.isInteger(evaluatedArrivalRate)
+            ? evaluatedArrivalRate
+            : format(fraction(evaluatedArrivalRate), { fraction: "ratio" })
+        );
+        const arrivalTime = 1 / evaluatedArrivalRate;
+        setArrivalTime(
+          Number.isInteger(arrivalTime)
+            ? arrivalTime.toString()
+            : format(fraction(arrivalTime), { fraction: "ratio" })
+        );
+      }
 
-    if (evaluatedArrivalRate <= evaluatedServiceRate) {
-      setIsInitialCutsomersRequired(true);
-    } else {
-      setIsInitialCutsomersRequired(false);
-    }
+      console.log(
+        "evaluatedArrivalRate",
+        evaluatedArrivalRate,
+        "evaluatedServiceRate",
+        evaluatedServiceRate
+      );
+      if (evaluatedArrivalRate <= evaluatedServiceRate) {
+        console.log("isInitialCutsomersRequired", true);
+        setIsInitialCutsomersRequired(true);
+      } else {
+        setIsInitialCutsomersRequired(false);
+      }
 
-    setInitialCustomers(
-      getFromLocalStorage("dd1k-initialCustomers", null, true)
-    );
+      const initialCustomers = getFromLocalStorage(
+        "dd1k-initialCustomers",
+        null
+      );
+      const evaluateInitialCustomers = evaluate(initialCustomers + "");
+      if (isValidPositiveInteger(evaluateInitialCustomers)) {
+        setInitialCustomers(evaluateInitialCustomers);
+      }
+    }
   }, []);
 
   const [isInitialCutsomersRequired, setIsInitialCutsomersRequired] =
@@ -101,15 +119,18 @@ const Dd1kCalculator: React.FC = () => {
       setIsInitialCutsomersRequired(false);
     } else {
       try {
-        const evaluatedArrivalRate = evaluate(arrivalRate);
-        const evaluatedServiceRate = evaluate(serviceRate);
+        const evaluatedArrivalRate = evaluate(arrivalRate + "");
+        const evaluatedServiceRate = evaluate(serviceRate + "");
         if (evaluatedArrivalRate <= evaluatedServiceRate) {
           setIsInitialCutsomersRequired(true);
+          console.log("isInitialCutsomersRequired", true);
         } else {
           setIsInitialCutsomersRequired(false);
+          console.log("isInitialCutsomersRequired", false);
         }
       } catch {
         setIsInitialCutsomersRequired(false);
+        console.log("isInitialCutsomersRequired", false);
       }
     }
   }, [arrivalRate, serviceRate]);
@@ -133,7 +154,7 @@ const Dd1kCalculator: React.FC = () => {
   const handleCalculate = () => {
     let evaluatedCapacity;
     try {
-      evaluatedCapacity = evaluate(capacity.toString());
+      evaluatedCapacity = evaluate(capacity + "");
       if (!isValidPositiveNumber(evaluatedCapacity)) {
         setError("K: must be +Integer");
         return;
@@ -145,7 +166,7 @@ const Dd1kCalculator: React.FC = () => {
 
     let evaluatedServiceRate;
     try {
-      evaluatedServiceRate = evaluate(serviceRate);
+      evaluatedServiceRate = evaluate(serviceRate + "");
       if (!isValidPositiveNumber(evaluatedServiceRate)) {
         setError("μ: must be +Integer");
         return;
@@ -157,7 +178,7 @@ const Dd1kCalculator: React.FC = () => {
 
     let evaluatedArrivalRate;
     try {
-      evaluatedArrivalRate = evaluate(arrivalRate);
+      evaluatedArrivalRate = evaluate(arrivalRate + "");
       if (!isValidPositiveNumber(evaluatedArrivalRate)) {
         setError("λ: must be +Integer");
         return;
@@ -171,13 +192,14 @@ const Dd1kCalculator: React.FC = () => {
 
     if (isInitialCutsomersRequired) {
       try {
-        evaluateInitialCustomers = evaluate(initialCustomers);
+        evaluateInitialCustomers = evaluate(initialCustomers + "");
         if (!isValidPositiveInteger(evaluateInitialCustomers)) {
           setError("M: must be +Integer");
           return;
         }
-      } catch {
+      } catch (e) {
         setError("M: must be +Integer");
+        console.error(e.message);
         return;
       }
     }
@@ -222,100 +244,82 @@ const Dd1kCalculator: React.FC = () => {
         borderRadius: 0,
       })}
     >
-      <Card
+      <Box
         sx={{
-          mt: 0,
-          p: 0,
-          borderRadius: 0,
-          height: "100%",
-          minHeight: "100vh",
-          boxShadow: "none",
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
         }}
       >
-        <CardHeader></CardHeader>
-        <CardContent>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-            }}
-          >
-            <Dd1kSystemParameters
-              setCapacity={setCapacity}
-              capacity={capacity}
-            />
-            <InputParameters
-              setArrivalRate={setArrivalRate}
-              setServiceRate={setServiceRate}
-              arrivalRate={arrivalRate}
-              serviceRate={serviceRate}
-              setArrivalTime={setArrivalTime}
-              setServiceTime={setServiceTime}
-              arrivalTime={arrivalTime}
-              serviceTime={serviceTime}
-            />
-            {isInitialCutsomersRequired && (
-              <Grid container spacing={2}>
-                <Grid size={{ xs: 12, sm: 6 }} container>
-                  {/* Empty Column */}
-                  <Grid size={1} />
-                  <Grid size={11}>
-                    <NoNumberArrowsTextField
-                      value={initialCustomers}
-                      placeholder={"Initial Customers: M"}
-                      label="Initial Customers: M"
-                      fullWidth
-                      required={isInitialCutsomersRequired}
-                      autoComplete={"dd1k-initial-customers"}
-                      onChange={(e) => {
-                        setInitialCustomers(e.target.value);
-                      }}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            )}
-            <Grid size={12} container spacing={0} alignItems="start">
+        <Dd1kSystemParameters setCapacity={setCapacity} capacity={capacity} />
+        <InputParameters
+          setArrivalRate={setArrivalRate}
+          setServiceRate={setServiceRate}
+          arrivalRate={arrivalRate}
+          serviceRate={serviceRate}
+          setArrivalTime={setArrivalTime}
+          setServiceTime={setServiceTime}
+          arrivalTime={arrivalTime}
+          serviceTime={serviceTime}
+        />
+        {isInitialCutsomersRequired && (
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, sm: 6 }} container>
               {/* Empty Column */}
               <Grid size={1} />
-              <Grid size={11} justifyContent={"start"}>
-                <Button variant="contained" onClick={handleCalculate} fullWidth>
-                  Process
-                </Button>
+              <Grid size={11}>
+                <NoNumberArrowsTextField
+                  value={initialCustomers}
+                  placeholder={"Initial Customers: M"}
+                  label="Initial Customers: M"
+                  fullWidth
+                  required={isInitialCutsomersRequired}
+                  autoComplete={"dd1k-initial-customers"}
+                  onChange={(e) => {
+                    setInitialCustomers(e.target.value);
+                  }}
+                />
               </Grid>
             </Grid>
-          </Box>
+          </Grid>
+        )}
+        <Grid size={12} container spacing={0} alignItems="start">
+          {/* Empty Column */}
+          <Grid size={1} />
+          <Grid size={11} justifyContent={"start"}>
+            <Button variant="contained" onClick={handleCalculate} fullWidth>
+              Process
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
 
-          <Box mt={4}>
-            {error && (
-              <Alert severity="error" sx={{ mb: 3 }}>
-                <AlertTitle>Error</AlertTitle>
-                {error}
-              </Alert>
-            )}
+      <Box mt={4}>
+        {error && (
+          <Alert variant="outlined" severity="error" sx={{ mb: 4 }}>
+            {error}
+          </Alert>
+        )}
 
-            {results}
+        {results}
 
-            {!results && (
-              <Alert
-                severity="info"
-                className="mt-6"
-                sx={{
-                  backgroundColor: "background.paper",
-                }}
-              >
-                <AlertTitle>Note</AlertTitle>
-                <span className="ml-2 mt-1">
-                  For D/D/1 and D/D/1/(k-1) models, the Time (t) field is used
-                  for transient analysis. For unstable systems (λ {">"} μ),
-                  results may be limited or require additional explanation.
-                </span>
-              </Alert>
-            )}
-          </Box>
-        </CardContent>
-      </Card>
+        {!results && (
+          <Alert
+            severity="info"
+            className="mt-6"
+            sx={{
+              backgroundColor: "background.paper",
+            }}
+          >
+            <AlertTitle>Note</AlertTitle>
+            <span className="ml-2 mt-1">
+              For D/D/1 and D/D/1/(k-1) models, the Time (t) field is used for
+              transient analysis. For unstable systems (λ {">"} μ), results may
+              be limited or require additional explanation.
+            </span>
+          </Alert>
+        )}
+      </Box>
     </Container>
   );
 };

@@ -1,4 +1,9 @@
 import { createTheme } from "@mui/material/styles";
+import { Montserrat } from "next/font/google";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+});
 
 const nextJsDarkTheme = createTheme({
   palette: {
@@ -19,7 +24,7 @@ const nextJsDarkTheme = createTheme({
     },
   },
   typography: {
-    fontFamily: "'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif",
+    fontFamily: `${montserrat.style.fontFamily}, 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif`,
     fontSize: 14, // Default font size
     h1: {
       fontSize: "2.25rem",

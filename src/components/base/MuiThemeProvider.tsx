@@ -2,7 +2,7 @@
 
 import nextJsDarkTheme from "@/theme/nextJsDarkTheme";
 import nextJsTheme from "@/theme/nextJsTheme";
-import { ThemeProvider } from "@mui/material";
+import { Box, ThemeProvider } from "@mui/material";
 import { useTheme } from "next-themes";
 import React, { useMemo } from "react";
 
@@ -29,7 +29,11 @@ const MuiThemeProvider: React.FC<MuiThemeProviderProps> = ({ children }) => {
     return null;
   }
 
-  return <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>;
+  return (
+    <ThemeProvider theme={muiTheme}>
+      <Box sx={{ backgroundColor: "background.default" }}>{children}</Box>
+    </ThemeProvider>
+  );
 };
 
 export default MuiThemeProvider;

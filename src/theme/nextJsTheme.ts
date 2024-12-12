@@ -1,4 +1,9 @@
 import { createTheme } from "@mui/material/styles";
+import { Montserrat } from "next/font/google";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+});
 
 const nextJsTheme = createTheme({
   palette: {
@@ -10,8 +15,8 @@ const nextJsTheme = createTheme({
       main: "#333333", // A dark grey for contrast
     },
     background: {
-      default: "#f0f0f0", // White background
-      paper: "#dcdbdb", // Slightly grey for elevated surfaces
+      default: "#fff", // White background
+      paper: "#fefefe", // Slightly grey for elevated surfaces
     },
     text: {
       primary: "#333333", // Dark grey for readability
@@ -19,7 +24,7 @@ const nextJsTheme = createTheme({
     },
   },
   typography: {
-    fontFamily: "'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif",
+    fontFamily: `${montserrat.style.fontFamily}, 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif`,
     fontSize: 14, // Default font size
     h1: {
       fontSize: "2.25rem",
@@ -61,6 +66,13 @@ const nextJsTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 8, // Rounded corners for cards and paper components
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        outlinedError: {
+          backgroundColor: "background.paper",
         },
       },
     },

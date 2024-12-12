@@ -5,11 +5,10 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Link,
   Button,
-  Box,
   Drawer,
-  Container,
+  Box,
+  Typography,
 } from "@mui/material";
 import {
   DarkMode,
@@ -19,18 +18,15 @@ import {
 } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 
 const links = [
   {
-    label: "Home",
-    href: "/",
-  },
-  {
-    label: "D/D/1/(k-1)",
+    label: "D / D / 1 / (k-1)",
     href: "/dd1k",
   },
   {
-    label: "M/M/C/K",
+    label: "M / M / C / K",
     href: "/mm",
   },
 ];
@@ -53,27 +49,7 @@ export default function TopAppBar() {
   };
 
   return (
-    <Container
-      maxWidth={"lg"}
-      sx={(theme) => ({
-        py: 4,
-        maxWidth: "100%",
-        [theme.breakpoints.up("xs")]: {
-          maxWidth: "100%",
-        },
-        [theme.breakpoints.up("sm")]: {
-          maxWidth: theme.breakpoints.values.lg,
-        },
-        [theme.breakpoints.up("md")]: {
-          maxWidth: theme.breakpoints.values.md,
-        },
-        marginLeft: "auto",
-        marginRight: "auto",
-        t: 0,
-        p: 0,
-        borderRadius: 0,
-      })}
-    >
+    <Box>
       <AppBar
         position="static"
         ref={appBarRef}
@@ -103,10 +79,18 @@ export default function TopAppBar() {
               flexDirection: "row",
               justifyContent: "space-between",
               width: "100%",
+              alignItems: "center",
             }}
           >
             {/* xs: Home and Menu Icon */}
-            <Box sx={{ display: { xs: "flex", md: "none" } }}>
+            <Box
+              sx={{
+                display: { xs: "flex", md: "none" },
+
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
               {/* Menu Icon */}
               <IconButton
                 size="large"
@@ -118,39 +102,71 @@ export default function TopAppBar() {
                 <MenuIcon />
               </IconButton>
               {/* Home Icon */}
-              <IconButton
-                color="inherit"
-                onClick={() => {
-                  router.push("/");
-                }}
-              >
-                <HomeIcon />
-              </IconButton>
+              {/* Home Icon */}
+              <Link href="/">
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  <HomeIcon />
+                  <Typography
+                    variant="h1"
+                    sx={{
+                      fontSize: "1rem",
+                    }}
+                  >
+                    Queuify
+                  </Typography>
+                </Box>
+              </Link>
             </Box>
 
             {/* md: Home and Links */}
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <Box
+              sx={{
+                display: { xs: "none", md: "flex" },
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
               {/* Home Icon */}
-              <IconButton
-                color="inherit"
-                onClick={() => {
-                  router.push("/");
-                }}
-              >
-                <HomeIcon />
-              </IconButton>
+              <Link href="/">
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  <HomeIcon />
+                  <Typography
+                    variant="h1"
+                    sx={{
+                      fontSize: "1rem",
+                    }}
+                  >
+                    Queuify
+                  </Typography>
+                </Box>
+              </Link>
 
               {/* Links */}
               {links.map((link) => (
-                <Button
-                  key={link.label}
-                  onClick={() => router.push(link.href)}
-                  color="inherit"
-                  sx={{ margin: 1 }}
-                  LinkComponent={Link}
-                >
-                  {link.label}
-                </Button>
+                <Link href={link.href} key={link.label} color="inherit">
+                  <Typography
+                    variant="h1"
+                    sx={{
+                      fontSize: "1rem",
+                    }}
+                  >
+                    {link.label}
+                  </Typography>
+                </Link>
               ))}
             </Box>
             <IconButton
@@ -205,6 +221,6 @@ export default function TopAppBar() {
           ))}
         </Box>
       </Drawer>
-    </Container>
+    </Box>
   );
 }
