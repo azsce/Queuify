@@ -11,7 +11,6 @@ import Grid from "@mui/material/Grid2";
 import dD1KFactoryMethod from "@/class/dd1k/DD1KFactoryMethod";
 import Dd1kSystemParameters from "./Dd1kSystemParameters";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
-import InputWithInfinity from "@/components/base/InputWithInfinity";
 
 export default function DD1KCalculator() {
   // dd1k
@@ -193,37 +192,18 @@ export default function DD1KCalculator() {
                   <Grid size={1} />
                   <Grid size={11}>
                     <NoNumberArrowsTextField
-                      value={isNaN(value) ? "∞" : value}
-                      placeholder={showInfinity ? "∞" : ""}
+                      value={isNaN(initialCustomers) ? "" : initialCustomers}
+                      placeholder={"Initial Customers: M"}
                       label="Initial Customers: M"
                       type="number"
                       fullWidth
-                      required={required}
+                      required={isInitialCutsomersRequired}
                       autoComplete={"dd1k-initial-customers"}
-                      onChange={() => {setInitialCustomers(n)}}
-                      size="small"
-                      // error={required && isNaN(value)}
-                      onBlur={handleBlur}
-                      slotProps={{
-                        input: {
-                          endAdornment: showInfinity && (
-                            <IconButton
-                              color="primary"
-                              onClick={onInfinityClick}
-                              sx={{ minWidth: "40px" }}
-                            >
-                              <InfinityIcon />
-                            </IconButton>
-                          ),
-                        },
+                      onChange={(e) => {
+                        setInitialCustomers(parseInt(e.target.value));
                       }}
-                    />
-                    <InputWithInfinity
-                      label="Initial Customers: M"
-                      value={initialCustomers}
-                      onChange={(n) => setInitialCustomers(n)}
-                      required
-                      autoComplete="initial-customers"
+                      size="small"
+                      error={isNaN(initialCustomers)}
                     />
                   </Grid>
                 </Grid>

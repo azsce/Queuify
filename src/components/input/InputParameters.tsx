@@ -2,6 +2,7 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid2";
 import InfinityLinkIndicator from "../base/InfinityLinkIndicator";
 import { Box } from "@mui/material";
+import { evaluate, isNaN, fraction, format } from "mathjs"; // Import mathjs
 
 type InputParametersProps = {
   setArrivalRate: (value: string) => void;
@@ -26,6 +27,78 @@ const InputParameters: React.FC<InputParametersProps> = ({
   arrivalTime,
   serviceTime,
 }) => {
+  const handleServiceRateChange = (value: string) => {
+    setServiceRate(value);
+    if (value === "") {
+      setServiceTime("");
+      return;
+    }
+    try {
+      const serviceTime = 1 / evaluate(value);
+      if (!isNaN(serviceTime)) {
+        setServiceTime(format(fraction(serviceTime), { fraction: 'ratio' }));
+      } else {
+        setServiceTime("");
+      }
+    } catch {
+      setServiceTime("");
+    }
+  };
+
+  const handleServiceTimeChange = (value: string) => {
+    setServiceTime(value);
+    if (value === "") {
+      setServiceRate("");
+      return;
+    }
+    try {
+      const serviceRate = 1 / evaluate(value);
+      if (!isNaN(serviceRate)) {
+        setServiceRate(format(fraction(serviceRate), { fraction: 'ratio' }));
+      } else {
+        setServiceRate("");
+      }
+    } catch {
+      setServiceRate("");
+    }
+  };
+
+  const handleArrivalRateChange = (value: string) => {
+    setArrivalRate(value);
+    if (value === "") {
+      setArrivalTime("");
+      return;
+    }
+    try {
+      const arrivalTime = 1 / evaluate(value);
+      if (!isNaN(arrivalTime)) {
+        setArrivalTime(format(fraction(arrivalTime), { fraction: 'ratio' }));
+      } else {
+        setArrivalTime("");
+      }
+    } catch {
+      setArrivalTime("");
+    }
+  };
+
+  const handleArrivalTimeChange = (value: string) => {
+    setArrivalTime(value);
+    if (value === "") {
+      setArrivalRate("");
+      return;
+    }
+    try {
+      const arrivalRate = 1 / evaluate(value);
+      if (!isNaN(arrivalRate)) {
+        setArrivalRate(format(fraction(arrivalRate), { fraction: 'ratio' }));
+      } else {
+        setArrivalRate("");
+      }
+    } catch {
+      setArrivalRate("");
+    }
+  };
+
   return (
     <Grid container spacing={2}>
       {/* Service Rate-Time */}
@@ -59,16 +132,8 @@ const InputParameters: React.FC<InputParametersProps> = ({
             <Grid size={{ xs: 12 }}>
               <TextField
                 label="Service Rate (μ)"
-                value={serviceRate}
-                onChange={(e) => {
-                  setServiceRate(e.target.value);
-                  const serviceTime = 1 / parseFloat(e.target.value);
-                  if (!serviceTime || isNaN(serviceTime)) {
-                    setServiceTime("");
-                  } else {
-                    setServiceTime(serviceTime.toString());
-                  }
-                }}
+                value={serviceRate ?? ""}
+                onChange={(e) => handleServiceRateChange(e.target.value)}
                 placeholder="Enter service rate"
                 fullWidth
               />
@@ -78,16 +143,8 @@ const InputParameters: React.FC<InputParametersProps> = ({
             <Grid size={{ xs: 12 }}>
               <TextField
                 label="Service Time (1/μ)"
-                value={serviceTime}
-                onChange={(e) => {
-                  setServiceTime(e.target.value);
-                  const serviceRate = 1 / parseFloat(e.target.value);
-                  if (!serviceRate || isNaN(serviceRate)) {
-                    setServiceRate("");
-                  } else {
-                    setServiceRate(serviceRate.toString());
-                  }
-                }}
+                value={serviceTime ?? ""}
+                onChange={(e) => handleServiceTimeChange(e.target.value)}
                 placeholder="Enter service time"
                 fullWidth
               />
@@ -130,16 +187,8 @@ const InputParameters: React.FC<InputParametersProps> = ({
             <Grid size={{ xs: 12 }}>
               <TextField
                 label="Arrival Rate (λ)"
-                value={arrivalRate}
-                onChange={(e) => {
-                  setArrivalRate(e.target.value);
-                  const arrivalTime = 1 / parseFloat(e.target.value);
-                  if (!arrivalTime || isNaN(arrivalTime)) {
-                    setArrivalTime("");
-                  } else {
-                    setArrivalTime(arrivalTime.toString());
-                  }
-                }}
+                value={arrivalRate || ""}
+                onChange={(e) => handleArrivalRateChange(e.target.value)}
                 placeholder="Enter arrival rate"
                 fullWidth
               />
@@ -149,16 +198,8 @@ const InputParameters: React.FC<InputParametersProps> = ({
             <Grid size={{ xs: 12 }}>
               <TextField
                 label="Arrival Time (1/λ)"
-                value={arrivalTime}
-                onChange={(e) => {
-                  setArrivalTime(e.target.value);
-                  const arrivalRate = 1 / parseFloat(e.target.value);
-                  if (!arrivalRate || isNaN(arrivalRate)) {
-                    setArrivalRate("");
-                  } else {
-                    setArrivalRate(arrivalRate.toString());
-                  }
-                }}
+                value={arrivalTime || ""}
+                onChange={(e) => handleArrivalTimeChange(e.target.value)}
                 placeholder="Enter arrival time"
                 fullWidth
               />
