@@ -31,7 +31,14 @@ const MuiThemeProvider: React.FC<MuiThemeProviderProps> = ({ children }) => {
 
   return (
     <ThemeProvider theme={muiTheme}>
-      <Box sx={{ backgroundColor: "background.default" }}>{children}</Box>
+      <Box
+        sx={{
+          backgroundColor: "background.default",
+          height: "100vh",
+        }}
+      >
+        {children}
+      </Box>
     </ThemeProvider>
   );
 };

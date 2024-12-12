@@ -19,6 +19,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import LabelIcon from "@mui/icons-material/Label";
 
 const links = [
   {
@@ -202,22 +203,40 @@ export default function TopAppBar() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-start",
+            alignItems: "flex-start",
             height: "100%",
           }}
         >
           {links.map((link) => (
-            <Button
+            <Link
+              href={link.href}
               key={link.label}
-              onClick={() => {
-                router.push(link.href);
-                handleDrawerToggle();
-              }}
               color="inherit"
-              sx={{ margin: 1 }}
-              LinkComponent={Link}
+              style={{
+                width: "100%",
+              }}
             >
-              {link.label}
-            </Button>
+              <Button
+                key={link.label}
+                color="inherit"
+                sx={{
+                  width: "100%",
+                  p: 2,
+                }}
+                onClick={handleDrawerToggle}
+              >
+                <LabelIcon />
+                <Typography
+                  variant="h1"
+                  sx={{
+                    fontSize: "1rem",
+                    width: "100%",
+                  }}
+                >
+                  {link.label}
+                </Typography>
+              </Button>
+            </Link>
           ))}
         </Box>
       </Drawer>

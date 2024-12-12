@@ -5,6 +5,7 @@ import {
   Radio,
   RadioGroup,
   FormControlLabel,
+  Typography,
 } from "@mui/material";
 import React from "react";
 import Grid from "@mui/material/Grid2";
@@ -31,7 +32,18 @@ const ProcessTypeSelector: React.FC<ProcessTypeSelectorProps> = ({
             gap: { xs: 2, md: 12 },
           }}
         >
-          <FormLabel>Queue Type</FormLabel>
+          <FormLabel
+            sx={{
+              color: "text.primary",
+              fontWeight: "bold",
+            }}
+          >
+            Select{" "}
+            <Typography variant="h6" display={"inline"}>
+              Q
+            </Typography>{" "}
+            Type
+          </FormLabel>
           <RadioGroup
             defaultValue="D/D/1/K-1"
             onChange={(e) => setProcessType(e.target.value as Process)}
@@ -41,12 +53,12 @@ const ProcessTypeSelector: React.FC<ProcessTypeSelectorProps> = ({
             <FormControlLabel
               value="M/M/X/Y"
               control={<Radio />}
-              label="M/M/X/Y"
+              label="M / M / X / Y"
             />
             <FormControlLabel
               value="D/D/1/K-1"
               control={<Radio />}
-              label="D/D/1/K-1"
+              label="D / D / 1 / K-1"
             />
           </RadioGroup>
         </FormControl>

@@ -156,11 +156,11 @@ const Dd1kCalculator: React.FC = () => {
     try {
       evaluatedCapacity = evaluate(capacity + "");
       if (!isValidPositiveNumber(evaluatedCapacity)) {
-        setError("K: must be +Integer");
+        setError("'K' must be +Integer");
         return;
       }
     } catch {
-      setError("K: must be +Integer");
+      setError(" 'K' must be +Integer");
       return;
     }
 
@@ -168,11 +168,11 @@ const Dd1kCalculator: React.FC = () => {
     try {
       evaluatedServiceRate = evaluate(serviceRate + "");
       if (!isValidPositiveNumber(evaluatedServiceRate)) {
-        setError("μ: must be +Integer");
+        setError("'μ': must be +Integer");
         return;
       }
     } catch {
-      setError("μ: must be +Integer");
+      setError("'μ': must be +Integer");
       return;
     }
 
@@ -180,11 +180,11 @@ const Dd1kCalculator: React.FC = () => {
     try {
       evaluatedArrivalRate = evaluate(arrivalRate + "");
       if (!isValidPositiveNumber(evaluatedArrivalRate)) {
-        setError("λ: must be +Integer");
+        setError("'λ': must be +Integer");
         return;
       }
     } catch {
-      setError("λ: must be +Integer");
+      setError("'λ': must be +Integer");
       return;
     }
 
@@ -198,7 +198,7 @@ const Dd1kCalculator: React.FC = () => {
           return;
         }
       } catch (e) {
-        setError("M: must be +Integer");
+        setError("'M': must be +Integer");
         console.error(e.message);
         return;
       }
@@ -288,7 +288,7 @@ const Dd1kCalculator: React.FC = () => {
           <Grid size={1} />
           <Grid size={11} justifyContent={"start"}>
             <Button variant="contained" onClick={handleCalculate} fullWidth>
-              Process
+              Analyze
             </Button>
           </Grid>
         </Grid>
@@ -296,29 +296,21 @@ const Dd1kCalculator: React.FC = () => {
 
       <Box mt={4}>
         {error && (
-          <Alert variant="outlined" severity="error" sx={{ mb: 4 }}>
+          <Alert
+            variant="standard"
+            severity="error"
+            sx={{
+              mb: 4,
+              fontWeight: "600",
+              letterSpacing: "2",
+              fontFamily: "sans-serif",
+            }}
+          >
             {error}
           </Alert>
         )}
 
         {results}
-
-        {!results && (
-          <Alert
-            severity="info"
-            className="mt-6"
-            sx={{
-              backgroundColor: "background.paper",
-            }}
-          >
-            <AlertTitle>Note</AlertTitle>
-            <span className="ml-2 mt-1">
-              For D/D/1 and D/D/1/(k-1) models, the Time (t) field is used for
-              transient analysis. For unstable systems (λ {">"} μ), results may
-              be limited or require additional explanation.
-            </span>
-          </Alert>
-        )}
       </Box>
     </Container>
   );

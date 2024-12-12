@@ -24,7 +24,7 @@ const QueuingTheoryCalculator: React.FC = () => {
         py: 4,
         maxWidth: "100%",
         [theme.breakpoints.up("xs")]: {
-          maxWidth: "100%",
+          maxWidth: "95%",
         },
         [theme.breakpoints.up("sm")]: {
           maxWidth: theme.breakpoints.values.lg,
@@ -47,14 +47,14 @@ const QueuingTheoryCalculator: React.FC = () => {
           fontWeight: 600,
           fontSize: { xs: "1.2rem", sm: "1.8rem", md: "2.25rem" },
           textAlign: "center",
-          mt: 0,
+          mt: 4,
           mb: 2,
           borderBottom: 1,
           borderColor: "divider",
           pb: 2,
         }}
       >
-        Queuing Theory Calculator
+        Queue Performance Analyzer
       </Typography>
       <Box
         sx={{
