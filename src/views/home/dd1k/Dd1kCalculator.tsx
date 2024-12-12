@@ -18,9 +18,9 @@ export const dd1kCapacityKey = "dd1k-capacity";
 const serviceRateKey = "dd1k-serviceRate";
 const arrivalRateKey = "dd1k-arrivalRate";
 const initialCustomersKey = "dd1k-initialCustomers";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getFromLocalStorage = (
   key: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defaultValue: any = "",
   parse?: boolean
 ) => {
@@ -49,7 +49,7 @@ const Dd1kCalculator: React.FC = () => {
     const serviceRate = getFromLocalStorage(serviceRateKey, "");
     const evaluatedServiceRate = evaluate(serviceRate);
     if (isValidPositiveNumber(evaluatedServiceRate)) {
-      const c = setServiceRate(
+      setServiceRate(
         Number.isInteger(evaluatedServiceRate)
           ? evaluatedServiceRate
           : format(fraction(evaluatedServiceRate), { fraction: "ratio" })

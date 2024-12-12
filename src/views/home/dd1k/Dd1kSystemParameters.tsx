@@ -20,13 +20,12 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
 
   useEffect(() => {
     const capacity = getFromLocalStorage(dd1kCapacityKey, "");
-    console.log("capacity", capacity);
     const evaluatedCapacity = evaluate(capacity);
     if (isValidPositiveInteger(evaluatedCapacity)) {
       setCapacity(evaluatedCapacity);
       setBuffer((evaluatedCapacity - 1).toString());
     }
-  }, []);
+  }, [setCapacity, setBuffer]);
 
   const onCapacityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
