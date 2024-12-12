@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { timeLineData } from "@/types/timeLineData";
 import Dd1k from "./Dd1k";
 import { toProperFraction } from "@/lib/math";
 

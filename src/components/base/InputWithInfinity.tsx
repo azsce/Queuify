@@ -7,7 +7,7 @@ type InputWithInfinityProps = {
   id: string;
   label: string;
   value: number;
-  onChange: (value: number) => void;
+  onChange: (value: string) => void;
   showInfinity?: boolean;
   onInfinityClick?: () => void;
   required?: boolean;
@@ -36,8 +36,7 @@ const InputWithInfinity: React.FC<InputWithInfinityProps> = ({
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseInt(event.target.value);
-    onChange(newValue);
+    onChange(event.target.value);
   };
 
   return (

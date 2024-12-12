@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid2";
 import InputWithInfinity from "@/components/base/InputWithInfinity";
 import InfinityLinkIndicator from "@/components/base/InfinityLinkIndicator";
 import { evaluate } from "mathjs"; // Import evaluate from mathjs
+import { isValidPositiveValue } from "@/lib/math";
 
 type Dd1kSystemParametersProps = {
   setCapacity: Dispatch<SetStateAction<number>>;
@@ -18,46 +19,56 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
     capacity - 1
   );
 
-  const onCapacityChange = (value: number | string) => {
+  const onCapacityChange = (value: string) => {
     try {
-      if (value === "" || isNaN(value as number)) {
-      setCapacity(undefined);
-      setCapacityMinusOne(undefined);
-      return;
-    }
-      const evaluatedValue = evaluate(value.toString());
-      if (!Number.isInteger(evaluatedValue) || evaluatedValue <= 1) {
-        return; // Ensure the value is a positive integer greater than 1
+      if (value === "" || isNaN(parseInt(value))) {
+        setCapacity(undefined);
+        setCapacityMinusOne(undefined);
+        return;
       }
-      setCapacity(evaluatedValue);
-      setCapacityMinusOne(evaluatedValue - 1);
+      const evaluatedValue = evaluate(value.toString());
+      if (
+        isValidPositiveValue(evaluatedValue) &&
+        Number.isInteger(evaluatedValue) &&
+        evaluatedValue > 1
+      ) {
+        setCapacity(evaluatedValue);
+        setCapacityMinusOne(evaluatedValue - 1);
+      }
     } catch {
       return; // Do not update state if evaluation fails
     }
   };
 
-  const onCapacityMinusOneChange = (value: number | string) => {
+  const onCapacityMinusOneChange = (value: string) => {
     try {
-      if (value === "" || isNaN(value as number)) {
-      setCapacityMinusOne(undefined);
-      setCapacity(undefined);
-      return;
-    }
-      const evaluatedValue = evaluate(value.toString());
-      if (!Number.isInteger(evaluatedValue) || evaluatedValue < 0) {
-        return; // Ensure the value is a non-negative integer
+      if (value === "" || isNaN(parseInt(value))) {
+        console.log(" (value === '' || isNaN(parseInt(value)))  value", value);
+        setCapacityMinusOne(undefined);
+        setCapacity(undefined);
+        return;
       }
-      setCapacityMinusOne(evaluatedValue);
-      setCapacity(evaluatedValue + 1);
+      const evaluatedValue = evaluate(value.toString());
+      if (
+        isValidPositiveValue(evaluatedValue) &&
+        Number.isInteger(evaluatedValue) &&
+        evaluatedValue >= 0
+      ) {
+        setCapacityMinusOne(evaluatedValue);
+        setCapacity(evaluatedValue + 1);
+      }
     } catch {
       return; // Do not update state if evaluation fails
     }
   };
 
   return (
-    <Grid size={{ xs: 12, sm: 6 }} container alignItems="center"
-    width={{ xs: "100%", sm: "50%" }}
-    sx={{ paddingRight: { xs: 0, sm: 1 } }}
+    <Grid
+      size={{ xs: 12, sm: 6 }}
+      container
+      alignItems="center"
+      width={{ xs: "100%", sm: "50%" }}
+      sx={{ paddingRight: { xs: 0, sm: 1 } }}
     >
       {/* Infinite Link Indicator */}
       <Grid
@@ -86,7 +97,7 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
       <Grid size={11}>
         <Grid container spacing={2}>
           {/* System Capacity - 1 */}
-          <Grid size={{ xs: 12, }}>
+          <Grid size={{ xs: 12 }}>
             <InputWithInfinity
               id="capacityMinusOne"
               label="K-1"

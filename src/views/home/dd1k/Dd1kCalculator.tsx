@@ -12,15 +12,13 @@ import Grid from "@mui/material/Grid2";
 import dd1kFactoryMethod from "@/class/dd1k/dd1kFactoryMethod";
 import Dd1kSystemParameters from "./Dd1kSystemParameters";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
+import { isValidPositiveValue } from "@/lib/math";
 
 export default function Dd1kCalculator() {
   // dd1k
-  const [capacity, setCapacity] = useState<number | undefined>(() => {
-    const saved = localStorage.getItem("capacity");
-    return saved !== null && saved !== "undefined"
-      ? JSON.parse(saved)
-      : undefined;
-  });
+  const [capacity, setCapacity] = useState<number | undefined>(
+    () => localStorage.getItem("capacity") as unknown as number
+  );
   const [arrivalRate, setArrivalRate] = useState(() => {
     const saved = localStorage.getItem("arrivalRate");
     return saved ?? "";
@@ -46,21 +44,10 @@ export default function Dd1kCalculator() {
     useState(false);
 
   const [initialCustomers, setInitialCustomers] = useState<number | undefined>(
-    () => {
-      const saved = localStorage.getItem("initialCustomers");
-      return saved !== null && saved !== "undefined"
-        ? JSON.parse(saved)
-        : undefined;
-    }
+    () => localStorage.getItem("initialCustomers") as unknown as number
   );
 
   useEffect(() => {
-    console.log(
-      "DD1KCalculator useEffect arrivalRate",
-      arrivalRate,
-      "serviceRate",
-      serviceRate
-    );
     if (arrivalRate === "" || serviceRate === "") {
       setIsInitialCutsomersRequired(false);
       setInitialCustomers(undefined);
@@ -112,11 +99,12 @@ export default function Dd1kCalculator() {
         return;
       }
       const evaluatedValue = evaluate(value);
-      if (!Number.isInteger(evaluatedValue) || evaluatedValue <= 0) {
-        return; // Ensure the value is a positive integer greater than 1
+      if (
+        isValidPositiveValue(evaluatedValue) &&
+        Number.isInteger(evaluatedValue)
+      ) {
+        setInitialCustomers(evaluatedValue);
       }
-
-      setInitialCustomers(evaluatedValue);
     } catch {
       return; // Do not update state if evaluation fails
     }

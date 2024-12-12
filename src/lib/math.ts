@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Fraction } from "@/types/math";
 
 /**
@@ -25,3 +26,8 @@ export function toProperFraction(decimal: number): Fraction {
 
   return { numerator: h1, denominator: k1 };
 }
+
+export const isValidPositiveValue = (value: any): boolean => {
+  if (value <= 0 || isNaN(value) || value.value === null) return;
+  return true;
+};

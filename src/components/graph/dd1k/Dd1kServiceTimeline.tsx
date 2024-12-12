@@ -29,7 +29,6 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
   showTopAxis,
   showBottomAxis,
 }) => {
-  console.log("Dd1kServiceTimeline height", height);
   const data = dd1k.timeLineData;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));

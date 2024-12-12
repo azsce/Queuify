@@ -204,7 +204,6 @@ abstract class Dd1k {
       if (t === nextArrivalTime) {
         arrived = true;
         blocked = numberOfNewCustomers >= this.capacity - 1;
-        console.log("blocked", blocked);
         arrivals++;
         nextArrivalTime += this.arrivalTime;
         if (blocked) {
@@ -214,7 +213,6 @@ abstract class Dd1k {
         }
       }
 
-        console.log("initialCustomersRemaining", initialCustomersRemaining, "numberOfNewCustomers", numberOfNewCustomers);
       if (t === nextServiceEnteranceTime) {
         if (initialCustomersRemaining + numberOfNewCustomers > 0) {
           enteredService = true;
@@ -258,7 +256,6 @@ abstract class Dd1k {
         key: key++,
       };
 
-      console.log("d", d);
       timelineData.push(d);
     }
 
@@ -278,8 +275,6 @@ abstract class Dd1k {
       );
     }
 
-    console.log("maxCustomers", maxCustomers);
-
     for (let n = 0; n <= maxCustomers; n++) {
       const waitingTime = this.waitingTimeForNthCustomer(n);
       data.push({
@@ -288,7 +283,6 @@ abstract class Dd1k {
       });
     }
 
-    console.log("queue type", this.type, "generateCustomerGraphData", data);
     return data;
   }
 }

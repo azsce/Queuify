@@ -2,7 +2,8 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid2";
 import InfinityLinkIndicator from "../base/InfinityLinkIndicator";
 import { Box } from "@mui/material";
-import { evaluate, isNaN, fraction, format } from "mathjs"; // Import mathjs
+import { evaluate, fraction, format } from "mathjs"; // Import mathjs
+import { isValidPositiveValue } from "@/lib/math";
 
 type InputParametersProps = {
   setArrivalRate: (value: string) => void;
@@ -35,10 +36,16 @@ const InputParameters: React.FC<InputParametersProps> = ({
     }
     try {
       const evaluatedValue = evaluate(value);
-      if (evaluatedValue <= 0 || isNaN(evaluatedValue)) return; // Prohibit non-positive values
-      setServiceRate(value);
-      const serviceTime = 1 / evaluatedValue;
-      setServiceTime(format(fraction(serviceTime), { fraction: 'ratio' }));
+      console.log(evaluatedValue);
+      if (isValidPositiveValue(evaluatedValue)) {
+        setServiceRate(value);
+        const serviceTime = 1 / evaluatedValue;
+        if (evaluatedValue === 1) {
+          setServiceTime("1");
+        } else {
+          setServiceTime(format(fraction(serviceTime), { fraction: "ratio" }));
+        }
+      }
     } catch {
       return; // Do not update state if evaluation fails
     }
@@ -52,10 +59,15 @@ const InputParameters: React.FC<InputParametersProps> = ({
     }
     try {
       const evaluatedValue = evaluate(value);
-      if (evaluatedValue <= 0 || isNaN(evaluatedValue)) return; // Prohibit non-positive values
-      setServiceTime(value);
-      const serviceRate = 1 / evaluatedValue;
-      setServiceRate(format(fraction(serviceRate), { fraction: 'ratio' }));
+      if (isValidPositiveValue(evaluatedValue)) {
+        setServiceTime(value);
+        const serviceRate = 1 / evaluatedValue;
+        if (evaluatedValue === 1) {
+          setServiceRate("1");
+        } else {
+          setServiceRate(format(fraction(serviceRate), { fraction: "ratio" }));
+        }
+      }
     } catch {
       return; // Do not update state if evaluation fails
     }
@@ -69,10 +81,16 @@ const InputParameters: React.FC<InputParametersProps> = ({
     }
     try {
       const evaluatedValue = evaluate(value);
-      if (evaluatedValue <= 0 || isNaN(evaluatedValue)) return; // Prohibit non-positive values
-      setArrivalRate(value);
-      const arrivalTime = 1 / evaluatedValue;
-      setArrivalTime(format(fraction(arrivalTime), { fraction: 'ratio' }));
+
+      if (isValidPositiveValue(evaluatedValue)) {
+        setArrivalRate(value);
+        const arrivalTime = 1 / evaluatedValue;
+        if (evaluatedValue === 1) {
+          setArrivalTime("1");
+        } else {
+          setArrivalTime(format(fraction(arrivalTime), { fraction: "ratio" }));
+        }
+      }
     } catch {
       return; // Do not update state if evaluation fails
     }
@@ -86,10 +104,16 @@ const InputParameters: React.FC<InputParametersProps> = ({
     }
     try {
       const evaluatedValue = evaluate(value);
-      if (evaluatedValue <= 0 || isNaN(evaluatedValue)) return; // Prohibit non-positive values
-      setArrivalTime(value);
-      const arrivalRate = 1 / evaluatedValue;
-      setArrivalRate(format(fraction(arrivalRate), { fraction: 'ratio' }));
+
+      if (isValidPositiveValue(evaluatedValue)) {
+        setArrivalTime(value);
+        const arrivalRate = 1 / evaluatedValue;
+        if (evaluatedValue === 1) {
+          setArrivalRate("1");
+        } else {
+          setArrivalRate(format(fraction(arrivalRate), { fraction: "ratio" }));
+        }
+      }
     } catch {
       return; // Do not update state if evaluation fails
     }
