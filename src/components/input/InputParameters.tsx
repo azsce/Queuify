@@ -156,6 +156,7 @@ const InputParameters: React.FC<InputParametersProps> = ({
                 onChange={(e) => handleServiceRateChange(e.target.value)}
                 placeholder="Enter service rate"
                 fullWidth
+                required={true}
               />
             </Grid>
 
@@ -167,6 +168,7 @@ const InputParameters: React.FC<InputParametersProps> = ({
                 onChange={(e) => handleServiceTimeChange(e.target.value)}
                 placeholder="Enter service time"
                 fullWidth
+                required={true}
               />
             </Grid>
           </Grid>
@@ -211,6 +213,7 @@ const InputParameters: React.FC<InputParametersProps> = ({
                 onChange={(e) => handleArrivalRateChange(e.target.value)}
                 placeholder="Enter arrival rate"
                 fullWidth
+                required={true}
               />
             </Grid>
 
@@ -222,6 +225,7 @@ const InputParameters: React.FC<InputParametersProps> = ({
                 onChange={(e) => handleArrivalTimeChange(e.target.value)}
                 placeholder="Enter arrival time"
                 fullWidth
+                required={true}
               />
             </Grid>
           </Grid>

@@ -1,6 +1,6 @@
 "use client";
 
-import { JSX, useEffect, useState } from "react";
+import React, {JSX, useEffect, useState } from "react";
 import { evaluate } from "mathjs"; // Import evaluate from mathjs
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
@@ -14,7 +14,7 @@ import Dd1kSystemParameters from "./Dd1kSystemParameters";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 import { isValidPositiveValue } from "@/lib/math";
 
-export default function Dd1kCalculator() {
+const  Dd1kCalculator: React.FC = () => {
   // dd1k
   const [capacity, setCapacity] = useState<number | undefined>(
     () => localStorage.getItem("capacity") as unknown as number
@@ -244,8 +244,6 @@ export default function Dd1kCalculator() {
                       onChange={(e) => {
                         handleInitialCustomersChange(e.target.value);
                       }}
-                      size="small"
-                      error={isNaN(initialCustomers)}
                     />
                   </Grid>
                 </Grid>
@@ -294,3 +292,6 @@ export default function Dd1kCalculator() {
     </Container>
   );
 }
+
+
+export default Dd1kCalculator;

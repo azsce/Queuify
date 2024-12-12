@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import ProcessTypeSelector from "@/components/input/ProcessTypeSelector";
 import {
   Card,
@@ -14,7 +14,7 @@ import { Process } from "@/types/queue";
 import Dd1kCalculator from "./dd1k/Dd1kCalculator";
 import MMCalculator from "./mm/MMCalculator";
 
-export default function QueuingTheoryCalculator() {
+const QueuingTheoryCalculator: React.FC = () => {
   const [processType, setProcessType] = useState<Process>("D/D/1/K-1");
 
   return (
@@ -91,4 +91,6 @@ export default function QueuingTheoryCalculator() {
       </Card>
     </Container>
   );
-}
+};
+
+export default QueuingTheoryCalculator;

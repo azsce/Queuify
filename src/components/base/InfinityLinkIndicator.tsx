@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Box } from "@mui/material";
 import { Link as LinkIcon } from "lucide-react";
 
-const InfinityLinkIndicator = () => {
+const InfinityLinkIndicator: React.FC = () => {
   const [containerHeight, setContainerHeight] = React.useState(0);
   const containerRef = React.useRef<HTMLDivElement>(null);
 

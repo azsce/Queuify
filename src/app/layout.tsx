@@ -5,7 +5,6 @@ import { Box } from "@mui/material";
 import TopAppBar from "@/components/base/TopAppBar";
 import { ThemeProvider } from "@/components/base/theme-provider";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
-import Loading from "@/components/base/Loading";
 import MuiThemeProvider from "@/components/base/MuiThemeProvider";
 
 const geistSans = localFont({
@@ -38,10 +37,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        suppressHydrationWarning
       >
         <ThemeProvider
           attribute="class"
@@ -58,10 +56,8 @@ export default function RootLayout({
                   flexDirection: "column",
                 }}
               >
-                <Loading>
-                  <TopAppBar />
-                  {children}
-                </Loading>
+                <TopAppBar />
+                {children}
               </Box>
             </MuiThemeProvider>
           </AppRouterCacheProvider>
