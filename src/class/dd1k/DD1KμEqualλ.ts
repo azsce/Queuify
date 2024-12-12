@@ -41,7 +41,7 @@ class DD1KμEqualλ extends DD1K {
   }
 
   waitingTimeForNthCustomer(n: number) {
-    return (this.initialCustomers - 1) / (1 * this.serviceRate);
+    return (this.initialCustomers - 1) * this.serviceTime;
   }
 
   graphMaxTime(): number {

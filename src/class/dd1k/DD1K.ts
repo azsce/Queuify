@@ -270,10 +270,15 @@ abstract class DD1K {
     waitingTime: number;
   }> {
     const data = [];
-    const maxCustomers = Math.max(
-      Math.ceil(this.arrivalRate * this.t_i * 2),
-      10
-    );
+    let maxCustomers = 10;
+    if(this.t_i){
+       maxCustomers = Math.max(
+        Math.ceil(this.arrivalRate * this.t_i * 2),
+        10
+      );
+    }
+
+    console.log("maxCustomers", maxCustomers);
 
     for (let n = 0; n <= maxCustomers; n++) {
       const waitingTime = this.waitingTimeForNthCustomer(n);
@@ -282,6 +287,8 @@ abstract class DD1K {
         waitingTime: waitingTime,
       });
     }
+
+    console.log("queue type", this.type, "generateCustomerGraphData", data);
     return data;
   }
 }

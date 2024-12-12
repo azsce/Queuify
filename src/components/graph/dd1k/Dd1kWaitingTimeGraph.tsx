@@ -91,7 +91,7 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                 xAxisId="bottom"
                 orientation="bottom"
                 label={{
-                  value: "nth Customer",
+                  value: "Customer (n)",
                   position: "insideBottom",
                   offset: -10,
                   dy: -8,
