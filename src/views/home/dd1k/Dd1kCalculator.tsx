@@ -263,9 +263,16 @@ const Dd1kCalculator: React.FC = () => {
         )}
         <Grid size={12} container spacing={0} alignItems="start">
           {/* Empty Column */}
-          <Grid size={1} />
-          <Grid size={11} justifyContent={"start"}>
-            <Button variant="contained" onClick={handleCalculate} fullWidth>
+          <Grid size={{ xs: 1, sm: 0.5 }} />
+          <Grid size={{ xs: 11, sm: 11.5 }} justifyContent={"start"}>
+            <Button
+              variant="outlined"
+              sx={{
+                fontWeight: "700",
+              }}
+              onClick={handleCalculate}
+              fullWidth
+            >
               Analyze
             </Button>
           </Grid>

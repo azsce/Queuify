@@ -26,6 +26,7 @@ const MmSystemParameters: React.FC<SystemParametersProps> = ({
           <NoNumberArrowsTextField
             id="mm-servers"
             label="Servers: (S)"
+            placeholder="S"
             value={servers}
             onChange={(e) => setServers(e.target.value)}
             autoComplete="mm-servers"

@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid2";
-import InfinityLinkIndicator from "../base/InfinityLinkIndicator";
+import VerticalInfinityLinkIndicator from "../base/VerticalInfinityLinkIndicator";
 import { Box } from "@mui/material";
 import { evaluate, fraction, format } from "mathjs"; // Import mathjs
 import { isValidPositiveNumber } from "@/lib/math";
@@ -141,7 +141,7 @@ const InputParameters: React.FC<InputParametersProps> = ({
               justifyContent: "center",
             }}
           >
-            <InfinityLinkIndicator />
+            <VerticalInfinityLinkIndicator />
           </Box>
         </Grid>
         {/* Service Rate-Time Input Fields */}
@@ -153,7 +153,7 @@ const InputParameters: React.FC<InputParametersProps> = ({
                 label="Service Rate (μ)"
                 value={serviceRate ?? ""}
                 onChange={(e) => handleServiceRateChange(e.target.value)}
-                placeholder="Enter service rate"
+                placeholder="μ"
                 fullWidth
                 required={true}
               />
@@ -165,7 +165,7 @@ const InputParameters: React.FC<InputParametersProps> = ({
                 label="Service Time (1/μ)"
                 value={serviceTime ?? ""}
                 onChange={(e) => handleServiceTimeChange(e.target.value)}
-                placeholder="Enter service time"
+                placeholder="1/μ"
                 fullWidth
                 required={true}
               />
@@ -197,7 +197,7 @@ const InputParameters: React.FC<InputParametersProps> = ({
               justifyContent: "center",
             }}
           >
-            <InfinityLinkIndicator />
+            <VerticalInfinityLinkIndicator />
           </Box>
         </Grid>
 
@@ -210,7 +210,7 @@ const InputParameters: React.FC<InputParametersProps> = ({
                 label="Arrival Rate (λ)"
                 value={arrivalRate || ""}
                 onChange={(e) => handleArrivalRateChange(e.target.value)}
-                placeholder="Enter arrival rate"
+                placeholder="λ"
                 fullWidth
                 required={true}
               />
@@ -222,7 +222,7 @@ const InputParameters: React.FC<InputParametersProps> = ({
                 label="Arrival Time (1/λ)"
                 value={arrivalTime || ""}
                 onChange={(e) => handleArrivalTimeChange(e.target.value)}
-                placeholder="Enter arrival time"
+                placeholder="1/λ"
                 fullWidth
                 required={true}
               />

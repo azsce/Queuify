@@ -114,16 +114,16 @@ export default function QueuingTheoryCalculator() {
 
   const handleCalculate = () => {
     let evaluatedServers;
-      try {
-        evaluatedServers = evaluate(servers + "");
-        if (!isValidPositiveInteger(evaluatedServers)) {
-          setError("'S' must be +Integer");
-          return;
-        }
-      } catch {
-        setError("'S'must be +Integer");
+    try {
+      evaluatedServers = evaluate(servers + "");
+      if (!isValidPositiveInteger(evaluatedServers)) {
+        setError("'S' must be +Integer");
         return;
       }
+    } catch {
+      setError("'S'must be +Integer");
+      return;
+    }
 
     let evaluatedCapacity;
     if (capacity) {
@@ -194,7 +194,13 @@ export default function QueuingTheoryCalculator() {
         evaluatedServers,
         evaluatedCapacity
       );
-      setResults(<MMResults characteristics={characteristics} />);
+      if (characteristics.validSystem) {
+        setResults(<MMResults characteristics={characteristics} />);
+      } else {
+        setError(
+          "The system is unstable. Please check the arrival and service rates."
+        );
+      }
     } catch (e) {
       setError(e.message);
     }
@@ -245,11 +251,18 @@ export default function QueuingTheoryCalculator() {
           arrivalTime={arrivalTime}
           serviceTime={serviceTime}
         />
-        <Grid size={12} container spacing={0} alignItems="start">
+        <Grid size={12} container spacing={0} alignItems="center">
           {/* Empty Column */}
-          <Grid size={1} />
-          <Grid size={11} justifyContent={"start"}>
-            <Button variant="contained" onClick={handleCalculate} fullWidth>
+          <Grid size={{ xs: 1, sm: 0.5 }} />
+          <Grid size={{ xs: 11, sm: 11.5 }} justifyContent={"start"}>
+            <Button
+              variant="outlined"
+              sx={{
+                fontWeight: "700",
+              }}
+              onClick={handleCalculate}
+              fullWidth
+            >
               Analyze
             </Button>
           </Grid>

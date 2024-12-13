@@ -1,12 +1,14 @@
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import { useState, Dispatch, SetStateAction, useEffect } from "react";
 import Grid from "@mui/material/Grid2";
-import InfinityLinkIndicator from "@/components/base/InfinityLinkIndicator";
+import VerticalInfinityLinkIndicator from "@/components/base/VerticalInfinityLinkIndicator";
 import { evaluate } from "mathjs"; // Import evaluate from mathjs
 import { isValidNaturalNumber, isValidPositiveInteger } from "@/lib/math";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 import { dd1kCapacityKey } from "./Dd1kCalculator";
 import { getFromLocalStorage } from "@/utils/localstorage";
+import HorizontalInfinityLinkIndicator from "@/components/base/HorizontalInfinityLinkIndicator";
+import { LinkIcon } from "lucide-react";
 
 type Dd1kSystemParametersProps = {
   setCapacity: Dispatch<SetStateAction<string>>;
@@ -62,6 +64,8 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
     }
   };
 
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   return (
     <Grid
       size={{ xs: 12, sm: 6 }}
@@ -69,39 +73,35 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
       spacing={0}
       alignItems="center"
       width={{ xs: "100%", sm: "100%" }}
-      sx={{ paddingRight: { xs: 0, sm: 1 } }}
+      sx={{ paddingRight: { xs: 0, sm: 0 } }}
     >
       {/* Infinite Link Indicator */}
-      <Grid
-        size={1}
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Box
-          sx={{
-            position: "relative",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            height: "100%",
-            justifyContent: "center",
-          }}
-        >
-          <InfinityLinkIndicator />
-        </Box>
+      <Grid size={{ xs: 1, sm: 0.5 }}>
+        {isMobile && (
+          <Box
+            sx={{
+              position: "relative",
+              display: { xs: "flex", sm: "none" },
+              flexDirection: "column",
+              alignItems: "center",
+              height: "100%",
+              justifyContent: "center",
+            }}
+          >
+            <VerticalInfinityLinkIndicator />
+          </Box>
+        )}
       </Grid>
 
       {/* System Capacity Inputs */}
-      <Grid size={11}>
-        <Grid container spacing={2}>
+      <Grid size={{ xs: 11, sm: 11.5 }}>
+        <Grid container spacing={1}>
           {/* Buffer (K-1) */}
-          <Grid size={{ xs: 12 }}>
+          <Grid size={{ xs: 12, sm: 5.65 }}>
             <NoNumberArrowsTextField
               id="buffer"
               label="Buffer (K-1)"
+              placeholder="K-1"
               value={buffer}
               onChange={onBufferChange}
               autoComplete="dd1k-buffer"
@@ -109,11 +109,26 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
               fullWidth
             />
           </Grid>
+          {/* Empty space */}
+          <Grid size={{ xs: 0, sm: 0.7 }}>
+            <Box
+              sx={{
+                display: { xs: "none", sm: "inline-flex" },
+                width: "100%",
+                height: "100%",
+                alignContent: "center",
+                justifyContent: "center",
+              }}
+            >
+              <HorizontalInfinityLinkIndicator />
+            </Box>
+          </Grid>
           {/* Capacity (K) */}
-          <Grid size={{ xs: 12 }}>
+          <Grid size={{ xs: 12, sm: 5.65 }}>
             <NoNumberArrowsTextField
               id="capacity"
               label="Capacity (K)"
+              placeholder="K-1"
               value={capacity}
               onChange={onCapacityChange}
               autoComplete="dd1k-capacity"

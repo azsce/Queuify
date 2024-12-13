@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import ProcessTypeSelector from "@/components/input/ProcessTypeSelector";
 import { Box, Container, Typography } from "@mui/material";
 import Dd1kCalculator from "./dd1k/Dd1kCalculator";
@@ -10,16 +11,42 @@ import { Process } from "@/types/queue";
 const QueuingTheoryCalculator: React.FC = () => {
   const [processType, setProcessType] = useState<Process>(() => {
     const storedValue = localStorage.getItem("processType") as Process;
-    return storedValue ? storedValue : ("M/M/X/Y" as Process); // Default value if nothing is in localStorage
+    return storedValue ? storedValue : ("M/M/X/Y" as Process);
   });
 
   useEffect(() => {
     localStorage.setItem("processType", processType);
   }, [processType]);
 
+  // Transition variants for the calculator
+  const calculatorVariants = {
+    initial: { 
+      opacity: 0, 
+      scale: 0.95,
+      y: 20 
+    },
+    animate: { 
+      opacity: 1, 
+      scale: 1,
+      y: 0,
+      transition: { 
+        duration: 0.3,
+        ease: "easeInOut"
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      scale: 0.95,
+      y: 20,
+      transition: { 
+        duration: 0.2,
+        ease: "easeInOut"
+      }
+    }
+  };
+
   return (
     <Container
-      // maxWidth="lg"
       sx={(theme) => ({
         py: 4,
         maxWidth: "100%",
@@ -67,7 +94,17 @@ const QueuingTheoryCalculator: React.FC = () => {
           processType={processType}
           setProcessType={setProcessType}
         />
-        {processType === "D/D/1/K-1" ? <Dd1kCalculator /> : <MMCalculator />}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={processType}
+            variants={calculatorVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            {processType === "D/D/1/K-1" ? <Dd1kCalculator /> : <MMCalculator />}
+          </motion.div>
+        </AnimatePresence>
       </Box>
     </Container>
   );
