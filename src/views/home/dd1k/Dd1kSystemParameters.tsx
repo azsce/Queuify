@@ -66,8 +66,9 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
     <Grid
       size={{ xs: 12, sm: 6 }}
       container
+      spacing={0}
       alignItems="center"
-      width={{ xs: "100%", sm: "50%" }}
+      width={{ xs: "100%", sm: "100%" }}
       sx={{ paddingRight: { xs: 0, sm: 1 } }}
     >
       {/* Infinite Link Indicator */}
@@ -93,10 +94,10 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
         </Box>
       </Grid>
 
-      {/* System Capacity  - 1 and System Capacity */}
+      {/* System Capacity Inputs */}
       <Grid size={11}>
         <Grid container spacing={2}>
-          {/* System Capacity - 1 */}
+          {/* Buffer (K-1) */}
           <Grid size={{ xs: 12 }}>
             <NoNumberArrowsTextField
               id="buffer"
@@ -108,7 +109,7 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
               fullWidth
             />
           </Grid>
-          {/* System Capacity */}
+          {/* Capacity (K) */}
           <Grid size={{ xs: 12 }}>
             <NoNumberArrowsTextField
               id="capacity"
