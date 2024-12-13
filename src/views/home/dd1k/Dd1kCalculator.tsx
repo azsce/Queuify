@@ -5,7 +5,7 @@ import { evaluate } from "mathjs";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import InputParameters from "@/components/input/InputParameters";
-import DD1KResults from "@/components/output/DD1K/DD1KResults";
+import DD1KResults from "@/components/results/DD1K/DD1KResults";
 import { Box, Container } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import dd1kFactoryMethod from "@/class/dd1k/dd1kFactoryMethod";

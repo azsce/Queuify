@@ -36,12 +36,16 @@ class Dd1kLambdaEqualNew extends Dd1k {
     this.customerGraphData = this.generateCustomerGraphData();
   }
 
-  computeNOfT(initialCustomers) {
-    return initialCustomers;
+  computeNOfT(t: number) {
+    if (t < 0 || isNaN(t)) {
+      return undefined;
+    }
+    return this.initialCustomers;
   }
 
   waitingTimeForNthCustomer(n: number) {
-    return (this.initialCustomers - 1) * this.serviceTime;
+    if (n <= 0 || isNaN(n) || !Number.isInteger(n)) return undefined;
+    if (n >= 1) return (this.initialCustomers - 1) * this.serviceTime;
   }
 
   graphMaxTime(): number {

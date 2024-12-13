@@ -108,6 +108,12 @@ const Dd1kNewExceedLambdaResults: React.FC<
           </div>
           <div className="space-y-4">
             <div className="flex items-center gap-2">
+              <strong>Initial Customers: :</strong>
+              <MathJax inline>{`\\(M = ${initialCustomers}\\)`}</MathJax>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
               <strong>Transient time:</strong>
               <MathJax inline>{`\\(t_i = ${t_i}\\)`}</MathJax>
             </div>

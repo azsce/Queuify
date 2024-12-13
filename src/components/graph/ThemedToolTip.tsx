@@ -3,6 +3,10 @@ import React from "react"
 import { TooltipProps } from 'recharts';
 import { ValueType, NameType } from 'recharts/types/component/DefaultTooltipContent';
 
+import {
+  roundTo4Decimals,
+} from "@/lib/math";
+
 type ThemedToolTipProps = TooltipProps<ValueType, NameType> & {
     labelKey: string
 }
@@ -14,6 +18,7 @@ const ThemedToolTip: React.FC<ThemedToolTipProps> = ({
     labelKey,
   }) => {
     const theme = useTheme();
+    
   
     if (active && payload && payload.length) {
       return (
@@ -51,7 +56,7 @@ const ThemedToolTip: React.FC<ThemedToolTipProps> = ({
                   mr: 1 
                 }} 
               />
-              {entry.name}: {entry.value}
+              {entry.name}: {roundTo4Decimals(entry.value)}
             </Typography>
           ))}
         </Box>

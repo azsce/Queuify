@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import { mm } from "@/lib/mm";
 import InputParameters from "@/components/input/InputParameters";
-import MMResults from "@/components/output/MMResults";
+import MMResults from "@/components/results/MMResults";
 import { Box, Container } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { MMCharacteristics } from "@/types/mm";

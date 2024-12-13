@@ -100,7 +100,7 @@ class Dd1kNewExceedLambda extends Dd1k {
    *
    */
   waitingTimeForNthCustomer(n: number): number {
-    if (n <= 0 || isNaN(n)) return undefined;
+    if (n <= 0 || isNaN(n) || !Number.isInteger(n)) return undefined;
     if (n < this.lambdaTiFloored) {
       return (
         (this.initialCustomers - 1 + n) * this.serviceTime -
