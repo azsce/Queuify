@@ -14,22 +14,6 @@ export function mm(
     capacity
   );
 
-  if (rho >= 1 && (!capacity || capacity > servers)) {
-    return {
-      validSystem: false,
-      servers: servers,
-      capacity: capacity,
-      serviceRate: serviceRate,
-      arrivalRate: arrivalRate,
-      rho: rho,
-      P0: P0,
-      L: L,
-      Lq: Lq,
-      W: W,
-      Wq: Wq,
-    };
-  }
-
   return {
     validSystem: true,
     servers: servers,

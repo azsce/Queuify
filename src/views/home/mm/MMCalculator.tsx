@@ -196,13 +196,7 @@ export default function QueuingTheoryCalculator() {
         evaluatedServers,
         evaluatedCapacity
       );
-      if (characteristics.validSystem) {
-        setResults(<MMResults characteristics={characteristics} />);
-      } else {
-        setError(
-          "The system is unstable. Please check the arrival and service rates."
-        );
-      }
+      setResults(<MMResults characteristics={characteristics} />);
     } catch (e) {
       setError(e.message);
     }

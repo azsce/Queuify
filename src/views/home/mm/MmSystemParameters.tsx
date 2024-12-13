@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import Grid from "@mui/material/Grid2";
 import InputWithInfinity from "@/components/base/InputWithInfinity";
+import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 
 type SystemParametersProps = {
   setServers: Dispatch<SetStateAction<string>>;
@@ -22,15 +23,14 @@ const MmSystemParameters: React.FC<SystemParametersProps> = ({
         <Grid size={1} />
         {/* Number of Servers */}
         <Grid size={11}>
-          <InputWithInfinity
+          <NoNumberArrowsTextField
             id="mm-servers"
-            label="Servers: (C)"
+            label="Servers: (S)"
             value={servers}
-            onChange={(v) => setServers(v)}
-            showInfinity={true}
-            onInfinityClick={() => setServers("")}
+            onChange={(e) => setServers(e.target.value)}
             autoComplete="mm-servers"
             required={false}
+            fullWidth
           />
         </Grid>
       </Grid>

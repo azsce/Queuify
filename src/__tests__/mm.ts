@@ -65,14 +65,14 @@ const mm_tests = [
     expectedWq: 4 / 27,
   },
   {
-    serviceRate: 3,
-    arrivalRate: 6,
+    serviceRate: 1/6,
+    arrivalRate: 1,
     servers: 3,
-    capacity: undefined,
-    expectedL: 26 / 9,
-    expectedLq: 8 / 9,
-    expectedW: 13 / 27,
-    expectedWq: 4 / 27,
+    capacity: 7,
+    expectedL: 6.063103,
+    expectedLq: 504/163,
+    expectedW: 12.244248,
+    expectedWq: 6.244248,
   },
 ];
 
