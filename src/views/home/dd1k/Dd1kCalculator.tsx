@@ -146,11 +146,11 @@ const Dd1kCalculator: React.FC = () => {
     try {
       evaluatedServiceRate = evaluate(serviceRate + "");
       if (!isValidPositiveNumber(evaluatedServiceRate)) {
-        setError("'μ': must be +Integer");
+        setError("'μ': must be +Number");
         return;
       }
     } catch {
-      setError("'μ': must be +Integer");
+      setError("'μ': must be +Number");
       return;
     }
 
@@ -158,11 +158,11 @@ const Dd1kCalculator: React.FC = () => {
     try {
       evaluatedArrivalRate = evaluate(arrivalRate + "");
       if (!isValidPositiveNumber(evaluatedArrivalRate)) {
-        setError("'λ': must be +Integer");
+        setError("'λ': must be +Number");
         return;
       }
     } catch {
-      setError("'λ': must be +Integer");
+      setError("'λ': must be +Number");
       return;
     }
 

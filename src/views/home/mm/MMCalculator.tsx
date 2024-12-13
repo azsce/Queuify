@@ -114,18 +114,16 @@ export default function QueuingTheoryCalculator() {
 
   const handleCalculate = () => {
     let evaluatedServers;
-    if (servers) {
       try {
         evaluatedServers = evaluate(servers + "");
         if (!isValidPositiveInteger(evaluatedServers)) {
-          setError("'S' not valid");
+          setError("'S' must be +Integer");
           return;
         }
       } catch {
-        setError("'S' not valid");
+        setError("'S'must be +Integer");
         return;
       }
-    }
 
     let evaluatedCapacity;
     if (capacity) {
@@ -145,11 +143,11 @@ export default function QueuingTheoryCalculator() {
     try {
       evaluatedServiceRate = evaluate(serviceRate + "");
       if (!isValidPositiveNumber(evaluatedServiceRate)) {
-        setError("'μ': must be +Integer");
+        setError("'μ': must be +Number");
         return;
       }
     } catch {
-      setError("'μ': must be +Integer");
+      setError("'μ': must be +Number");
       return;
     }
 
@@ -157,11 +155,11 @@ export default function QueuingTheoryCalculator() {
     try {
       evaluatedArrivalRate = evaluate(arrivalRate + "");
       if (!isValidPositiveNumber(evaluatedArrivalRate)) {
-        setError("'λ': must be +Integer");
+        setError("'λ': must be +Number");
         return;
       }
     } catch {
-      setError("'λ': must be +Integer");
+      setError("'λ': must be +Number");
       return;
     }
 
