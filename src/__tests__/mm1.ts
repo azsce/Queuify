@@ -6,7 +6,7 @@ describe("mm function", () => {
     const serviceRate = 60;
     const arrivalRate = 50;
     const servers = 1;
-    const capacity = null;
+    const capacity = undefined;
 
     const expectedRho = 5 / 6;
     const expectedP0 = 1 / 6;
@@ -15,19 +15,19 @@ describe("mm function", () => {
     const expectedW = 1 / 10;
     const expectedWq = 1 / 12;
 
-    const result = mm(60, 50, 1);
+    const result = mm(serviceRate, arrivalRate, servers);
     const expected: MMCharacteristics = {
       validSystem: true,
-      servers: 1,
-      capacity: undefined,
-      serviceRate: 60,
-      arrivalRate: 50,
-      rho: 50 / 60,
-      P0: 1 - 50 / 60,
-      L: 5,
-      Lq: 5 - (1 - (1 - 50 / 60)),
-      W: 5 / 50,
-      Wq: (5 - (1 - (1 - 50 / 60))) / 50,
+      servers: servers,
+      capacity: capacity,
+      serviceRate: serviceRate,
+      arrivalRate: arrivalRate,
+      rho: expectedRho,
+      P0: expectedP0,
+      L: expectedL,
+      Lq: expectedLq,
+      W: expectedW,
+      Wq: expectedWq,
     };
 
     const precision = 6; // Define the precision for comparison
