@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import Dd1k from "@/class/dd1k/Dd1k";
+import ThemedToolTip from "../ThemedToolTip";
 
 interface NumberOfCustomersGraphProps {
   dd1k: Dd1k;
@@ -124,7 +125,7 @@ const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
               allowDecimals={false}
               domain={[0, dd1k.capacity]}
             />
-            <Tooltip />
+            <Tooltip content={<ThemedToolTip labelKey="Time" />} />
             <Line
               type="stepAfter"
               dataKey="numberOfCustomers"

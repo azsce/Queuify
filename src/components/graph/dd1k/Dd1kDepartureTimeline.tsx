@@ -152,7 +152,7 @@ const Dd1kDepartureTimeline: React.FC<DepartureTimelineProps> = ({
                 }
                 stroke={
                   entry.departured && entry.initialDepartured
-                    ? "black"
+                    ? theme.palette.text.primary
                     : entry.departured
                       ? colors[entry.departures % colors.length]
                       : "transparent"

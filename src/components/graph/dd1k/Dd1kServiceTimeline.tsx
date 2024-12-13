@@ -155,7 +155,7 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                 }
                 stroke={
                   entry.enteredService && entry.initialEnteredService
-                    ? "black"
+                    ? theme.palette.text.primary
                     : entry.enteredService
                       ? colors[entry.serviceEnterancs % colors.length]
                       : "transparent"

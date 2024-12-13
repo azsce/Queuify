@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import Dd1k from "@/class/dd1k/Dd1k";
+import ThemedToolTip from "../ThemedToolTip";
 
 interface CustomerFlowDiagramProps {
   dd1k: Dd1k;
@@ -130,7 +131,7 @@ const Dd1kCustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
               allowDecimals={false}
               stroke={theme.palette.text.primary}
             />
-            <Tooltip />
+            <Tooltip content={<ThemedToolTip labelKey="Time" />} />
             <Line
               type="monotone"
               dataKey="arrivals"

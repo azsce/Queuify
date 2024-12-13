@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import Dd1k from "@/class/dd1k/Dd1k";
+import ThemedToolTip from "../ThemedToolTip";
 
 interface WaitingTimeGraphProps {
   dd1k: Dd1k;
@@ -125,7 +126,7 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
               allowDecimals={false}
               tick={{ fontSize: 8, fill: theme.palette.text.primary }}
             />
-            <Tooltip />
+            <Tooltip content={<ThemedToolTip labelKey="Customer" />} />
             <Line
               type="stepAfter"
               dataKey="waitingTime"

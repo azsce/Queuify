@@ -1,45 +1,32 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { useState, Dispatch, SetStateAction, useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import VerticalInfinityLinkIndicator from "@/components/base/VerticalInfinityLinkIndicator";
 import { evaluate } from "mathjs"; // Import evaluate from mathjs
 import { isValidNaturalNumber, isValidPositiveInteger } from "@/lib/math";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 import HorizontalInfinityLinkIndicator from "@/components/base/HorizontalInfinityLinkIndicator";
+import { useDD1K } from "@/contexts/DD1KContext";
 
-type Dd1kSystemParametersProps = {
-  setCapacity: Dispatch<SetStateAction<string>>;
-  capacity: string;
-};
-
-const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
-  setCapacity,
-  capacity,
-}) => {
-  const [buffer, setBuffer] = useState<string>("");
-
-  useEffect(() => {
-    console.log("capacity", capacity)
-    if (capacity === "") {
-      setBuffer("");
-      return;
-    }
-    try {
-      const evaluatedCapacity = evaluate(capacity);
-      console.log("evaluatedCapacity", evaluatedCapacity)
-      if (isValidPositiveInteger(evaluatedCapacity)) {
-        console.log("isValidPositiveInteger(evaluatedCapacity)", isValidPositiveInteger(evaluatedCapacity))
-        setBuffer((evaluatedCapacity - 1 ).toString());
-      }
-    } catch {
-      return;
-    }
-  }, [capacity]);
+const Dd1kSystemParameters: React.FC = () => {
+  const { capacity, setCapacity, buffer, setBuffer } = useDD1K();
 
   const onCapacityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setCapacity(value);
-    
+
+    if (value === "") {
+      setBuffer("");
+      return;
+    }
+
+    try {
+      const evaluatedCapacity = evaluate(value.toString());
+      if (isValidPositiveInteger(evaluatedCapacity)) {
+        setBuffer((evaluatedCapacity - 1).toString());
+      }
+    } catch {
+      return;
+    }
   };
 
   const onBufferChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +34,7 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
     setBuffer(value);
     try {
       if (value === "") {
-        // setCapacity("");
+        setCapacity("");
         return;
       }
       const evaluatedBuffer = evaluate(value.toString());
@@ -55,7 +42,7 @@ const Dd1kSystemParameters: React.FC<Dd1kSystemParametersProps> = ({
         setCapacity((evaluatedBuffer + 1).toString());
       }
     } catch {
-      return; // Do not update state if evaluation fails
+      return;
     }
   };
 

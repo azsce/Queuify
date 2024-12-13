@@ -17,7 +17,6 @@ import { useDD1K } from "@/contexts/DD1KContext";
 const Dd1kCalculator: React.FC = () => {
   const {
     capacity,
-    setCapacity,
     arrivalRate,
     setArrivalRate,
     serviceRate,
@@ -133,7 +132,7 @@ const Dd1kCalculator: React.FC = () => {
           gap: 2,
         }}
       >
-        <Dd1kSystemParameters setCapacity={setCapacity} capacity={capacity} />
+        <Dd1kSystemParameters />
         <InputParameters
           setArrivalRate={setArrivalRate}
           setServiceRate={setServiceRate}
