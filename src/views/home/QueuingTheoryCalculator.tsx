@@ -76,7 +76,10 @@ const QueuingTheoryCalculator: React.FC = () => {
                   ? "scale(1) translateY(0)"
                   : "scale(0.9) translateY(20px)",
               pointerEvents: processType === "D/D/1/K-1" ? "auto" : "none",
-              transition: "all 0.3s ease",
+              transition:
+                "opacity 0.3s ease, transform 0.3s ease, pointer-events 0.3s ease, height 0.3s ease",
+              height: processType === "D/D/1/K-1" ? "auto" : "0", // auto when visible, 0 when hidden
+              overflow: processType === "D/D/1/K-1" ? "visible" : "hidden", // prevent content overflow when hidden
               width: "100%",
             }}
           >
@@ -91,7 +94,10 @@ const QueuingTheoryCalculator: React.FC = () => {
                   ? "scale(1) translateY(0)"
                   : "scale(0.9) translateY(20px)",
               pointerEvents: processType === "M/M/X/Y" ? "auto" : "none",
-              transition: "all 0.3s ease",
+              transition:
+                "opacity 0.3s ease, transform 0.3s ease, pointer-events 0.3s ease, height 0.3s ease",
+              height: processType === "M/M/X/Y" ? "auto" : "0", // auto when visible, 0 when hidden
+              overflow: processType === "M/M/X/Y" ? "visible" : "hidden", // prevent content overflow when hidden
               width: "100%",
             }}
           >
