@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import ProcessTypeSelector from "@/components/input/ProcessTypeSelector";
 import { Box, Container, Typography } from "@mui/material";
 import Dd1kCalculator from "./dd1k/Dd1kCalculator";
@@ -17,33 +16,6 @@ const QueuingTheoryCalculator: React.FC = () => {
   useEffect(() => {
     localStorage.setItem("processType", processType);
   }, [processType]);
-
-  // Transition variants for the calculator
-  const calculatorVariants = {
-    initial: { 
-      opacity: 0, 
-      scale: 0.95,
-      y: 20 
-    },
-    animate: { 
-      opacity: 1, 
-      scale: 1,
-      y: 0,
-      transition: { 
-        duration: 0.3,
-        ease: "easeInOut"
-      }
-    },
-    exit: { 
-      opacity: 0, 
-      scale: 0.95,
-      y: 20,
-      transition: { 
-        duration: 0.2,
-        ease: "easeInOut"
-      }
-    }
-  };
 
   return (
     <Container
@@ -94,18 +66,38 @@ const QueuingTheoryCalculator: React.FC = () => {
           processType={processType}
           setProcessType={setProcessType}
         />
-        
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={processType}
-            variants={calculatorVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
+
+        <Box>
+          <div
+            style={{
+              opacity: processType === "D/D/1/K-1" ? 1 : 0,
+              transform:
+                processType === "D/D/1/K-1"
+                  ? "scale(1) translateY(0)"
+                  : "scale(0.9) translateY(20px)",
+              pointerEvents: processType === "D/D/1/K-1" ? "auto" : "none",
+              transition: "all 0.3s ease",
+              width: "100%",
+            }}
           >
-            {processType === "D/D/1/K-1" ? <Dd1kCalculator /> : <MMCalculator />}
-          </motion.div>
-        </AnimatePresence>
+            <Dd1kCalculator />
+          </div>
+
+          <div
+            style={{
+              opacity: processType === "M/M/X/Y" ? 1 : 0,
+              transform:
+                processType === "M/M/X/Y"
+                  ? "scale(1) translateY(0)"
+                  : "scale(0.9) translateY(20px)",
+              pointerEvents: processType === "M/M/X/Y" ? "auto" : "none",
+              transition: "all 0.3s ease",
+              width: "100%",
+            }}
+          >
+            <MMCalculator />
+          </div>
+        </Box>
       </Box>
     </Container>
   );
