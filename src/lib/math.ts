@@ -27,6 +27,16 @@ export function toProperFraction(decimal: number): Fraction {
   return { numerator: h1, denominator: k1 };
 }
 
+export const formatFraction = (fraction: {
+  numerator: number;
+  denominator: number;
+}) => {
+  if (Number.isInteger(fraction.numerator / fraction.denominator)) {
+    return fraction.numerator.toString();
+  }
+  return `\\frac{${fraction.numerator}}{${fraction.denominator}}`;
+};
+
 // works with mathjs.evaluate(value)
 export const isValidNaturalNumber = (value: any): boolean => {
   return !isNaN(value) && value?.value !== null && value >= 0;

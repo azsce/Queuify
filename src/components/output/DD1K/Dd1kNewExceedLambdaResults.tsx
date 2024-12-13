@@ -3,14 +3,15 @@ import { Box, Divider, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 import Dd1k from "@/class/dd1k/Dd1k";
+import { formatFraction } from "@/lib/math";
 
 type Dd1kLambdaExceedNewlResultsProps = {
   dd1k: Dd1k;
 };
 
-const Dd1kLambdaExceedNewlResults: React.FC<Dd1kLambdaExceedNewlResultsProps> = ({
-  dd1k,
-}) => {
+const Dd1kNewExceedLambdaResults: React.FC<
+  Dd1kLambdaExceedNewlResultsProps
+> = ({ dd1k }) => {
   const {
     capacity,
     serviceRate,
@@ -54,16 +55,6 @@ const Dd1kLambdaExceedNewlResults: React.FC<Dd1kLambdaExceedNewlResultsProps> = 
     setNVar(n);
     const wqOfN = dd1k.waitingTimeForNthCustomer(n);
     setWqOfNVar(wqOfN);
-  };
-
-  const formatFraction = (fraction: {
-    numerator: number;
-    denominator: number;
-  }) => {
-    if (fraction.denominator === 1) {
-      return fraction.numerator.toString();
-    }
-    return `\\frac{${fraction.numerator}}{${fraction.denominator}}`;
   };
 
   return (
@@ -305,4 +296,4 @@ const Dd1kLambdaExceedNewlResults: React.FC<Dd1kLambdaExceedNewlResultsProps> = 
   );
 };
 
-export default Dd1kLambdaExceedNewlResults;
+export default Dd1kNewExceedLambdaResults;
