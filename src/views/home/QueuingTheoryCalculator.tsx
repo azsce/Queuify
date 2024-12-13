@@ -94,6 +94,7 @@ const QueuingTheoryCalculator: React.FC = () => {
           processType={processType}
           setProcessType={setProcessType}
         />
+        
         <AnimatePresence mode="wait">
           <motion.div
             key={processType}

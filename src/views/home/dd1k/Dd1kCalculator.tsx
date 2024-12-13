@@ -1,7 +1,7 @@
 "use client";
 
-import React, { JSX, useEffect, useState } from "react";
-import { evaluate, format, fraction } from "mathjs"; // Import evaluate from mathjs
+import React, { JSX, useState } from "react";
+import { evaluate } from "mathjs";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import InputParameters from "@/components/input/InputParameters";
@@ -12,122 +12,27 @@ import dd1kFactoryMethod from "@/class/dd1k/dd1kFactoryMethod";
 import Dd1kSystemParameters from "./Dd1kSystemParameters";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 import { isValidPositiveInteger, isValidPositiveNumber } from "@/lib/math";
-import { getFromLocalStorage } from "@/utils/localstorage";
-
-export const dd1kCapacityKey = "dd1k-capacity";
-const serviceRateKey = "dd1k-serviceRate";
-const arrivalRateKey = "dd1k-arrivalRate";
-const initialCustomersKey = "dd1k-initialCustomers";
-
-let init = true;
+import { useDD1K } from "@/contexts/DD1KContext";
 
 const Dd1kCalculator: React.FC = () => {
-  // dd1k
-  const [capacity, setCapacity] = useState<string>("");
-  const [arrivalRate, setArrivalRate] = useState<string>("");
-  const [arrivalTime, setArrivalTime] = useState("");
+  const {
+    capacity,
+    setCapacity,
+    arrivalRate,
+    setArrivalRate,
+    serviceRate,
+    setServiceRate,
+    initialCustomers,
+    setInitialCustomers,
+    arrivalTime,
+    setArrivalTime,
+    serviceTime,
+    setServiceTime,
+    isInitialCustomersRequired
+  } = useDD1K();
 
-  const [serviceRate, setServiceRate] = useState<string>("");
-  const [serviceTime, setServiceTime] = useState("");
-
-  const [initialCustomers, setInitialCustomers] = useState<string>("");
-
-  useEffect(() => {
-    if (init) {
-      init = false;
-      const savedServiceRate = getFromLocalStorage(serviceRateKey, "");
-      const evaluatedServiceRate = evaluate(savedServiceRate + "");
-      if (isValidPositiveNumber(evaluatedServiceRate)) {
-        setServiceRate(
-          Number.isInteger(evaluatedServiceRate)
-            ? evaluatedServiceRate
-            : format(fraction(evaluatedServiceRate), { fraction: "ratio" })
-        );
-        const serviceTime = 1 / evaluatedServiceRate;
-        setServiceTime(
-          Number.isInteger(serviceTime)
-            ? serviceTime.toString()
-            : format(fraction(serviceTime), { fraction: "ratio" })
-        );
-      }
-
-      const savedArrivalRate = getFromLocalStorage(arrivalRateKey, "");
-      const evaluatedArrivalRate = evaluate(savedArrivalRate + "");
-      if (isValidPositiveNumber(evaluatedArrivalRate)) {
-        setArrivalRate(
-          Number.isInteger(evaluatedArrivalRate)
-            ? evaluatedArrivalRate
-            : format(fraction(evaluatedArrivalRate), { fraction: "ratio" })
-        );
-        const arrivalTime = 1 / evaluatedArrivalRate;
-        setArrivalTime(
-          Number.isInteger(arrivalTime)
-            ? arrivalTime.toString()
-            : format(fraction(arrivalTime), { fraction: "ratio" })
-        );
-      }
-
-      if (evaluatedArrivalRate <= evaluatedServiceRate) {
-        console.log("isInitialCutsomersRequired", true);
-        setIsInitialCutsomersRequired(true);
-      } else {
-        setIsInitialCutsomersRequired(false);
-      }
-
-      const savedInitialCustomers = getFromLocalStorage(
-        initialCustomersKey,
-        null
-      );
-      const evaluateInitialCustomers = evaluate(savedInitialCustomers + "");
-      if (isValidPositiveInteger(evaluateInitialCustomers)) {
-        setInitialCustomers(evaluateInitialCustomers);
-      }
-    }
-  }, []);
-
-  const [isInitialCutsomersRequired, setIsInitialCutsomersRequired] =
-    useState(false);
-
-  // mmxy
   const [error, setError] = useState("");
   const [results, setResults] = useState<JSX.Element | null>(null);
-
-  useEffect(() => {
-    if (arrivalRate === "" || serviceRate === "") {
-      setIsInitialCutsomersRequired(false);
-    } else {
-      try {
-        const evaluatedArrivalRate = evaluate(arrivalRate + "");
-        const evaluatedServiceRate = evaluate(serviceRate + "");
-        if (evaluatedArrivalRate <= evaluatedServiceRate) {
-          setIsInitialCutsomersRequired(true);
-          console.log("isInitialCutsomersRequired", true);
-        } else {
-          setIsInitialCutsomersRequired(false);
-          console.log("isInitialCutsomersRequired", false);
-        }
-      } catch {
-        setIsInitialCutsomersRequired(false);
-        console.log("isInitialCutsomersRequired", false);
-      }
-    }
-  }, [arrivalRate, serviceRate]);
-
-  useEffect(() => {
-    localStorage.setItem(dd1kCapacityKey, capacity);
-  }, [capacity]);
-
-  useEffect(() => {
-    localStorage.setItem(arrivalRateKey, arrivalRate);
-  }, [arrivalRate]);
-
-  useEffect(() => {
-    localStorage.setItem(serviceRateKey, serviceRate);
-  }, [serviceRate]);
-
-  useEffect(() => {
-    localStorage.setItem(initialCustomersKey, initialCustomers);
-  }, [initialCustomers]);
 
   const handleCalculate = () => {
     let evaluatedCapacity;
@@ -168,7 +73,7 @@ const Dd1kCalculator: React.FC = () => {
 
     let evaluateInitialCustomers;
 
-    if (isInitialCutsomersRequired) {
+    if (isInitialCustomersRequired) {
       try {
         evaluateInitialCustomers = evaluate(initialCustomers + "");
         if (!isValidPositiveInteger(evaluateInitialCustomers)) {
@@ -186,7 +91,7 @@ const Dd1kCalculator: React.FC = () => {
     setError("");
     setResults(null);
 
-    const M = isInitialCutsomersRequired ? evaluateInitialCustomers : undefined;
+    const M = isInitialCustomersRequired ? evaluateInitialCustomers : undefined;
     try {
       const dd1k = dd1kFactoryMethod(
         evaluatedArrivalRate,
@@ -202,7 +107,6 @@ const Dd1kCalculator: React.FC = () => {
 
   return (
     <Container
-      // maxWidth="lg"
       sx={(theme) => ({
         py: 4,
         maxWidth: "100%",
@@ -240,10 +144,9 @@ const Dd1kCalculator: React.FC = () => {
           arrivalTime={arrivalTime}
           serviceTime={serviceTime}
         />
-        {isInitialCutsomersRequired && (
+        {isInitialCustomersRequired && (
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, sm: 6 }} container>
-              {/* Empty Column */}
               <Grid size={1} />
               <Grid size={11}>
                 <NoNumberArrowsTextField
@@ -251,7 +154,7 @@ const Dd1kCalculator: React.FC = () => {
                   placeholder={"Initial Customers: M"}
                   label="Initial Customers: M"
                   fullWidth
-                  required={isInitialCutsomersRequired}
+                  required={isInitialCustomersRequired}
                   autoComplete={"dd1k-initial-customers"}
                   onChange={(e) => {
                     setInitialCustomers(e.target.value);
@@ -262,7 +165,6 @@ const Dd1kCalculator: React.FC = () => {
           </Grid>
         )}
         <Grid size={12} container spacing={0} alignItems="start">
-          {/* Empty Column */}
           <Grid size={{ xs: 1, sm: 0.5 }} />
           <Grid size={{ xs: 11, sm: 11.5 }} justifyContent={"start"}>
             <Button

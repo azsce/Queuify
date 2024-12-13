@@ -6,6 +6,8 @@ import TopAppBar from "@/components/base/TopAppBar";
 import { ThemeProvider } from "@/components/base/theme-provider";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import MuiThemeProvider from "@/components/base/MuiThemeProvider";
+import { DD1KProvider } from "@/contexts/DD1KContext";
+import { MMProvider } from "@/contexts/MMContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -57,7 +59,9 @@ export default function RootLayout({
                 }}
               >
                 <TopAppBar />
-                {children}
+                <MMProvider>
+                  <DD1KProvider>{children}</DD1KProvider>
+                </MMProvider>
               </Box>
             </MuiThemeProvider>
           </AppRouterCacheProvider>

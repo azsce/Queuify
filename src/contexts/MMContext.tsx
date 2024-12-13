@@ -1,4 +1,6 @@
-// contexts/DD1KContext.tsx
+'use client';
+
+// contexts/MMContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { evaluate, format, fraction } from 'mathjs';
 import { 
@@ -11,48 +13,64 @@ import {
 } from '@/utils/localstorage';
 
 // Keys for localStorage
-export const DD1K_STORAGE_KEYS = {
-  CAPACITY: 'dd1k-capacity',
-  SERVICE_RATE: 'dd1k-serviceRate',
-  ARRIVAL_RATE: 'dd1k-arrivalRate',
-  INITIAL_CUSTOMERS: 'dd1k-initialCustomers'
+export const MM_STORAGE_KEYS = {
+  SERVERS: 'mm-servers',
+  CAPACITY: 'mm-capacity',
+  SERVICE_RATE: 'mm-serviceRate',
+  ARRIVAL_RATE: 'mm-arrivalRate',
+  SIMULATIONS: 'mm-simulations'
 };
 
-// Interface for DD1K Context State
-interface DD1KContextType {
+// Interface for MM Context State
+interface MMContextType {
+  servers: string;
+  setServers: (value: string) => void;
   capacity: string;
   setCapacity: (value: string) => void;
   arrivalRate: string;
   setArrivalRate: (value: string) => void;
   serviceRate: string;
   setServiceRate: (value: string) => void;
-  initialCustomers: string;
-  setInitialCustomers: (value: string) => void;
   arrivalTime: string;
   setArrivalTime: (value: string) => void;
   serviceTime: string;
   setServiceTime: (value: string) => void;
-  isInitialCustomersRequired: boolean;
+  simulations: string;
+  setSimulations: (value: string) => void;
 }
 
 // Create Context
-const DD1KContext = createContext<DD1KContextType | undefined>(undefined);
+const MMContext = createContext<MMContextType | undefined>(undefined);
 
 // Provider Component
-export const DD1KProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const MMProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [servers, setServers] = useState<string>("");
   const [capacity, setCapacity] = useState<string>("");
   const [arrivalRate, setArrivalRate] = useState<string>("");
   const [serviceRate, setServiceRate] = useState<string>("");
-  const [initialCustomers, setInitialCustomers] = useState<string>("");
   const [arrivalTime, setArrivalTime] = useState<string>("");
   const [serviceTime, setServiceTime] = useState<string>("");
-  const [isInitialCustomersRequired, setIsInitialCustomersRequired] = useState(false);
+  const [simulations, setSimulations] = useState<string>("");
 
   // Load from localStorage on initial mount
   useEffect(() => {
     const loadStoredValues = () => {
+      // Servers
+      const savedServers = getFromLocalStorage(MM_STORAGE_KEYS.SERVERS, "");
+      const evaluatedServers = evaluate(savedServers + "");
+      if (isValidPositiveInteger(evaluatedServers)) {
+        setServers(evaluatedServers);
+      }
+
+      // Capacity
+      const savedCapacity = getFromLocalStorage(MM_STORAGE_KEYS.CAPACITY, "");
+      const evaluatedCapacity = evaluate(savedCapacity);
+      if (isValidPositiveInteger(evaluatedCapacity)) {
+        setCapacity(evaluatedCapacity);
+      }
+
       // Service Rate
-      const savedServiceRate = getFromLocalStorage(DD1K_STORAGE_KEYS.SERVICE_RATE, "");
+      const savedServiceRate = getFromLocalStorage(MM_STORAGE_KEYS.SERVICE_RATE, "");
       const evaluatedServiceRate = evaluate(savedServiceRate + "");
       if (isValidPositiveNumber(evaluatedServiceRate)) {
         const formattedServiceRate = Number.isInteger(evaluatedServiceRate)
@@ -70,7 +88,7 @@ export const DD1KProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
 
       // Arrival Rate
-      const savedArrivalRate = getFromLocalStorage(DD1K_STORAGE_KEYS.ARRIVAL_RATE, "");
+      const savedArrivalRate = getFromLocalStorage(MM_STORAGE_KEYS.ARRIVAL_RATE, "");
       const evaluatedArrivalRate = evaluate(savedArrivalRate + "");
       if (isValidPositiveNumber(evaluatedArrivalRate)) {
         const formattedArrivalRate = Number.isInteger(evaluatedArrivalRate)
@@ -87,20 +105,11 @@ export const DD1KProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         );
       }
 
-      // Capacity
-      const savedCapacity = getFromLocalStorage(DD1K_STORAGE_KEYS.CAPACITY, "");
-      setCapacity(savedCapacity);
-
-      // Initial Customers
-      const savedInitialCustomers = getFromLocalStorage(DD1K_STORAGE_KEYS.INITIAL_CUSTOMERS, "");
-      const evaluatedInitialCustomers = evaluate(savedInitialCustomers + "");
-      if (isValidPositiveInteger(evaluatedInitialCustomers)) {
-        setInitialCustomers(evaluatedInitialCustomers);
-      }
-
-      // Determine if Initial Customers are Required
-      if (evaluatedArrivalRate && evaluatedServiceRate && evaluatedArrivalRate <= evaluatedServiceRate) {
-        setIsInitialCustomersRequired(true);
+      // Simulations
+      const savedSimulations = getFromLocalStorage(MM_STORAGE_KEYS.SIMULATIONS, "");
+      const evaluatedSimulations = evaluate(savedSimulations);
+      if (isValidPositiveInteger(evaluatedSimulations)) {
+        setSimulations(evaluatedSimulations);
       }
     };
 
@@ -109,65 +118,55 @@ export const DD1KProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Save to localStorage when values change
   useEffect(() => {
-    saveToLocalStorage(DD1K_STORAGE_KEYS.CAPACITY, capacity);
+    saveToLocalStorage(MM_STORAGE_KEYS.SERVERS, servers);
+  }, [servers]);
+
+  useEffect(() => {
+    saveToLocalStorage(MM_STORAGE_KEYS.CAPACITY, capacity);
   }, [capacity]);
 
   useEffect(() => {
-    saveToLocalStorage(DD1K_STORAGE_KEYS.ARRIVAL_RATE, arrivalRate);
+    saveToLocalStorage(MM_STORAGE_KEYS.ARRIVAL_RATE, arrivalRate);
   }, [arrivalRate]);
 
   useEffect(() => {
-    saveToLocalStorage(DD1K_STORAGE_KEYS.SERVICE_RATE, serviceRate);
+    saveToLocalStorage(MM_STORAGE_KEYS.SERVICE_RATE, serviceRate);
   }, [serviceRate]);
 
   useEffect(() => {
-    saveToLocalStorage(DD1K_STORAGE_KEYS.INITIAL_CUSTOMERS, initialCustomers);
-  }, [initialCustomers]);
-
-  // Determine if Initial Customers are Required
-  useEffect(() => {
-    if (arrivalRate === "" || serviceRate === "") {
-      setIsInitialCustomersRequired(false);
-    } else {
-      try {
-        const evaluatedArrivalRate = evaluate(arrivalRate + "");
-        const evaluatedServiceRate = evaluate(serviceRate + "");
-        setIsInitialCustomersRequired(evaluatedArrivalRate <= evaluatedServiceRate);
-      } catch {
-        setIsInitialCustomersRequired(false);
-      }
-    }
-  }, [arrivalRate, serviceRate]);
+    saveToLocalStorage(MM_STORAGE_KEYS.SIMULATIONS, simulations);
+  }, [simulations]);
 
   // Context value
   const contextValue = {
+    servers,
+    setServers,
     capacity,
     setCapacity,
     arrivalRate,
     setArrivalRate,
     serviceRate,
     setServiceRate,
-    initialCustomers,
-    setInitialCustomers,
     arrivalTime,
     setArrivalTime,
     serviceTime,
     setServiceTime,
-    isInitialCustomersRequired
+    simulations,
+    setSimulations
   };
 
   return (
-    <DD1KContext.Provider value={contextValue}>
+    <MMContext.Provider value={contextValue}>
       {children}
-    </DD1KContext.Provider>
+    </MMContext.Provider>
   );
 };
 
 // Custom Hook
-export const useDD1K = () => {
-  const context = useContext(DD1KContext);
+export const useMM = () => {
+  const context = useContext(MMContext);
   if (context === undefined) {
-    throw new Error('useDD1K must be used within a DD1KProvider');
+    throw new Error('useMM must be used within an MMProvider');
   }
   return context;
 };

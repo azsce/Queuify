@@ -1,9 +1,8 @@
 "use client";
 
-import { JSX, useEffect, useState } from "react";
+import { JSX, useState } from "react";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
 import { mm } from "@/lib/mm";
 import InputParameters from "@/components/input/InputParameters";
 import MMResults from "@/components/output/MMResults";
@@ -11,102 +10,27 @@ import { Box, Container } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { MMCharacteristics } from "@/types/mm";
 import MmSystemParameters from "./MmSystemParameters";
-import { getFromLocalStorage } from "@/utils/localstorage";
-import { evaluate, format, fraction } from "mathjs";
+import { evaluate } from "mathjs";
 import { isValidPositiveInteger, isValidPositiveNumber } from "@/lib/math";
-
-let init = true;
-
-const serversKey = "mm-servers";
-const mmCapacityKey = "mm-capacity";
-const serviceRateKey = "mm-serviceRate";
-const arrivalRateKey = "mm-arrivalRate";
-const simulationsKey = "mm-simulations";
+import { useMM } from "@/contexts/MMContext";
 
 export default function QueuingTheoryCalculator() {
-  const [servers, setServers] = useState("");
-  const [capacity, setCapacity] = useState("");
-  const [arrivalRate, setArrivalRate] = useState("");
-  const [serviceRate, setServiceRate] = useState("");
-  const [arrivalTime, setArrivalTime] = useState("");
-  const [serviceTime, setServiceTime] = useState("");
-  const [simulations, setSimulations] = useState("");
-
-  useEffect(() => {
-    if (init) {
-      init = false;
-
-      const savedServers = getFromLocalStorage(serversKey, "");
-      const evaluatedServers = evaluate(savedServers + "");
-      if (isValidPositiveInteger(evaluatedServers)) {
-        setServers(evaluatedServers);
-      }
-
-      const savedCapacity = getFromLocalStorage(mmCapacityKey, "");
-      const evaluatedCapacity = evaluate(savedCapacity);
-      if (isValidPositiveInteger(evaluatedCapacity)) {
-        setCapacity(evaluatedCapacity);
-      }
-
-      const savedServiceRate = getFromLocalStorage(serviceRateKey, "");
-      const evaluatedServiceRate = evaluate(savedServiceRate + "");
-      if (isValidPositiveNumber(evaluatedServiceRate)) {
-        setServiceRate(
-          Number.isInteger(evaluatedServiceRate)
-            ? evaluatedServiceRate
-            : format(fraction(evaluatedServiceRate), { fraction: "ratio" })
-        );
-        const serviceTime = 1 / evaluatedServiceRate;
-        setServiceTime(
-          Number.isInteger(serviceTime)
-            ? serviceTime.toString()
-            : format(fraction(serviceTime), { fraction: "ratio" })
-        );
-      }
-
-      const arrivalRate = getFromLocalStorage(arrivalRateKey, "");
-      const evaluatedArrivalRate = evaluate(arrivalRate + "");
-      if (isValidPositiveNumber(evaluatedArrivalRate)) {
-        setArrivalRate(
-          Number.isInteger(evaluatedArrivalRate)
-            ? evaluatedArrivalRate
-            : format(fraction(evaluatedArrivalRate), { fraction: "ratio" })
-        );
-        const arrivalTime = 1 / evaluatedArrivalRate;
-        setArrivalTime(
-          Number.isInteger(arrivalTime)
-            ? arrivalTime.toString()
-            : format(fraction(arrivalTime), { fraction: "ratio" })
-        );
-
-        const savedSimulations = getFromLocalStorage(simulationsKey, "");
-        const evaluatedSimulations = evaluate(savedSimulations);
-        if (isValidPositiveInteger(evaluatedSimulations)) {
-          setSimulations(evaluatedSimulations);
-        }
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(serversKey, servers);
-  }, [servers]);
-
-  useEffect(() => {
-    localStorage.setItem(mmCapacityKey, capacity);
-  }, [capacity]);
-
-  useEffect(() => {
-    localStorage.setItem(arrivalRateKey, arrivalRate);
-  }, [arrivalRate]);
-
-  useEffect(() => {
-    localStorage.setItem(serviceRateKey, serviceRate);
-  }, [serviceRate]);
-
-  useEffect(() => {
-    localStorage.setItem(simulationsKey, simulations);
-  }, [simulations]);
+  const {
+    servers,
+    setServers,
+    capacity,
+    setCapacity,
+    arrivalRate,
+    setArrivalRate,
+    serviceRate,
+    setServiceRate,
+    arrivalTime,
+    setArrivalTime,
+    serviceTime,
+    setServiceTime,
+    simulations,
+    // setSimulations
+  } = useMM();
 
   // mmxy
   const [error, setError] = useState("");
@@ -164,7 +88,7 @@ export default function QueuingTheoryCalculator() {
     }
 
     let evaluatedSimulations;
-    if (evaluatedSimulations) {
+    if (simulations) {
       try {
         evaluatedSimulations = evaluate(simulations + "");
         if (!isValidPositiveInteger(evaluatedSimulations)) {
@@ -208,7 +132,6 @@ export default function QueuingTheoryCalculator() {
 
   return (
     <Container
-      // maxWidth="lg"
       sx={(theme) => ({
         py: 4,
         maxWidth: "100%",
