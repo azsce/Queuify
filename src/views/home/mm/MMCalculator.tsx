@@ -191,10 +191,10 @@ export default function QueuingTheoryCalculator() {
 
     try {
       const characteristics: MMCharacteristics = mm(
-        evaluatedArrivalRate,
         evaluatedServiceRate,
-        evaluatedCapacity,
-        evaluatedServers
+        evaluatedArrivalRate,
+        evaluatedServers,
+        evaluatedCapacity
       );
       if (characteristics.validSystem) {
         setResults(<MMResults characteristics={characteristics} />);

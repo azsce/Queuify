@@ -203,34 +203,34 @@ export const mmcProbabilityN = (
 
 // calculate M/M/s queue return [rho, p0, lq, l, wq, w]
 export function mmcQueueCalculation(
-  lambda: number, // arrival rate
   mu: number, // service rate
+  lambda: number, // arrival rate
   s: number, // number of servers
   k?: number // maximum number of customers in system
 ) {
   const [tau, rho] = mmcTrafficIntensity(lambda, mu, s);
-  const p0 = mmcProbabilityOfNoCustomerInQueue(tau, rho, s, k);
+  const P0 = mmcProbabilityOfNoCustomerInQueue(tau, rho, s, k);
 
-  let lq = 0;
-  let l = 0;
+  let Lq = 0;
+  let L = 0;
 
   if (k) {
-    const offset = 1 - mmcProbabilityN(k, lambda, mu, s, p0, k);
+    const offset = 1 - mmcProbabilityN(k, lambda, mu, s, P0, k);
 
-    lq = mmckAvgCustomersQueue(tau, rho, p0, s, k);
-    l = mmckAvgCustomersInSystem(lq, tau, offset);
+    Lq = mmckAvgCustomersQueue(tau, rho, P0, s, k);
+    L = mmckAvgCustomersInSystem(Lq, tau, offset);
 
     // lambda-bar (λ-bar)
     lambda *= offset;
   } else {
-    lq = mmcAvgCustomersQueue(tau, rho, p0, s);
-    l = mmcAvgCustomersInSystem(lq, tau);
+    Lq = mmcAvgCustomersQueue(tau, rho, P0, s);
+    L = mmcAvgCustomersInSystem(Lq, tau);
   }
 
-  const wq = mmcAvgTimeInQueue(lq, lambda);
-  const w = mmcAvgTimeInSystem(l, lambda);
+  const Wq = mmcAvgTimeInQueue(Lq, lambda);
+  const W = mmcAvgTimeInSystem(L, lambda);
 
-  return [rho, p0, lq, l, wq, w];
+  return { rho, P0, L, Lq, W, Wq };
 }
 
 export {

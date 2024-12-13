@@ -34,7 +34,7 @@ const MuiThemeProvider: React.FC<MuiThemeProviderProps> = ({ children }) => {
       <Box
         sx={{
           backgroundColor: "background.default",
-          height: "100vh",
+          minHeight: "100vh",
         }}
       >
         {children}
