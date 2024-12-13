@@ -259,7 +259,6 @@ export default function QueuingTheoryCalculator() {
       <Box mt={4}>
         {error && (
           <Alert severity="error" sx={{ mb: 3 }}>
-            <AlertTitle>Error</AlertTitle>
             {error}
           </Alert>
         )}
