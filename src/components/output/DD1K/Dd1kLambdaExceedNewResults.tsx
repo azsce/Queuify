@@ -216,11 +216,11 @@ const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
                   endAdornment: (
                     <Typography
                       sx={{
-                        minWidth: { xs: "8rem", sm: "16rem" },
+                        minWidth: "50%",
                         borderLeft: "1px solid",
-                        borderColor: "primary.main",
+                        borderColor: "text.primary",
                         paddingLeft: "1rem",
-                        color: "primary.main",
+                        color: "text.primary"
                       }}
                     >
                       n(t) = {nOfTVar}
@@ -292,11 +292,11 @@ const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
                   endAdornment: (
                     <Typography
                       sx={{
-                        minWidth: { xs: "8rem", sm: "16rem" },
+                        minWidth: "50%",
                         borderLeft: "1px solid",
-                        borderColor: "secondary.main",
-                        paddingLeft: "0.5rem",
-                        color: "secondary.main",
+                        borderColor: "text.primary",
+                        paddingLeft: "1rem",
+                        color: "text.primary"
                       }}
                     >
                       Wq(n) = {wqOfNVar}

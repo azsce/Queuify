@@ -1,28 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MMCharacteristics } from "@/types/mm";
-import { formatFraction, toProperFraction } from "@/lib/math";
+import {
+  formatFraction,
+  toProperFraction,
+  isDecimalZeroAfterRounding,
+  roundTo4Decimals,
+} from "@/lib/math";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { Box, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-
-function isDecimalZeroAfterRounding(num) {
-  // Round the number to 4 decimal points
-  const roundedNum = Math.round(num * 10000) / 10000;
-
-  // Check if the decimal part is zero
-  return roundedNum % 1 === 0;
-}
-
-function roundTo4Decimals(num) {
-  // Round to 4 decimal places without adding trailing zeros
-  return Math.round(num * 10000) / 10000;
-}
 
 const MMResults = ({
   characteristics,
 }: {
   characteristics: MMCharacteristics;
 }) => {
+
+  useEffect(() => {
+    // eslint-disable-next-line
+    window.MathJax && window.MathJax.typeset();
+  }, [characteristics]);
+
   const { rho, P0, L, Lq, W, Wq } = characteristics;
   const rhoFraction = toProperFraction(rho);
   const P0Fraction = toProperFraction(P0);

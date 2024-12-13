@@ -37,6 +37,21 @@ export const formatFraction = (fraction: {
   return `\\frac{${fraction.numerator}}{${fraction.denominator}}`;
 };
 
+
+export function isDecimalZeroAfterRounding(num) {
+  // Round the number to 4 decimal points
+  const roundedNum = Math.round(num * 10000) / 10000;
+
+  // Check if the decimal part is zero
+  return roundedNum % 1 === 0;
+}
+
+export function roundTo4Decimals(num) {
+  // Round to 4 decimal places without adding trailing zeros
+  return Math.round(num * 10000) / 10000;
+}
+
+
 // works with mathjs.evaluate(value)
 export const isValidNaturalNumber = (value: any): boolean => {
   return !isNaN(value) && value?.value !== null && value >= 0;

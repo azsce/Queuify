@@ -3,7 +3,12 @@ import { Box, Divider, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 import Dd1k from "@/class/dd1k/Dd1k";
-import { formatFraction } from "@/lib/math";
+import {
+  formatFraction,
+  toProperFraction,
+  isDecimalZeroAfterRounding,
+  roundTo4Decimals,
+} from "@/lib/math";
 
 type Dd1kLambdaExceedNewlResultsProps = {
   dd1k: Dd1k;
@@ -15,9 +20,11 @@ const Dd1kNewExceedLambdaResults: React.FC<
   const {
     capacity,
     serviceRate,
+    arrivalRate,
     arrivalRateFraction,
     serviceRateFraction,
     t_i,
+    initialCustomers,
   } = dd1k;
 
   useEffect(() => {
@@ -25,23 +32,15 @@ const Dd1kNewExceedLambdaResults: React.FC<
     window.MathJax && window.MathJax.typeset();
   }, [dd1k]);
 
-  const M = capacity;
-  const initialWq = (M - 1) / (2 * serviceRate);
+  const initialWq = (initialCustomers - 1) / (2 * serviceRate);
+  const initialWqFraction = toProperFraction(initialWq);
 
-  const isWholeNumber = (fraction: {
-    numerator: number;
-    denominator: number;
-  }) => {
-    return fraction.denominator === 1;
-  };
-
-  const isServiceRateWhole = isWholeNumber(serviceRateFraction);
-  const isArrivalRateWhole = isWholeNumber(arrivalRateFraction);
-
-  const [tVar, setTVar] = useState<number | undefined>();
+  const [tVar, setTVar] = useState<number | undefined>(dd1k.transientTime);
   const [nOfTVar, setNOfTVar] = useState<number>(0);
-  const [nVar, setNVar] = useState<number | undefined>();
-  const [wqOfNVar, setWqOfNVar] = useState<number | undefined>();
+  const [nVar, setNVar] = useState<number | undefined>(dd1k.lambdaTiFloored);
+  const [wqOfNVar, setWqOfNVar] = useState<number | undefined>(
+    dd1k.waitingTimeForNthCustomer(dd1k.lambdaTiFloored)
+  );
 
   const handleTVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const t = parseFloat(e.target.value);
@@ -59,7 +58,7 @@ const Dd1kNewExceedLambdaResults: React.FC<
 
   return (
     <MathJaxContext>
-      <div className="space-y-6 text-sm md:text-base">
+      <div className="space-y-6 text-sm md:text-base mb-4">
         <Box
           className="text-center mb-6"
           sx={{
@@ -92,40 +91,35 @@ const Dd1kNewExceedLambdaResults: React.FC<
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center gap-2">
-            <strong>Arrival Rate (λ):</strong>
+            <strong>Arrival Rate: </strong>
             <MathJax
               inline
             >{`\\(\\lambda = ${formatFraction(arrivalRateFraction)}\\)`}</MathJax>
           </div>
           <div className="flex items-center gap-2">
-            <strong>Service Rate (μ):</strong>
+            <strong>Service Rate: </strong>
             <MathJax
               inline
             >{`\\(\\mu = ${formatFraction(serviceRateFraction)}\\)`}</MathJax>
           </div>
           <div className="flex items-center gap-2">
-            <strong>System Capacity (K):</strong>
+            <strong>Capacity: </strong>
             <MathJax inline>{`\\(K = ${capacity}\\)`}</MathJax>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <strong>Transient time:</strong>
+              <MathJax inline>{`\\(t_i = ${t_i}\\)`}</MathJax>
+            </div>
           </div>
         </div>
 
         <Divider />
 
         <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <strong>
-              <MathJax inline>{`\\(t_i\\)`}</MathJax> (Time of First Balk):
-            </strong>
-            <MathJax inline>{`\\(t_i = ${t_i}\\)`}</MathJax>
-          </div>
-        </div>
-
-        <Divider />
-
-        <div className="space-y-8">
-          <h3 className="text-lg md:text-xl font-semibold">
-            <MathJax inline>{`\\(n(t)\\)`}</MathJax> (Number of Customers)
-          </h3>
+          <strong>
+            Number of Customers: <MathJax inline>{`\\(n(t)\\)`}</MathJax>
+          </strong>
           <div className="ml-4 space-y-8">
             <div>
               <MathJax>{`\\( \\text{For all } t:\\)`}</MathJax>
@@ -135,21 +129,12 @@ const Dd1kNewExceedLambdaResults: React.FC<
                 >{`\\(n(t) = M + \\lfloor \\lambda t \\rfloor - \\lfloor \\mu t \\rfloor\\)`}</MathJax>
               </div>
               <div className="ml-6 mt-4">
-                <MathJax
-                  inline
-                >{`\\(n(t) = ${M} + \\lfloor ${formatFraction(arrivalRateFraction)}t \\rfloor - \\lfloor ${formatFraction(serviceRateFraction)}t \\rfloor\\)`}</MathJax>
+                <MathJax inline>{`\\(n(t) = ${initialCustomers} + \\lfloor ${
+                  arrivalRate === 1 ? "" : formatFraction(arrivalRateFraction) + "\\cdot"
+                } t \\rfloor - \\lfloor ${
+                  serviceRate === 1 ? "" : formatFraction(serviceRateFraction) + "\\cdot"
+                } t \\rfloor\\)`}</MathJax>
               </div>
-              {tVar !== undefined && (
-                <Typography
-                  variant="body1"
-                  sx={{
-                    textAlign: "center",
-                    marginTop: "1rem",
-                  }}
-                >
-                  Actual value of n(t) = {nOfTVar}
-                </Typography>
-              )}
             </div>
           </div>
 
@@ -159,20 +144,14 @@ const Dd1kNewExceedLambdaResults: React.FC<
               width: "100%",
               justifyContent: "center",
               alignItems: "center",
+              gap: 2,
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{
-                minWidth: "8rem",
-              }}
-            >
-              n(t) for t =
-            </Typography>
+            <MathJax inline>{`\\( n(t)\\)`}</MathJax>
             <NoNumberArrowsTextField
               label="t ="
               placeholder="t = "
-              value={tVar}
+              value={isNaN(tVar) ? "" : tVar}
               type="number"
               variant="outlined"
               onChange={handleTVarChange}
@@ -181,12 +160,14 @@ const Dd1kNewExceedLambdaResults: React.FC<
                   endAdornment: (
                     <Typography
                       sx={{
-                        minWidth: "6rem",
-                        borderLeft: "1px solid #000",
+                        minWidth: "50%",
+                        borderLeft: "1px solid",
+                        borderColor: "text.primary",
                         paddingLeft: "1rem",
+                        color: "text.primary"
                       }}
                     >
-                      n(t) = {nOfTVar}
+                      = {nOfTVar}
                     </Typography>
                   ),
                 },
@@ -197,17 +178,25 @@ const Dd1kNewExceedLambdaResults: React.FC<
 
         <Divider />
 
-        <div className="space-y-8">
-          <h3 className="text-lg md:text-xl font-semibold">
-            <MathJax inline>{`\\(Wq(n)\\)`}</MathJax> (Waiting Times)
-          </h3>
+        <div className="space-y-4">
+          <strong>
+            Waiting Times: <MathJax inline>{`\\(Wq(n)\\)`}</MathJax>
+          </strong>
           <div className="ml-4 space-y-8">
             <div>
-              <MathJax>{`\\( \\text{Initial Average Waiting Time for M Customers:}\\)`}</MathJax>
+              <Typography variant="body1">
+                Average Waiting Time for initial Customers:
+              </Typography>
               <div className="ml-6 mt-4">
-                <MathJax
-                  inline
-                >{`\\(W_q(0) = \\frac{M - 1}{2\\mu} = ${initialWq}\\)`}</MathJax>
+                {isDecimalZeroAfterRounding(initialWq) ? (
+                  <MathJax
+                    inline
+                  >{`\\(W_q(0) = \\frac{M - 1}{2\\mu} = ${roundTo4Decimals(initialWq)}\\)`}</MathJax>
+                ) : (
+                  <MathJax
+                    inline
+                  >{`\\(W_q(0) = \\frac{M - 1}{2\\mu} = ${formatFraction(initialWqFraction)}\\) = ${roundTo4Decimals(initialWq)}`}</MathJax>
+                )}
               </div>
             </div>
 
@@ -219,27 +208,16 @@ const Dd1kNewExceedLambdaResults: React.FC<
                 >{`\\(Wq(n) = (M - 1 + n) \\cdot \\frac{1}{\\mu} - n \\cdot \\frac{1}{\\lambda}\\)`}</MathJax>
               </div>
               <div className="ml-6 mt-4">
-                <MathJax inline>{`\\(Wq(n) = (n + ${M - 1}) \\cdot ${
-                  isServiceRateWhole
-                    ? `\\frac{1}{${serviceRateFraction.numerator}}`
-                    : `\\frac{${serviceRateFraction.denominator}}{${serviceRateFraction.numerator}}`
-                } - n \\cdot ${
-                  isArrivalRateWhole
-                    ? `\\frac{1}{${arrivalRateFraction.numerator}}`
-                    : `\\frac{${arrivalRateFraction.denominator}}{${arrivalRateFraction.numerator}}`
-                }\\)`}</MathJax>
+                <MathJax inline>{`\\(Wq(n) = (n + ${initialCustomers - 1})  ${
+                  serviceRate === 1
+                    ? ""
+                    : "\\cdot" + formatFraction(serviceRateFraction)
+                } - ${
+                  arrivalRate === 1
+                    ? ""
+                    : formatFraction(arrivalRateFraction) + "\\cdot"
+                } n  \\)`}</MathJax>
               </div>
-              {nVar !== undefined && (
-                <Typography
-                  variant="body1"
-                  sx={{
-                    textAlign: "center",
-                    marginTop: "1rem",
-                  }}
-                >
-                  Actual value of Wq(n) = {wqOfNVar}
-                </Typography>
-              )}
             </div>
 
             <div>
@@ -256,20 +234,15 @@ const Dd1kNewExceedLambdaResults: React.FC<
               width: "100%",
               justifyContent: "center",
               alignItems: "center",
+              gap: 2,
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{
-                minWidth: "8rem",
-              }}
-            >
-              Wq(n) for n =
-            </Typography>
+            <MathJax inline>{`\\(Wq(n) \\)`}</MathJax>
+
             <NoNumberArrowsTextField
               label="n ="
               placeholder="n = "
-              value={nVar}
+              value={isNaN(nVar) ? "" : nVar}
               type="number"
               variant="outlined"
               onChange={handleNVarChange}
@@ -278,12 +251,14 @@ const Dd1kNewExceedLambdaResults: React.FC<
                   endAdornment: (
                     <Typography
                       sx={{
-                        minWidth: "12rem",
-                        borderLeft: "1px solid #000",
+                        minWidth: "50%",
+                        borderLeft: "1px solid",
+                        borderColor: "text.primary",
                         paddingLeft: "1rem",
+                        color: "text.primary"
                       }}
                     >
-                      Wq(n) = {wqOfNVar}
+                      = {wqOfNVar}
                     </Typography>
                   ),
                 },

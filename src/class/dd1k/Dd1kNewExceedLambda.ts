@@ -65,11 +65,17 @@ class Dd1kNewExceedLambda extends Dd1k {
 
   //  n(t) = M + ⌊λt⌋ - ⌊μt⌋
   computeNOfT(t: number): number {
-    return (
-      this.initialCustomers +
-      Math.floor(this.arrivalRate * t) -
-      Math.floor(this.serviceRate * t)
-    );
+    if(t < 0 || isNaN(t)) {
+      return undefined;
+    }
+    if (t < this.transientTime) {
+      return (
+        this.initialCustomers +
+        Math.floor(this.arrivalRate * t) -
+        Math.floor(this.serviceRate * t)
+      );
+    }
+    return t % this.arrivalTime === 0 ? 1 : 0;
   }
 
   /**
@@ -94,14 +100,16 @@ class Dd1kNewExceedLambda extends Dd1k {
    *
    */
   waitingTimeForNthCustomer(n: number): number {
-    if (n < Math.floor(this.arrivalRate * this.transientTime)) {
+    if (n <= 0 || isNaN(n)) return undefined;
+    if (n < this.lambdaTiFloored) {
       return (
         (this.initialCustomers - 1 + n) * this.serviceTime -
-        n * (1 / this.arrivalRate)
+        n * this.arrivalTime
       );
-    } else {
+    } else if (n >= this.lambdaTiFloored) {
       return 0;
     }
+    return undefined;
   }
 
   /**

@@ -129,7 +129,7 @@ const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
             <Line
               type="stepAfter"
               dataKey="numberOfCustomers"
-              stroke="#8884d8"
+              stroke={theme.palette.mode === "dark" ? "#d884d1" : "#6f2169"}
               name="Customers in System"
               dot={false}
               strokeWidth={2}

@@ -130,7 +130,7 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
             <Line
               type="stepAfter"
               dataKey="waitingTime"
-              stroke="#8884d8"
+              stroke={theme.palette.mode === "dark" ? "#e6591c" : "#db581f"}
               name="Waiting Time"
               dot={false}
               strokeWidth={2}
