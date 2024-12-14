@@ -36,7 +36,6 @@ class MM1QueueSimulator extends QueueSystem {
     let arrivals = 0;
     let departures = 0;
     let totalWait = 0;
-    let waitInSystem = 0;
     let clock = 0;
     let nextArrival = 0;
     let nextDeparture = Infinity;
