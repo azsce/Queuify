@@ -8,7 +8,6 @@ import {
 } from "@/lib/math";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { Box, Tooltip, Typography } from "@mui/material";
-
 const MMResults = ({
   characteristics,
 }: {
@@ -131,6 +130,8 @@ const MMResults = ({
             )}
           </Typography>
         </Tooltip>
+
+        <Box sx={{ height: "30vh" }} />
       </Box>
     </MathJaxContext>
   );

@@ -5,6 +5,7 @@ const precision = 6; // Define the precision for comparison
 
 const mm_tests = [
   {
+    validSystem: true,
     serviceRate: 60,
     arrivalRate: 50,
     servers: 1,
@@ -17,6 +18,7 @@ const mm_tests = [
     expectedWq: 1 / 12,
   },
   {
+    validSystem: true,
     serviceRate: 1 / 8,
     arrivalRate: 1 / 10,
     servers: 1,
@@ -26,6 +28,7 @@ const mm_tests = [
     expectedWq: 32,
   },
   {
+    validSystem: true,
     serviceRate: 1 / 8,
     arrivalRate: 1 / 9,
     servers: 1,
@@ -35,6 +38,7 @@ const mm_tests = [
     expectedWq: 64,
   },
   {
+    validSystem: true,
     serviceRate: 2.4,
     arrivalRate: 2,
     servers: 1,
@@ -45,6 +49,7 @@ const mm_tests = [
     expectedWq: 2 + 1 / 12,
   },
   {
+    validSystem: true,
     serviceRate: 2.4,
     arrivalRate: 2,
     servers: 1,
@@ -55,6 +60,7 @@ const mm_tests = [
     expectedWq: 0.683545,
   },
   {
+    validSystem: true,
     serviceRate: 3,
     arrivalRate: 6,
     servers: 3,
@@ -65,14 +71,21 @@ const mm_tests = [
     expectedWq: 4 / 27,
   },
   {
-    serviceRate: 1/6,
+    validSystem: true,
+    serviceRate: 1 / 6,
     arrivalRate: 1,
     servers: 3,
     capacity: 7,
     expectedL: 6.063103,
-    expectedLq: 504/163,
+    expectedLq: 504 / 163,
     expectedW: 12.244248,
     expectedWq: 6.244248,
+  },
+  {
+    validSystem: false,
+    serviceRate: 2,
+    arrivalRate: 10,
+    servers: 3,
   },
 ];
 
@@ -84,7 +97,7 @@ describe("mm function", () => {
 
       const result = mm(serviceRate, arrivalRate, servers, capacity);
       const expected: MMCharacteristics = {
-        validSystem: true,
+        validSystem: expectedValues.validSystem,
         servers: servers,
         capacity: capacity,
         serviceRate: serviceRate,
@@ -96,6 +109,9 @@ describe("mm function", () => {
         W: expectedValues.expectedW,
         Wq: expectedValues.expectedWq,
       };
+
+        expect(result.validSystem).toEqual(expected.validSystem);
+
 
       if (expectedValues.expectedL !== undefined) {
         expect(result.L.toFixed(precision)).toEqual(
