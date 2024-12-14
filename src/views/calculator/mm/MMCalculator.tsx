@@ -196,10 +196,10 @@ export default function QueuingTheoryCalculator() {
             <Grid size={11}>
               <NoNumberArrowsTextField
                 value={simulations}
-                placeholder={"Initial Customers: M"}
+                placeholder={"Number of Simulations"}
                 label="Initial Customers: M"
                 fullWidth
-                autoComplete={"dd1k-initial-customers"}
+                autoComplete={"mm-simulations"}
                 onChange={(e) => {
                   setSimulations(e.target.value);
                 }}
