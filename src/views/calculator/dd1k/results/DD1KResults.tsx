@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Divider } from "@mui/material";
-import DD1KGraphContainer from "../../graph/dd1k/Dd1kGraphContainer";
+import DD1KGraphContainer from "../Dd1kGraphContainer";
 import Dd1kLambdaExceedNewResults from "./Dd1kLambdaExceedNewResults";
 import Dd1kLambdaEqualNewResults from "./Dd1kLambdaEqualNewResults";
 import Dd1kNewExceedLambdaResults from "./Dd1kNewExceedLambdaResults";
@@ -26,7 +26,7 @@ const DD1KResults: React.FC<Dd1kResultsProps> = ({ dd1k }) => {
       {result}
       <Divider />
 
-      <DD1KGraphContainer dd1k={dd1k} />
+      <DD1KGraphContainer queueSystem={dd1k} />
       <Box sx={{ height: "30vh" }} />
 
     </>

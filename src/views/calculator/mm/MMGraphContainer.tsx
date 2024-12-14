@@ -10,13 +10,13 @@ import CustomerFlowDiagram from "@/components/graph/CustomerFlowDiagram";
 import WaitingTimeGraph from "@/components/graph/WaitingTimeGraph";
 import { QueueSystem } from "@/class/QueueSystem";
 
-type DD1KGraphContainerProps = {
+type MMGraphContainerProps = {
   queueSystem: QueueSystem;
 };
 
 const GRAPH_HEIGHT = 300; // Height for each sub-graph
 
-const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ queueSystem }) => {
+const MMGraphContainer: React.FC<MMGraphContainerProps> = ({ queueSystem }) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <Box
@@ -73,4 +73,4 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ queueSystem }) 
   );
 };
 
-export default DD1KGraphContainer;
+export default MMGraphContainer;

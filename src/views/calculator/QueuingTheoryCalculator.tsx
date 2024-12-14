@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import ProcessTypeSelector from "@/components/input/ProcessTypeSelector";
+import ProcessTypeSelector from "@/views/calculator/components/input/ProcessTypeSelector";
 import { Box, Container, Typography } from "@mui/material";
 import Dd1kCalculator from "./dd1k/Dd1kCalculator";
 import MMCalculator from "./mm/MMCalculator";

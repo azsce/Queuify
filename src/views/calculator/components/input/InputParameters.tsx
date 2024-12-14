@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid2";
-import VerticalInfinityLinkIndicator from "../base/VerticalInfinityLinkIndicator";
+import VerticalInfinityLinkIndicator from "../../../../components/base/VerticalInfinityLinkIndicator";
 import { Box } from "@mui/material";
 import { evaluate, fraction, format } from "mathjs"; // Import mathjs
 import { isValidPositiveNumber } from "@/lib/math";

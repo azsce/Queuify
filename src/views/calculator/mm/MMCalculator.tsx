@@ -4,8 +4,8 @@ import { JSX, useState } from "react";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import { mm } from "@/lib/mm";
-import InputParameters from "@/components/input/InputParameters";
-import MMResults from "@/components/results/MMResults";
+import InputParameters from "@/views/calculator/components/input/InputParameters";
+import MMResults from "@/views/calculator/mm/MMResults";
 import { Box, Container } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { MMCharacteristics } from "@/types/mm";
@@ -13,6 +13,7 @@ import MmSystemParameters from "./MmSystemParameters";
 import { evaluate } from "mathjs";
 import { isValidPositiveInteger, isValidPositiveNumber } from "@/lib/math";
 import { useMM } from "@/contexts/MMContext";
+import MM1QueueSimulator from "@/class/mm/MM";
 
 export default function QueuingTheoryCalculator() {
   const {
@@ -119,6 +120,8 @@ export default function QueuingTheoryCalculator() {
         evaluatedCapacity
       );
       if (characteristics.validSystem) {
+  const simulator = MM1QueueSimulator(evaluatedArrivalRate, evaluatedServiceRate, simulations)
+
         setResults(<MMResults characteristics={characteristics} />);
       } else {
         setError(

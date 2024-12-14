@@ -8,23 +8,26 @@ import {
 } from "@/lib/math";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { Box, Tooltip, Typography } from "@mui/material";
+
+
 const MMResults = ({
-  characteristics,
+  characteristics: performanceMetrics,
 }: {
   characteristics: MMCharacteristics;
 }) => {
   useEffect(() => {
     // eslint-disable-next-line
     window.MathJax && window.MathJax.typeset();
-  }, [characteristics]);
+  }, [performanceMetrics]);
 
-  const { rho, P0, L, Lq, W, Wq } = characteristics;
+  const { rho, P0, L, Lq, W, Wq } = performanceMetrics;
   const rhoFraction = toProperFraction(rho);
   const P0Fraction = toProperFraction(P0);
   const LFraction = toProperFraction(L);
   const LqFraction = toProperFraction(Lq);
   const WFraction = toProperFraction(W);
   const WqFraction = toProperFraction(Wq);
+
 
   return (
     <MathJaxContext>

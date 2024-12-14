@@ -2,7 +2,7 @@ import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { Box, Divider, Typography } from "@mui/material";
 import { N_Of_T } from "@/types/dd1k";
 
-import { NoNumberArrowsTextField } from "../../base/NoNumberArrowsTextField";
+import { NoNumberArrowsTextField } from "../../../../components/base/NoNumberArrowsTextField";
 import { JSX, useEffect, useState } from "react";
 import Dd1k from "@/class/dd1k/Dd1k";
 import {
