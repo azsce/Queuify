@@ -5,31 +5,30 @@ import {
   LineChart,
   XAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
   ReferenceLine,
   YAxis,
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { colors } from "@/constants";
-import Dd1k from "@/class/dd1k/Dd1k";
+import { QueueSystem } from "@/class/QueueSystem";
 
-type Dd1kServiceTimelineProps = {
-  dd1k: Dd1k;
+interface DepartureTimelineProps {
+  queueSystem: QueueSystem;
   height?: number;
   subGraph?: boolean;
   showTopAxis?: boolean;
   showBottomAxis?: boolean;
-};
+}
 
-const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
-  dd1k,
+const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
+  queueSystem,
   height,
   subGraph,
   showTopAxis,
   showBottomAxis,
 }) => {
-  const data = dd1k.timeLineData;
+  const data = queueSystem.timeLineData;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   // Remove timeAxisTicks as we'll use same configuration as ArrivalTimeline
@@ -45,7 +44,7 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
     >
       {!subGraph && (
         <Typography variant="h6" component="h3">
-          Service Timeline
+          Departure Timeline
         </Typography>
       )}
       <Box
@@ -86,16 +85,11 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                   stroke: "transparent",
                   strokeDasharray: "transparent",
                 }}
-                tickFormatter={(value) => {
-                  if (value % dd1k.arrivalTime === 0 && value !== 0) {
-                    return value;
-                  }
-                  return "";
-                }}
                 dy={-3}
-                interval={dd1k.arrivalTime - 1}
+                interval={queueSystem.arrivalTime - 1}
                 tick={{
                   fontSize: 8,
+                  startOffset: queueSystem.arrivalTime,
                   fill: theme.palette.text.primary,
                 }}
               />
@@ -107,11 +101,11 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                 orientation="bottom"
                 tickFormatter={(value) => {
                   const d = data.find((entry) => entry.time === value);
-                  if (d?.enteredService) {
-                    if (d.initialEnteredService) {
-                      return `M${data.find((entry) => entry.time === value)?.initialServiceEnterances}`;
+                  if (d?.departured) {
+                    if (d.initialDepartured) {
+                      return `M${data.find((entry) => entry.time === value)?.initialDepartures}`;
                     } else {
-                      return `C${data.find((entry) => entry.time === value)?.serviceEnterancs}`;
+                      return `C${data.find((entry) => entry.time === value)?.departures}`;
                     }
                   }
                   return "";
@@ -122,30 +116,33 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                   dy: 5,
                   fill: theme.palette.text.primary,
                 }}
-                colorRendering="optimizeQuality"
                 tickLine={true}
                 axisLine={{
                   stroke: theme.palette.text.primary,
-                  // strokeWidth: 4,
+                  // strokeWidth: 2,
                 }}
                 interval={0}
               />
             )}
             <YAxis
               label={{
-                value: "-> Service",
+                value: "Departure",
                 angle: -90,
                 position: "insideLeft",
                 dx: 20,
-                dy: 40,
+                dy: 30,
                 fontSize: 12,
                 fill: theme.palette.text.primary,
               }}
+              tickLine={false}
+              tickSize={subGraph ? 0 : 2}
+              axisLine={{
+                stroke: "transparent",
+                strokeDasharray: "transparent",
+              }}
               tickCount={1}
-              stroke="transparent"
               tickFormatter={() => ""} // Add tick formatter
             />
-            <Tooltip />
             {data.map((entry) => (
               <ReferenceLine
                 key={entry.key}
@@ -154,10 +151,10 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
                   showBottomAxis ? "bottom" : showTopAxis ? "top" : "default"
                 }
                 stroke={
-                  entry.enteredService && entry.initialEnteredService
+                  entry.departured && entry.initialDepartured
                     ? theme.palette.text.primary
-                    : entry.enteredService
-                      ? colors[entry.serviceEnterancs % colors.length]
+                    : entry.departured
+                      ? colors[entry.departures % colors.length]
                       : "transparent"
                 }
                 strokeWidth={2}
@@ -168,11 +165,11 @@ const Dd1kServiceTimeline: React.FC<Dd1kServiceTimelineProps> = ({
       </Box>
       {!subGraph && (
         <Typography variant="caption" sx={{ mt: 1, textAlign: "center" }}>
-          ◆ Indicates service completion times
+          ◆ Indicates departure times
         </Typography>
       )}
     </Box>
   );
 };
 
-export default Dd1kServiceTimeline;
+export default DepartureTimeline;

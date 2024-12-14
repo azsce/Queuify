@@ -23,7 +23,7 @@ const Dd1kNewExceedLambdaResults: React.FC<
     arrivalRate,
     arrivalRateFraction,
     serviceRateFraction,
-    t_i,
+    timeSpecialValue: t_i,
     initialCustomers,
   } = dd1k;
 
@@ -43,8 +43,8 @@ const Dd1kNewExceedLambdaResults: React.FC<
   );
 
   useEffect(() => {
-    setTVar(dd1k.t_i);
-    setNOfTVar(dd1k.computeNOfT(dd1k.t_i));
+    setTVar(dd1k.timeSpecialValue);
+    setNOfTVar(dd1k.computeNOfT(dd1k.timeSpecialValue));
   }, [dd1k]);
 
   useEffect(() => {

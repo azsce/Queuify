@@ -12,7 +12,7 @@ class Dd1kLambdaEqualNew extends Dd1k {
     initialCustomers?: number
   ) {
     super();
-    this.type = "λ = μ";
+    this.dd1kType = "λ = μ";
 
     this.arrivalRate = arrivalRate;
     this.arrivalTime = 1 / arrivalRate;
@@ -27,13 +27,13 @@ class Dd1kLambdaEqualNew extends Dd1k {
     this.serviceRateFraction = toProperFraction(serviceRate);
 
     this.transientTime = undefined;
-    this.t_i = undefined;
+    this.timeSpecialValue = undefined;
 
     this.lastInitialCustomerDepartureTime =
       this.initialCustomers * this.serviceTime;
 
     this.timeLineData = this.generateTimeGraphData();
-    this.customerGraphData = this.generateCustomerGraphData();
+    this.customerLineData = this.generateCustomerGraphData();
   }
 
   computeNOfT(t: number) {

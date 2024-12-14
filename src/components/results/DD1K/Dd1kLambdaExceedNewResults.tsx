@@ -33,9 +33,9 @@ const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
     arrivalRateFraction,
     serviceRateFraction,
     capacity,
-    t_i,
+    timeSpecialValue: t_i,
     lambdaTiFloored,
-    type,
+    dd1kType: type,
   } = dd1k;
 
   useEffect(() => {
@@ -152,8 +152,8 @@ const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
   );
 
   useEffect(() => {
-    setTVar(dd1k.t_i);
-    setNOfTVar(dd1k.computeNOfT(dd1k.t_i));
+    setTVar(dd1k.timeSpecialValue);
+    setNOfTVar(dd1k.computeNOfT(dd1k.timeSpecialValue));
   }, [dd1k]);
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import Dd1kLambdaExceedNew from "./Dd1kLambdaExceedNew";
 class Dd1kLambdaMultipleAndExceedNew extends Dd1kLambdaExceedNew {
   constructor(arrivalRate: number, serviceRate: number, capacity: number) {
     super(arrivalRate, serviceRate, capacity);
-    this.type = "(λ > μ) && λ%μ = 0";
+    this.dd1kType = "(λ > μ) && λ%μ = 0";
   }
 
   computeNOfTAtSteadyState(t: number): number {

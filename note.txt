@@ -1,0 +1,104 @@
+look at the jave code use to simulate mm1 queue server, 
+
+i want to make this in typescript, but with one function that calc evvery thing in a sequance and comulative, and return three objects of 
+MmTimeLineData[], MmCustomerTimeLineData[], MmStatistics
+type MmTimeLineData = {    time: number;
+    arrived: boolean;    arrivals: number;
+    enteredService: boolean;    serviceEnterancs: number;
+    departured: boolean;    departures: number;        numberOfCustomers: number;    key: number;}    type MmCustomerTimeLineData = {    customer: number,    arrivalTime: number,    serviceStartTime: number,    departureTime: number,}
+type MmStatistics = {    totalWaitingTime: number,    averageWaitingTime: number,    totalWaitingTimeInQueue: number,    averageWaitingTimeInQueue: number,    totalIdleServerTime: number,    averageIdleServerTime: number,}
+
+remember all things mus be comulative in one function
+
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+/**
+ *
+ * @author Mohamed
+ */
+public class MM1Queu {
+        static double  lamba ;  // arrival rate
+        static double mu    ;  // service rate
+        static int num_in_system=0;
+        static int num_arrival=0;
+        static int num_departure=0;
+        static double total_waite=0;
+        static double wait_in_system =0;
+        
+
+        static Queue<Double> queue  = new LinkedList<>();       // arrival times of customers
+        static double nextArrival ;     // time of next arrival
+        static double nextDeparture ;  // time of next departure
+        static double clock=0;
+
+    public static void main(String[] args) {
+        Scanner myObj = new Scanner(System.in);
+        System.out.println("Enter Arrival Rate");
+        lamba = Double.parseDouble(myObj.nextLine());  // arrival rate
+        
+         System.out.println("Enter Service Rate");
+         mu     = Double.parseDouble(myObj.nextLine());  // service rate
+         
+        System.out.println("Enter Number of Simulation");
+        int num_simulation = Integer.parseInt(myObj.nextLine());
+        
+        Queue<Double> queue  = new LinkedList<>();       // arrival times of customers
+        //nextArrival   = StdRandom.exp(1/lamba);     // time of next arrival
+        nextArrival   = 0;     // time of next arrival
+        nextDeparture = Double.POSITIVE_INFINITY;  // time of next departure
+        String event_type ="";
+       
+       System.out.println("Serial, Clock, Event,#Arrival, #Depature,#InSystem,Wait");
+        // simulate an M/M/1 queue
+        for(int i=1;i<num_simulation;i++) {
+
+            // it's an arrival
+            if (nextArrival <= nextDeparture) {
+                clock = nextArrival;             
+                handel_arrival_event();
+  
+                System.out.println(i +"," +clock + "," + "Arrival"+ "," + num_arrival+","+num_departure+","+num_in_system+",none");
+            }
+            // it's a departure
+            else {
+                clock = nextDeparture;
+                handel_depture_event();
+                 System.out.println(i +"," +clock + "," + "Depture"+ "," + num_arrival+","+num_departure+","+num_in_system+","+wait_in_system);
+            }
+            
+            
+        }
+
+    }
+    
+    public static void handel_arrival_event()
+    {
+        num_arrival++;
+        num_in_system++;
+        if (queue.isEmpty()){
+            double service_time =StdRandom.exp(mu);
+            nextDeparture = nextArrival + service_time;
+        }
+        queue.add(nextArrival);
+        double interarrival_time = StdRandom.exp(lamba);
+        nextArrival = nextArrival + interarrival_time;
+        
+           
+    }
+    public static void handel_depture_event()
+    {
+        num_departure++;
+        num_in_system--;
+        wait_in_system = nextDeparture - queue.poll();
+        total_waite += wait_in_system;
+        if (queue.isEmpty())
+            nextDeparture = Double.POSITIVE_INFINITY;
+        else  {
+            double service_time =StdRandom.exp(mu);
+            nextDeparture = nextDeparture +service_time;
+        }
+    }
+}

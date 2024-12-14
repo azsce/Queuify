@@ -11,3 +11,12 @@ export type MMCharacteristics = {
   W: number;
   Wq: number;
 };
+
+export type MmStatistics = {
+  totalWaitingTime: number;
+  averageWaitingTime: number;
+  totalWaitingTimeInQueue: number;
+  averageWaitingTimeInQueue: number;
+  totalIdleServerTime: number;
+  averageIdleServerTime: number;
+};

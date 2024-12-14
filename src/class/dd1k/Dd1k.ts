@@ -1,6 +1,6 @@
 import { DD1KType } from "@/types/dd1k";
-import { Fraction } from "@/types/math";
-import { timeLineData } from "@/types/timeLineData";
+import { CustomerTimeLineData, TimeLineData } from "@/types/Simulation";
+import { QueueSystem } from "../QueueSystem";
 
 /**
  * Algorithm to analyze and solve the D/D/1/(k-1) queue system for both cases λ > μ and λ ≤ μ,
@@ -101,34 +101,8 @@ import { timeLineData } from "@/types/timeLineData";
  *
  */
 
-abstract class Dd1k {
-  arrivalRate: number;
-  serviceRate: number;
-  capacity: number;
-  initialCustomers?: number;
-  arrivalRateFraction: Fraction;
-  serviceRateFraction: Fraction;
-
-  arrivalTime: number;
-  serviceTime: number;
-
-  firstBalkTime?: number;
-  transientTime?: number;
-
-  t_i: number;
-
-  lambdaTi: number;
-  lambdaTiFloored: number;
-  muTi: number;
-  muTiFloored: number;
-
-  type: DD1KType;
-
-  timeLineData: timeLineData[];
-  customerGraphData: Array<{
-    customer: number;
-    waitingTime: number;
-  }>;
+abstract class Dd1k extends QueueSystem {
+  dd1kType: DD1KType;
 
   /**
    * Computes the number of customers in the system at time t.
@@ -145,11 +119,11 @@ abstract class Dd1k {
   abstract waitingTimeForNthCustomer(nth: number): number;
 
   graphMaxTime(): number {
-    return Math.ceil(Math.min(this.t_i * 1.5, 60)) + 1.5; // Round up max time
+    return Math.ceil(Math.min(this.timeSpecialValue * 1.5, 60)) + 1.5; // Round up max time
   }
 
-  generateTimeGraphData(): timeLineData[] {
-    const timelineData: timeLineData[] = [];
+  generateTimeGraphData(): TimeLineData[] {
+    const timelineData: TimeLineData[] = [];
 
     const maxTime = this.graphMaxTime();
 
@@ -227,8 +201,6 @@ abstract class Dd1k {
         nextServiceEnteranceTime += this.serviceTime;
       }
 
-     
-
       const numberOfCustomers =
         numberOfNewCustomers + initialCustomersRemaining;
 
@@ -268,19 +240,23 @@ abstract class Dd1k {
   }> {
     const data = [];
     let maxCustomers = 10;
-    if(this.t_i){
-       maxCustomers = Math.max(
-        Math.ceil(this.arrivalRate * this.t_i * 2),
+    if (this.timeSpecialValue) {
+      maxCustomers = Math.max(
+        Math.ceil(this.arrivalRate * this.timeSpecialValue * 2),
         10
       );
     }
 
     for (let n = 0; n <= maxCustomers; n++) {
       const waitingTime = this.waitingTimeForNthCustomer(n);
-      data.push({
+      const d: CustomerTimeLineData = {
         customer: n,
         waitingTime: waitingTime,
-      });
+        arrivalTime: undefined,
+        serviceStartTime: undefined,
+        departureTime: undefined,
+      };
+      data.push(d);
     }
 
     return data;

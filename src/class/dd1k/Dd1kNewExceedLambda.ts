@@ -13,7 +13,7 @@ class Dd1kNewExceedLambda extends Dd1k {
   ) {
     super();
 
-    this.type = "λ < μ";
+    this.dd1kType = "λ < μ";
 
     this.arrivalRate = arrivalRate;
     this.arrivalTime = 1 / arrivalRate;
@@ -28,7 +28,7 @@ class Dd1kNewExceedLambda extends Dd1k {
     this.serviceRateFraction = toProperFraction(serviceRate);
 
     this.transientTime = this.findTransientTime();
-    this.t_i = this.transientTime;
+    this.timeSpecialValue = this.transientTime;
 
     this.lambdaTi = this.arrivalRate * this.transientTime;
     this.lambdaTiFloored = Math.floor(this.lambdaTi);
@@ -40,7 +40,7 @@ class Dd1kNewExceedLambda extends Dd1k {
       this.initialCustomers * this.serviceTime;
 
     this.timeLineData = this.generateTimeGraphData();
-    this.customerGraphData = this.generateCustomerGraphData();
+    this.customerLineData = this.generateCustomerGraphData();
   }
 
   /**

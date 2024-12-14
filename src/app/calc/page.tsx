@@ -1,6 +1,6 @@
 "use client";
 
-import QueuingTheoryCalculator from "@/views/home/QueuingTheoryCalculator";
+import QueuingTheoryCalculator from "@/views/calculator/QueuingTheoryCalculator";
 
 export default function Home() {
   return <QueuingTheoryCalculator />;

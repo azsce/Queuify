@@ -12,25 +12,25 @@ import {
   ReferenceLine,
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import Dd1k from "@/class/dd1k/Dd1k";
-import ThemedToolTip from "../ThemedToolTip";
+import ThemedToolTip from "./ThemedToolTip";
+import { QueueSystem } from "@/class/QueueSystem";
 
-interface NumberOfCustomersGraphProps {
-  dd1k: Dd1k;
+interface CustomerFlowDiagramProps {
+  queueSystem: QueueSystem;
   height?: number;
   subGraph?: boolean;
   showTopAxis?: boolean;
   showBottomAxis?: boolean;
 }
 
-const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
-  dd1k,
+const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
+  queueSystem,
   height,
   subGraph,
   showTopAxis,
   showBottomAxis,
 }) => {
-  const data = dd1k.timeLineData;
+  const data = queueSystem.timeLineData;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -46,7 +46,7 @@ const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
     >
       {!subGraph && (
         <Typography variant="h6" component="h3">
-          Number of Customers vs Time
+          Customer Flow Diagram
         </Typography>
       )}
       <Box
@@ -63,82 +63,110 @@ const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
           <LineChart
             data={data}
             margin={{
-              top: 20,
+              top: 30,
               right: 0,
               left: -20,
-              bottom: isMobile ? 30 : 50,
+              bottom: subGraph ? 0 : isMobile ? 30 : 50,
             }}
           >
             <CartesianGrid
               strokeDasharray="2 2"
               strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"}
             />
-            {!showTopAxis && !showBottomAxis && (
-              <XAxis dataKey="time" xAxisId="default" hide={true} />
-            )}
+            {/* Add time axis at the top */}
             {showTopAxis && (
               <XAxis
                 dataKey="time"
-                xAxisId="top"
                 orientation="top"
+                xAxisId="top"
                 label={{
                   value: "Time (t)",
                   position: "insideTop",
                   offset: -25,
                   fill: theme.palette.text.primary,
                 }}
-                tick={{ dy: -10 }}
-                interval={dd1k.arrivalTime - 1}
-              />
-            )}
-            {showBottomAxis && (
-              <XAxis
-                dataKey="time"
-                xAxisId="bottom"
-                orientation="bottom"
-                label={{
-                  value: "Time (t)",
-                  position: "insideBottom",
-                  offset: -10,
-                  dy: -8,
-                  fontSize: 12,
+                tick={{
+                  dy: -10,
+                  fontSize: 8,
                   fill: theme.palette.text.primary,
                 }}
-                tickSize={0}
-                tick={{ dy: 5, fontSize: 8, fill: theme.palette.text.primary }}
-                interval={dd1k.arrivalTime - 1}
+                stroke={theme.palette.text.primary}
+                interval={queueSystem.arrivalTime - 1}
               />
+            )}
+            {/* Keep existing bottom axis for customer index */}
+            {showBottomAxis && (
+              <XAxis
+                xAxisId="bottom"
+                dataKey="customerIndex"
+                orientation="bottom"
+                label={{
+                  value: "Customer Index",
+                  position: "insideBottom",
+                  offset: -10,
+                  dy: 10,
+                  fill: theme.palette.text.primary,
+                }}
+                height={40}
+                tickSize={0}
+                tickLine={false}
+                tick={{ dy: 10, fontSize: 8 }}
+                stroke={theme.palette.text.primary}
+              />
+            )}
+            {!showTopAxis && !showBottomAxis && (
+              <XAxis dataKey="time" xAxisId="default" hide={true} />
             )}
             <YAxis
               label={{
-                value: "Number of Customers n(t)",
+                value: "Customer Flow",
                 angle: -90,
                 position: "insideLeft",
                 dx: 20,
-                dy: isMobile ? 50 : 105,
-                fontSize: isMobile ? 8 : 12,
+                dy: 50,
+                fontSize: 12,
                 fill: theme.palette.text.primary,
               }}
               tick={{ fontSize: 8 }}
-              tickSize={0}
-              stroke={theme.palette.text.primary}
               allowDecimals={false}
-              domain={[0, dd1k.capacity]}
+              stroke={theme.palette.text.primary}
             />
             <Tooltip content={<ThemedToolTip labelKey="Time" />} />
             <Line
-              type="stepAfter"
-              dataKey="numberOfCustomers"
-              stroke={theme.palette.mode === "dark" ? "#d884d1" : "#6f2169"}
-              name="Customers in System"
+              type="monotone"
+              dataKey="arrivals"
+              stroke="#ffc800"
+              name="Arrivals"
               dot={false}
               strokeWidth={2}
               xAxisId={
                 showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
-              } // Add this line
+              }
+            />
+            <Line
+              type="monotone"
+              dataKey="departures"
+              stroke="#00a941"
+              name="Departures"
+              dot={false}
+              strokeWidth={2}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
+            />
+            <Line
+              type="monotone"
+              dataKey="blocks"
+              stroke="#ff0000"
+              name="Blocked"
+              dot={false}
+              strokeWidth={2}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
             />
             <ReferenceLine
-              x={dd1k.t_i}
+              x={queueSystem.timeSpecialValue}
               xAxisId={
                 showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
               }
@@ -157,4 +185,4 @@ const Dd1kNumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
   );
 };
 
-export default Dd1kNumberOfCustomersGraph;
+export default CustomerFlowDiagram;

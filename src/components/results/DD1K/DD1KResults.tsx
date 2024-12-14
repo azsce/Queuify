@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Divider } from "@mui/material";
-import DD1KGraphContainer from "../../graph/dd1k/DD1KGraphContainer";
+import DD1KGraphContainer from "../../graph/dd1k/Dd1kGraphContainer";
 import Dd1kLambdaExceedNewResults from "./Dd1kLambdaExceedNewResults";
 import Dd1kLambdaEqualNewResults from "./Dd1kLambdaEqualNewResults";
 import Dd1kNewExceedLambdaResults from "./Dd1kNewExceedLambdaResults";
@@ -11,7 +11,7 @@ type Dd1kResultsProps = {
 };
 
 const DD1KResults: React.FC<Dd1kResultsProps> = ({ dd1k }) => {
-  const { type } = dd1k;
+  const { dd1kType: type } = dd1k;
   let result: React.JSX.Element = null;
   if (type === "λ = μ") {
     result = <Dd1kLambdaEqualNewResults dd1k={dd1k} />;

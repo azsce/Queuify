@@ -47,7 +47,7 @@ class Dd1kLambdaExceedNew extends Dd1k {
   constructor(arrivalRate: number, serviceRate: number, capacity: number) {
     super();
 
-    this.type = "λ > μ";
+    this.dd1kType = "λ > μ";
 
     this.arrivalRate = arrivalRate;
     this.arrivalTime = 1 / arrivalRate;
@@ -61,7 +61,7 @@ class Dd1kLambdaExceedNew extends Dd1k {
     this.serviceRateFraction = toProperFraction(serviceRate);
 
     this.firstBalkTime = this.findFirstBalkTime();
-    this.t_i = this.firstBalkTime;
+    this.timeSpecialValue = this.firstBalkTime;
 
     this.lambdaTi = this.arrivalRate * this.firstBalkTime;
     this.lambdaTiFloored = Math.floor(this.lambdaTi);
@@ -70,7 +70,7 @@ class Dd1kLambdaExceedNew extends Dd1k {
     this.muTiFloored = Math.floor(this.muTi);
 
     this.timeLineData = this.generateTimeGraphData();
-    this.customerGraphData = this.generateCustomerGraphData();
+    this.customerLineData = this.generateCustomerGraphData();
   }
 
   /**

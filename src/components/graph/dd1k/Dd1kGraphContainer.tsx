@@ -2,13 +2,13 @@
 
 import React from "react";
 import { Box } from "@mui/material";
-import Dd1kArrivalTimeline from "./Dd1kArrivalTimeline";
-import Dd1kServiceTimeline from "./Dd1kServiceTimeline";
-import Dd1kDepartureTimeline from "./Dd1kDepartureTimeline";
+import ArrivalTimeline from "../ArrivalTimeline";
+import ServiceTimeline from "../ServiceTimeline";
+import DepartureTimeline from "../DepartureTimeline";
 import Dd1k from "@/class/dd1k/Dd1k";
-import Dd1kNumberOfCustomersGraph from "./Dd1kNumberOfCustomersGraph";
-import Dd1kCustomerFlowDiagram from "./Dd1kCustomerFlowDiagram";
-import Dd1kWaitingTimeGraph from "./Dd1kWaitingTimeGraph";
+import NumberOfCustomersGraph from "../NumberOfCustomersGraph";
+import CustomerFlowDiagram from "../CustomerFlowDiagram";
+import WaitingTimeGraph from "../WaitingTimeGraph";
 
 type DD1KGraphContainerProps = {
   dd1k: Dd1k;
@@ -26,14 +26,14 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ dd1k }) => {
       ></Box>
 
       {/* <CombinedGraph {...props} height={1000} /> Add CombinedGraph */}
-      <Dd1kCustomerFlowDiagram
+      <CustomerFlowDiagram
         dd1k={dd1k}
         height={GRAPH_HEIGHT}
         subGraph={true}
         showTopAxis={true}
         showBottomAxis={false}
       />
-      <Dd1kArrivalTimeline
+      <ArrivalTimeline
         dd1k={dd1k}
         height={GRAPH_HEIGHT / 2}
         subGraph={true}
@@ -41,28 +41,28 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({ dd1k }) => {
         showBottomAxis={true}
       />
 
-      <Dd1kServiceTimeline
+      <ServiceTimeline
         dd1k={dd1k}
         height={GRAPH_HEIGHT / 3}
         subGraph={true}
         showTopAxis={false}
         showBottomAxis={true}
       />
-      <Dd1kDepartureTimeline
+      <DepartureTimeline
         dd1k={dd1k}
         height={GRAPH_HEIGHT / 3}
         subGraph={true}
         showTopAxis={false}
         showBottomAxis={true}
       />
-      <Dd1kNumberOfCustomersGraph
+      <NumberOfCustomersGraph
         dd1k={dd1k}
         height={GRAPH_HEIGHT}
         subGraph={true}
         showTopAxis={false}
         showBottomAxis={true}
       />
-      <Dd1kWaitingTimeGraph
+      <WaitingTimeGraph
         dd1k={dd1k}
         height={GRAPH_HEIGHT}
         subGraph={true}

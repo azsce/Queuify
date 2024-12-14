@@ -13,24 +13,24 @@ import {
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 
 import { colors } from "@/constants";
-import Dd1k from "@/class/dd1k/Dd1k";
+import { QueueSystem } from "@/class/QueueSystem";
 
-type Dd1kArrivalTimelineProps = {
-  dd1k: Dd1k;
+type ArrivalTimelineProps = {
+  queueSystem: QueueSystem;
   height?: number;
   subGraph?: boolean;
   showTopAxis?: boolean;
   showBottomAxis?: boolean;
 };
 
-const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
-  dd1k,
+const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
+  queueSystem,
   height,
   subGraph,
   showTopAxis,
   showBottomAxis,
 }) => {
-  const data = dd1k.timeLineData;
+  const data = queueSystem.timeLineData;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -90,7 +90,7 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                 }} // Set the color of the axis line to black
                 dy={-3}
                 tickFormatter={(value) => {
-                  if (value % dd1k.arrivalTime === 0 && value !== 0) {
+                  if (value % queueSystem.arrivalTime === 0 && value !== 0) {
                     return value;
                   }
                   return "";
@@ -125,7 +125,7 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
                   stroke: theme.palette.text.primary,
                   // strokeWidth: 2,
                 }} // Set the color of the axis line to black
-                interval={dd1k.arrivalTime - 1}
+                interval={queueSystem.arrivalTime - 1}
               />
             )}
             <YAxis
@@ -177,4 +177,4 @@ const Dd1kArrivalTimeline: React.FC<Dd1kArrivalTimelineProps> = ({
   );
 };
 
-export default Dd1kArrivalTimeline;
+export default ArrivalTimeline;

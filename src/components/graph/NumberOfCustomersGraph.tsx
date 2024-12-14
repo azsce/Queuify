@@ -12,25 +12,25 @@ import {
   ReferenceLine,
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import Dd1k from "@/class/dd1k/Dd1k";
-import ThemedToolTip from "../ThemedToolTip";
+import ThemedToolTip from "./ThemedToolTip";
+import { QueueSystem } from "@/class/QueueSystem";
 
-interface WaitingTimeGraphProps {
-  dd1k: Dd1k;
+interface NumberOfCustomersGraphProps {
+  queueSystem: QueueSystem;
   height?: number;
   subGraph?: boolean;
   showTopAxis?: boolean;
   showBottomAxis?: boolean;
 }
 
-const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
-  dd1k,
+const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
+  queueSystem,
   height,
   subGraph,
   showTopAxis,
   showBottomAxis,
 }) => {
-  const data = dd1k.customerGraphData;
+  const data = queueSystem.timeLineData;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -46,7 +46,7 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
     >
       {!subGraph && (
         <Typography variant="h6" component="h3">
-          Waiting Time vs Customer Number
+          Number of Customers vs Time
         </Typography>
       )}
       <Box
@@ -74,78 +74,77 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
               strokeOpacity={theme.palette.mode === "dark" ? 0.1 : "0.4"}
             />
             {!showTopAxis && !showBottomAxis && (
-              <XAxis dataKey="customer" xAxisId="default" hide={true} />
+              <XAxis dataKey="time" xAxisId="default" hide={true} />
             )}
             {showTopAxis && (
               <XAxis
-                dataKey="customer"
+                dataKey="time"
                 xAxisId="top"
                 orientation="top"
                 label={{
-                  value: "nth Customer",
+                  value: "Time (t)",
                   position: "insideTop",
                   offset: -25,
                   fill: theme.palette.text.primary,
                 }}
                 tick={{ dy: -10 }}
+                interval={queueSystem.arrivalTime - 1}
               />
             )}
             {showBottomAxis && (
               <XAxis
-                dataKey="customer"
+                dataKey="time"
                 xAxisId="bottom"
                 orientation="bottom"
                 label={{
-                  value: "Customer (n)",
+                  value: "Time (t)",
                   position: "insideBottom",
                   offset: -10,
                   dy: -8,
                   fontSize: 12,
                   fill: theme.palette.text.primary,
                 }}
-                height={40}
-                tick={{
-                  dy: 10,
-                  fontSize: 8,
-                  fill: theme.palette.text.primary,
-                }}
-                stroke={theme.palette.primary.main}
+                tickSize={0}
+                tick={{ dy: 5, fontSize: 8, fill: theme.palette.text.primary }}
+                interval={queueSystem.arrivalTime - 1}
               />
             )}
             <YAxis
               label={{
-                value: "Waiting Time Wq(n)",
+                value: "Number of Customers n(t)",
                 angle: -90,
                 position: "insideLeft",
                 dx: 20,
-                dy: 40,
+                dy: isMobile ? 50 : 105,
                 fontSize: isMobile ? 8 : 12,
                 fill: theme.palette.text.primary,
               }}
+              tick={{ fontSize: 8 }}
+              tickSize={0}
               stroke={theme.palette.text.primary}
               allowDecimals={false}
-              tick={{ fontSize: 8, fill: theme.palette.text.primary }}
+              domain={[0, queueSystem.capacity]}
             />
-            <Tooltip content={<ThemedToolTip labelKey="Customer" />} />
+            <Tooltip content={<ThemedToolTip labelKey="Time" />} />
             <Line
               type="stepAfter"
-              dataKey="waitingTime"
-              stroke={theme.palette.mode === "dark" ? "#e6591c" : "#db581f"}
-              name="Waiting Time"
+              dataKey="numberOfCustomers"
+              stroke={theme.palette.mode === "dark" ? "#d884d1" : "#6f2169"}
+              name="Customers in System"
               dot={false}
               strokeWidth={2}
               xAxisId={
                 showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
-              }
+              } // Add this line
             />
             <ReferenceLine
-              x={dd1k.lambdaTiFloored}
+              x={queueSystem.timeSpecialValue}
               xAxisId={
                 showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
               }
               stroke="red"
               label={{
-                value: `n = ⌊λ*t_i⌋`,
+                value: `t = t_i`,
                 position: "top",
                 fill: "red",
                 fontSize: 12,
@@ -158,4 +157,4 @@ const Dd1kWaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
   );
 };
 
-export default Dd1kWaitingTimeGraph;
+export default NumberOfCustomersGraph;
