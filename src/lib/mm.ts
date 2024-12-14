@@ -15,28 +15,28 @@ export function mm(
     capacity
   );
 
-  // if (
-  // // if (rho >= 1 && (!capacity || capacity < servers)) {
-  //   (capacity === undefined && arrivalRate >= serviceRate * servers) || // Infinite capacity and arrival rate is too high
-  //   (capacity !== undefined &&
-  //     arrivalRate > serviceRate * servers &&
-  //     capacity <= servers) || // Finite capacity, arrival rate is too high, and capacity is too small
-  //     (rho >= 1 && (!capacity || capacity < servers))
-  // ) {
-  //   return {
-  //     validSystem: false,
-  //     servers: servers,
-  //     capacity: capacity,
-  //     serviceRate: serviceRate,
-  //     arrivalRate: arrivalRate,
-  //     rho: undefined,
-  //     P0: undefined,
-  //     L: undefined,
-  //     Lq: undefined,
-  //     W: undefined,
-  //     Wq: undefined,
-  //   };
-  // }
+  if (
+    rho >= 1 && (!capacity || capacity < servers) ||
+    (capacity === undefined && arrivalRate >= serviceRate * servers) || // Infinite capacity and arrival rate is too high
+    (capacity !== undefined &&
+      arrivalRate > serviceRate * servers &&
+      capacity <= servers) || // Finite capacity, arrival rate is too high, and capacity is too small
+      (rho >= 1 && (!capacity || capacity < servers))
+  ) {
+    return {
+      validSystem: false,
+      servers: servers,
+      capacity: capacity,
+      serviceRate: serviceRate,
+      arrivalRate: arrivalRate,
+      rho: undefined,
+      P0: undefined,
+      L: undefined,
+      Lq: undefined,
+      W: undefined,
+      Wq: undefined,
+    };
+  }
 
 
 

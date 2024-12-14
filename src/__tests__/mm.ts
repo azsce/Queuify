@@ -87,6 +87,12 @@ const mm_tests = [
     arrivalRate: 10,
     servers: 3,
   },
+  {
+    validSystem: false,
+    serviceRate: 3,
+    arrivalRate: 5,
+    servers: 1,
+  }
 ];
 
 describe("mm function", () => {
