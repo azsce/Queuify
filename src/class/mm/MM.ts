@@ -1,5 +1,6 @@
 import { roundTo4Decimals } from "@/lib/math";
 import { QueueSystem } from "../QueueSystem";
+import { TimeLineData } from "@/types/Simulation";
 
 type MmStatistics = {
   totalWaitingTime: number;
@@ -32,15 +33,15 @@ class MM1QueueSimulator extends QueueSystem {
 
   generateSimulationData() {
     let numInSystem = 0;
-    let numArrival = 0;
-    let numDeparture = 0;
+    let arrivals = 0;
+    let departures = 0;
     let totalWait = 0;
     let waitInSystem = 0;
     let clock = 0;
     let nextArrival = 0;
     let nextDeparture = Infinity;
     const queue: number[] = [];
-
+    const timelineMap = new Map<string, TimeLineData>();
     this.customerLineData.push({
       customer: 0,
       arrivalTime: undefined,
@@ -49,20 +50,21 @@ class MM1QueueSimulator extends QueueSystem {
       waitingTime: undefined,
     });
 
-    while (numDeparture < this.numOfSimulations) {
+    while (departures < this.numOfSimulations) {
       if (nextArrival <= nextDeparture) {
+        // Arrival event
         clock = nextArrival;
-        numArrival++;
+        arrivals++;
         numInSystem++;
-        const customerIndex = numArrival;
+        const customerIndex = arrivals;
 
-        this.customerLineData.push({
+        this.customerLineData[customerIndex] = {
           customer: customerIndex,
           arrivalTime: clock,
-          serviceStartTime: numInSystem === 1 ? clock : 0,
-          departureTime: 0,
+          serviceStartTime: numInSystem === 1 ? clock : undefined,
+          departureTime: undefined,
           waitingTime: 0,
-        });
+        };
 
         if (queue.length === 0) {
           const serviceTime = exponentialRandom(this.serviceRate);
@@ -71,25 +73,25 @@ class MM1QueueSimulator extends QueueSystem {
         queue.push(customerIndex);
         nextArrival += exponentialRandom(this.arrivalRate);
 
-        this.timeLineData.push({
+        timelineMap.set(clock, {
           time: roundTo4Decimals(clock),
           arrived: true,
-          arrivals: numArrival,
+          arrivals: arrivals,
           enteredService: numInSystem === 1,
           serviceEnterancs: numInSystem === 1 ? 1 : 0,
           departured: false,
-          departures: numDeparture,
+          departures: departures,
           numberOfCustomers: numInSystem,
           key: customerIndex,
         });
       } else {
         // Departure event
         clock = nextDeparture;
-        numDeparture++;
+        departures++;
         numInSystem--;
         const customerIndex = queue.shift()!;
-        const customer = this.customerLineData[customerIndex - 1];
-        const waitInSystem = clock - customer.arrivalTime;
+        const customer = this.customerLineData[customerIndex];
+        const waitInSystem = clock - customer.arrivalTime!;
         totalWait += waitInSystem;
         customer.departureTime = clock;
         customer.waitingTime = waitInSystem;
@@ -100,29 +102,34 @@ class MM1QueueSimulator extends QueueSystem {
           const serviceTime = exponentialRandom(this.serviceRate);
           nextDeparture = clock + serviceTime;
           const nextCustomerIndex = queue[0];
-          this.customerLineData[nextCustomerIndex - 1].serviceStartTime = clock;
+          this.customerLineData[nextCustomerIndex].serviceStartTime = clock;
         }
 
-        this.timeLineData.push({
+        timelineMap.set(clock, {
           time: roundTo4Decimals(clock),
           arrived: false,
-          arrivals: numArrival,
+          arrivals: arrivals,
           enteredService: queue.length > 0,
           serviceEnterancs: queue.length > 0 ? 1 : 0,
           departured: true,
-          departures: numDeparture,
+          departures: departures,
           numberOfCustomers: numInSystem,
           key: customerIndex,
         });
       }
     }
 
+    // Convert timelineMap to timeLineData array
+    this.timeLineData = Array.from(timelineMap.values()).sort(
+      (a, b) => a.time - b.time
+    );
+
     this.statistics = {
       totalWaitingTime: totalWait,
-      averageWaitingTime: totalWait / numDeparture,
-      totalWaitingTimeInQueue: totalWait - numDeparture / this.serviceRate,
+      averageWaitingTime: totalWait / departures,
+      totalWaitingTimeInQueue: totalWait - departures / this.serviceRate,
       averageWaitingTimeInQueue:
-        (totalWait - numDeparture / this.serviceRate) / numDeparture,
+        (totalWait - departures / this.serviceRate) / departures,
       totalIdleServerTime: clock - totalWait,
       averageIdleServerTime: (clock - totalWait) / this.numOfSimulations,
     };
