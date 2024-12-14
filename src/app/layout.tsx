@@ -10,6 +10,7 @@ import { MMProvider } from "@/contexts/MMContext";
 import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
 import { GoogleAnalytics } from '@next/third-parties/google'
+import Script from "next/script";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -135,6 +136,24 @@ export default function RootLayout({
           </AppRouterCacheProvider>
         </ThemeProvider>
       </body>
+
+      {/* Google Analytics using next/script for better script handling */}
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=G-D4KKXZ1SH9`}
+      />
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-D4KKXZ1SH9');
+          `,
+        }}
+      />
       <GoogleAnalytics gaId="G-D4KKXZ1SH9" />
     </html>
   );
