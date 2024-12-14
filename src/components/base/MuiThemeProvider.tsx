@@ -2,7 +2,7 @@
 
 import nextJsDarkTheme from "@/theme/nextJsDarkTheme";
 import nextJsTheme from "@/theme/nextJsTheme";
-import { Box, ThemeProvider } from "@mui/material";
+import { Box, ThemeProvider, Typography } from "@mui/material";
 import { useTheme } from "next-themes";
 import React, { useMemo } from "react";
 
@@ -25,9 +25,9 @@ const MuiThemeProvider: React.FC<MuiThemeProviderProps> = ({ children }) => {
     }
   }, [theme]);
 
-  if (!theme || !muiTheme) {
-    return null;
-  }
+  // if (!theme || !muiTheme) {
+  //   return <Typography variant="caption">::...Loading</Typography>;
+  // }
 
   return (
     <ThemeProvider theme={muiTheme}>

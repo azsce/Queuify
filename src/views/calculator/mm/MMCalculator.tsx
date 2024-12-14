@@ -14,6 +14,7 @@ import { evaluate } from "mathjs";
 import { isValidPositiveInteger, isValidPositiveNumber } from "@/lib/math";
 import { useMM } from "@/contexts/MMContext";
 import MM1QueueSimulator from "@/class/mm/MM";
+import MMGraphContainer from "./MMGraphContainer";
 
 export default function QueuingTheoryCalculator() {
   const {
@@ -36,6 +37,9 @@ export default function QueuingTheoryCalculator() {
   // mmxy
   const [error, setError] = useState("");
   const [results, setResults] = useState<JSX.Element | null>(null);
+  const [graphContainer, setGraphContainer] = useState<JSX.Element | null>(
+    null
+  );
 
   const handleCalculate = () => {
     let evaluatedServers;
@@ -120,9 +124,14 @@ export default function QueuingTheoryCalculator() {
         evaluatedCapacity
       );
       if (characteristics.validSystem) {
-  const simulator = MM1QueueSimulator(evaluatedArrivalRate, evaluatedServiceRate, simulations)
+        const simulator = new MM1QueueSimulator(
+          evaluatedArrivalRate,
+          evaluatedServiceRate,
+          evaluatedSimulations
+        );
 
         setResults(<MMResults characteristics={characteristics} />);
+        setGraphContainer(<MMGraphContainer queueSystem={simulator} />);
       } else {
         setError(
           "The system is unstable. Please check the arrival and service rates."
@@ -195,7 +204,14 @@ export default function QueuingTheoryCalculator() {
         </Grid>
       </Box>
 
-      <Box mt={4}>
+      <Box
+        sx={{
+          mt: 4,
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
+      >
         {error && (
           <Alert severity="error" sx={{ mb: 3 }}>
             {error}

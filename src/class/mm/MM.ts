@@ -47,6 +47,7 @@ class MM1QueueSimulator extends QueueSystem {
           arrivalTime: clock,
           serviceStartTime: 0,
           departureTime: 0,
+          waitingTime: 0,
         });
 
         if (queue.length === 0) {
