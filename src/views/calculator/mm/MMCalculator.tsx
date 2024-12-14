@@ -197,7 +197,7 @@ export default function QueuingTheoryCalculator() {
               <NoNumberArrowsTextField
                 value={simulations}
                 placeholder={"Number of Simulations"}
-                label="Initial Customers: M"
+                label="Number of Simulations"
                 fullWidth
                 autoComplete={"mm-simulations"}
                 onChange={(e) => {
