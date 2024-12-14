@@ -118,7 +118,7 @@ const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
   } else if (type === "(λ > μ) && λ%μ = 0") {
     nGreaterThanOrEqualLambdaTi = (
       <MathJax inline>
-        {`\\(Wq(n) \\text{ = } ${service_minus_arrival_time}(${lambdaTi} - 2)`}
+        {`\\(Wq(n) \\text{ = } ${service_minus_arrival_time}(${lambdaTi} - 2)\\)`}
       </MathJax>
     );
   }
