@@ -40,7 +40,7 @@ class MM1QueueSimulator extends QueueSystem {
     let nextArrival = 0;
     let nextDeparture = Infinity;
     const queue: number[] = [];
-    const timelineMap = new Map<string, TimeLineData>();
+    const timelineMap = new Map<number, TimeLineData>();
     this.customerLineData.push({
       customer: 0,
       arrivalTime: undefined,
