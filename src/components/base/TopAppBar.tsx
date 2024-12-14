@@ -102,7 +102,7 @@ export default function TopAppBar() {
               </IconButton>
               {/* Home Icon */}
               {/* Home Icon */}
-              <Link href="/Queue/">
+              <Link href="/calc">
                 <Box
                   sx={{
                     display: "flex",
@@ -133,7 +133,7 @@ export default function TopAppBar() {
               }}
             >
               {/* Home Icon */}
-              <Link href="/Queue/">
+              <Link href="/calc">
                 <Box
                   sx={{
                     display: "flex",
