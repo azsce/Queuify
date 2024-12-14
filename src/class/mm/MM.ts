@@ -10,6 +10,10 @@ type MmStatistics = {
   averageIdleServerTime: number;
 };
 
+function exponentialRandom(rate: number): number {
+  return -Math.log(1.0 - Math.random()) / rate;
+}
+
 class MM1QueueSimulator extends QueueSystem {
   numOfSimulations: number;
 
@@ -53,12 +57,12 @@ class MM1QueueSimulator extends QueueSystem {
         });
 
         if (queue.length === 0) {
-          const serviceTime = exponential(this.serviceRate);
+          const serviceTime = exponentialRandom(this.serviceRate);
           nextDeparture = nextArrival + serviceTime;
           this.customerLineData[customerIndex - 1].serviceStartTime = clock;
         }
         queue.push(customerIndex);
-        const interarrivalTime = exponential(this.arrivalRate);
+        const interarrivalTime = exponentialRandom(this.arrivalRate);
         nextArrival += interarrivalTime;
 
         this.timeLineData.push({
@@ -85,7 +89,7 @@ class MM1QueueSimulator extends QueueSystem {
         if (queue.length === 0) {
           nextDeparture = Infinity;
         } else {
-          const serviceTime = exponential(this.serviceRate);
+          const serviceTime = exponentialRandom(this.serviceRate);
           nextDeparture += serviceTime;
           const nextCustomerIndex = queue[0];
           this.customerLineData[nextCustomerIndex - 1].serviceStartTime = clock;
@@ -115,10 +119,6 @@ class MM1QueueSimulator extends QueueSystem {
       averageIdleServerTime: (clock - totalWait) / this.numOfSimulations,
     };
   }
-}
-
-function exponential(rate: number): number {
-  return -Math.log(1.0 - Math.random()) / rate;
 }
 
 export default MM1QueueSimulator;

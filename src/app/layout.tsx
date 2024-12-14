@@ -7,17 +7,22 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import MuiThemeProvider from "@/components/base/MuiThemeProvider";
 import { DD1KProvider } from "@/contexts/DD1KContext";
 import { MMProvider } from "@/contexts/MMContext";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import Head from "next/head";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Script from "next/script";
 
-const geistSans = Geist({
-  subsets: ["latin"],
+const geistSans = localFont({
+  src: "../fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+  weight: "100 900",
 });
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
+const geistMono = localFont({
+  src: "../fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+  weight: "100 900",
 });
+
 export const metadata: Metadata = {
   title: "Queuify - Queuing Theory Calculator and Simulator",
   description:
@@ -74,7 +79,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Head>
-        <meta name="color-scheme" content="dark light" />
+        {/* <meta name="color-scheme" content="dark light" /> */}
 
         <script
           type="application/ld+json"

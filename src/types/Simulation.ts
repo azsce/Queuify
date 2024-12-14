@@ -1,32 +1,32 @@
 export type TimeLineData = {
-    time: number;
+  time: number;
 
-    arrived: boolean;
-    arrivals: number;
+  arrived: boolean;
+  arrivals: number;
 
-    blocked?: boolean | null;
-    blocks?: number;
+  blocked?: boolean | null;
+  blocks?: number;
 
-    enteredService: boolean;
-    serviceEnterancs: number;
+  enteredService: boolean;
+  serviceEnterancs: number;
 
-    initialEnteredService?: boolean;
-    initialServiceEnterances?: number;
+  initialEnteredService?: boolean;
+  initialServiceEnterances?: number;
 
-    departured: boolean;
-    departures: number;
-    
-    initialDepartured?: boolean;
-    initialDepartures?: number;
+  departured: boolean;
+  departures: number;
 
-    numberOfCustomers: number;
-    key: number;
-  };
+  initialDepartured?: boolean;
+  initialDepartures?: number;
 
-  export type CustomerTimeLineData = {
-    customer: number;
-    arrivalTime: number;
-    serviceStartTime: number;
-    departureTime: number;
-    waitingTime;
-  };
+  numberOfCustomers: number;
+  key: number;
+};
+
+export type CustomerTimeLineData = {
+  customer: number;
+  arrivalTime?: number;
+  serviceStartTime?: number;
+  departureTime?: number;
+  waitingTime: number;
+};
