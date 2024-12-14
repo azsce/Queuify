@@ -133,9 +133,8 @@ export default function QueuingTheoryCalculator() {
           );
           setGraphContainer(<MMGraphContainer queueSystem={simulator} />);
         } else {
-          setGraphContainer(null);
+          setGraphContainer(<Box sx={{ height: "30vh" }} />);
         }
-
         setResults(<MMResults characteristics={characteristics} />);
       } else {
         setError(
@@ -208,33 +207,21 @@ export default function QueuingTheoryCalculator() {
             </Grid>
           </Grid>
         </Grid>
-        {/* New sticky container for the Analyze button */}
-        <Paper
-          elevation={3}
-          sx={{
-            position: "sticky",
-            top: 0,
-            zIndex: 1000,
-            padding: 2,
-            backgroundColor: "background.paper",
-          }}
-        >
-          <Grid container spacing={0} alignItems="center">
-            <Grid item xs={1} sm={0.5} />
-            <Grid item xs={11} sm={11.5}>
-              <Button
-                variant="outlined"
-                sx={{
-                  fontWeight: "700",
-                }}
-                onClick={handleCalculate}
-                fullWidth
-              >
-                Analyze
-              </Button>
-            </Grid>
+        <Grid container spacing={0} alignItems="center">
+          <Grid size={{ xs: 1, sm: 0.5 }} />
+          <Grid size={{ xs: 11, sm: 11.5 }}>
+            <Button
+              variant="outlined"
+              sx={{
+                fontWeight: "700",
+              }}
+              onClick={handleCalculate}
+              fullWidth
+            >
+              Analyze
+            </Button>
           </Grid>
-        </Paper>
+        </Grid>
       </Box>
 
       <Box

@@ -9,7 +9,6 @@ import {
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { Box, Tooltip, Typography } from "@mui/material";
 
-
 const MMResults = ({
   characteristics: performanceMetrics,
 }: {
@@ -27,7 +26,6 @@ const MMResults = ({
   const LqFraction = toProperFraction(Lq);
   const WFraction = toProperFraction(W);
   const WqFraction = toProperFraction(Wq);
-
 
   return (
     <MathJaxContext>
@@ -133,8 +131,6 @@ const MMResults = ({
             )}
           </Typography>
         </Tooltip>
-
-        <Box sx={{ height: "30vh" }} />
       </Box>
     </MathJaxContext>
   );

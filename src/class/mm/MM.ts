@@ -1,4 +1,4 @@
-import { CustomerTimeLineData, TimeLineData } from "@/types/Simulation";
+import { roundTo4Decimals } from "@/lib/math";
 import { QueueSystem } from "../QueueSystem";
 
 type MmStatistics = {
@@ -62,7 +62,7 @@ class MM1QueueSimulator extends QueueSystem {
         nextArrival += interarrivalTime;
 
         this.timeLineData.push({
-          time: clock,
+          time: roundTo4Decimals(clock),
           arrived: true,
           arrivals: numArrival,
           enteredService: queue.length === 1,
@@ -92,7 +92,7 @@ class MM1QueueSimulator extends QueueSystem {
         }
 
         this.timeLineData.push({
-          time: clock,
+          time: roundTo4Decimals(clock),
           arrived: false,
           arrivals: numArrival,
           enteredService: false,
