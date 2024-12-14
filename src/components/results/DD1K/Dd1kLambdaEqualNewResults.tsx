@@ -62,6 +62,10 @@ const Dd1kLambdaEqualNewResults: React.FC<Dd1kLambdaEqualNewResultsProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center gap-2">
+            <strong>Note:</strong>
+            <MathJax inline>{`\\( \\lambda = \\mu \\)`}</MathJax>
+          </div>
+          <div className="flex items-center gap-2">
             <strong>Arrival Rate: </strong>
             <MathJax
               inline

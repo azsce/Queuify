@@ -98,6 +98,9 @@ class Dd1kLambdaExceedNew extends Dd1k {
   }
 
   computeNOfT(t: number): number {
+    if(t < 0 || isNaN(t)) {
+      return undefined;
+    }
     if (t < 1 / this.arrivalRate) {
       // State 1: t < 1/λ
       return 0;
@@ -133,13 +136,13 @@ class Dd1kLambdaExceedNew extends Dd1k {
   }
 
   waitingTimeForNthCustomer(n: number): number {
-    if (n === 0) {
-      return 0;
-    } else if (n < this.arrivalRate * this.firstBalkTime) {
+    if (n <= 0 || isNaN(n) || !Number.isInteger(n)) return undefined;
+    if (n < this.arrivalRate * this.firstBalkTime) {
       return (this.serviceTime - 1 / this.arrivalRate) * (n - 1);
     } else {
       return this.waitingTimeForNthCustomerAtSteadyState(n);
     }
+    return undefined;
   }
 
   waitingTimeForNthCustomerAtSteadyState(n: number): number {

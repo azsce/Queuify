@@ -42,6 +42,17 @@ const Dd1kNewExceedLambdaResults: React.FC<
     dd1k.waitingTimeForNthCustomer(dd1k.lambdaTiFloored)
   );
 
+  useEffect(() => {
+    setTVar(dd1k.t_i);
+    setNOfTVar(dd1k.computeNOfT(dd1k.t_i));
+  }, [dd1k]);
+
+  useEffect(() => {
+    setNVar(dd1k.lambdaTiFloored);
+    setWqOfNVar(dd1k.waitingTimeForNthCustomer(dd1k.lambdaTiFloored));
+  }, [dd1k]);
+
+
   const handleTVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const t = parseFloat(e.target.value);
     setTVar(t);
@@ -91,6 +102,10 @@ const Dd1kNewExceedLambdaResults: React.FC<
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center gap-2">
+            <strong>Note:</strong>
+            <MathJax inline>{`\\( \\lambda < \\mu \\)`}</MathJax>
+          </div>
+          <div className="flex items-center gap-2">
             <strong>Arrival Rate: </strong>
             <MathJax
               inline
@@ -136,9 +151,13 @@ const Dd1kNewExceedLambdaResults: React.FC<
               </div>
               <div className="ml-6 mt-4">
                 <MathJax inline>{`\\(n(t) = ${initialCustomers} + \\lfloor ${
-                  arrivalRate === 1 ? "" : formatFraction(arrivalRateFraction) + "\\cdot"
+                  arrivalRate === 1
+                    ? ""
+                    : formatFraction(arrivalRateFraction) + "\\cdot"
                 } t \\rfloor - \\lfloor ${
-                  serviceRate === 1 ? "" : formatFraction(serviceRateFraction) + "\\cdot"
+                  serviceRate === 1
+                    ? ""
+                    : formatFraction(serviceRateFraction) + "\\cdot"
                 } t \\rfloor\\)`}</MathJax>
               </div>
             </div>
@@ -151,6 +170,7 @@ const Dd1kNewExceedLambdaResults: React.FC<
               justifyContent: "center",
               alignItems: "center",
               gap: 2,
+              pt:2
             }}
           >
             <MathJax inline>{`\\( n(t)\\)`}</MathJax>
@@ -170,7 +190,7 @@ const Dd1kNewExceedLambdaResults: React.FC<
                         borderLeft: "1px solid",
                         borderColor: "text.primary",
                         paddingLeft: "1rem",
-                        color: "text.primary"
+                        color: "text.primary",
                       }}
                     >
                       = {nOfTVar}
@@ -241,6 +261,7 @@ const Dd1kNewExceedLambdaResults: React.FC<
               justifyContent: "center",
               alignItems: "center",
               gap: 2,
+              pt: 2,
             }}
           >
             <MathJax inline>{`\\(Wq(n) \\)`}</MathJax>
@@ -261,7 +282,7 @@ const Dd1kNewExceedLambdaResults: React.FC<
                         borderLeft: "1px solid",
                         borderColor: "text.primary",
                         paddingLeft: "1rem",
-                        color: "text.primary"
+                        color: "text.primary",
                       }}
                     >
                       = {wqOfNVar}

@@ -7,15 +7,13 @@ import {
   roundTo4Decimals,
 } from "@/lib/math";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
-import { Box, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import { Box, Tooltip, Typography } from "@mui/material";
 
 const MMResults = ({
   characteristics,
 }: {
   characteristics: MMCharacteristics;
 }) => {
-
   useEffect(() => {
     // eslint-disable-next-line
     window.MathJax && window.MathJax.typeset();
@@ -31,97 +29,108 @@ const MMResults = ({
 
   return (
     <MathJaxContext>
-      <Box sx={{ p: 2 }}>
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12 }}>
-            {/* ρ */}
-            <Typography variant="body1">
-              System utilization (ρ):{" "}
-              {isDecimalZeroAfterRounding(rho) ? (
-                <MathJax
-                  inline
-                >{`\\(\\rho = ${roundTo4Decimals(rho)}`}</MathJax>
-              ) : (
-                <MathJax
-                  inline
-                >{`\\(\\rho = ${formatFraction(rhoFraction)}\\) = ${roundTo4Decimals(rho)}`}</MathJax>
-              )}
-            </Typography>
-          </Grid>
+      <Box
+        sx={{
+          p: 2,
+          pl: 8,
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
+      >
+        {/* ρ */}
+        <Tooltip title="System utilization" followCursor>
+          <Typography variant="body1">
+            {isDecimalZeroAfterRounding(rho) ? (
+              <MathJax
+                inline
+              >{`\\(\\rho = ${roundTo4Decimals(rho)}\\)`}</MathJax>
+            ) : (
+              <MathJax inline>
+                {`\\(\\rho = ${formatFraction(rhoFraction)}\\) = ${roundTo4Decimals(
+                  rho
+                )}`}
+              </MathJax>
+            )}
+          </Typography>
+        </Tooltip>
 
-          {/* P0 */}
-          <Grid size={{ xs: 12 }}>
-            <Typography variant="body1">
-              Probability of 0 customers (P0):{" "}
-              {isDecimalZeroAfterRounding(P0) ? (
-                <MathJax
-                  inline
-                >{`\\(P_0 = ${roundTo4Decimals(P0)}\\)`}</MathJax>
-              ) : (
-                <MathJax
-                  inline
-                >{`\\(P_0 = ${formatFraction(P0Fraction)}\\) = ${roundTo4Decimals(P0)}`}</MathJax>
-              )}
-            </Typography>
-          </Grid>
+        {/* P0 */}
+        <Tooltip title="Probability of 0 customers" followCursor>
+          <Typography variant="body1">
+            {isDecimalZeroAfterRounding(P0) ? (
+              <MathJax inline>{`\\(P_0 = ${roundTo4Decimals(P0)}\\)`}</MathJax>
+            ) : (
+              <MathJax inline>
+                {`\\(P_0 = ${formatFraction(P0Fraction)}\\) = ${roundTo4Decimals(
+                  P0
+                )}`}
+              </MathJax>
+            )}
+          </Typography>
+        </Tooltip>
 
-          {/* L */}
-          <Grid size={{ xs: 12 }}>
-            <Typography variant="body1">
-              Average number of customers in the system (L):{" "}
-              {isDecimalZeroAfterRounding(L) ? (
-                <MathJax inline>{`\\(L = ${roundTo4Decimals(L)}\\)`}</MathJax>
-              ) : (
-                <MathJax
-                  inline
-                >{`\\(L = ${formatFraction(LFraction)}\\) = ${roundTo4Decimals(L)}`}</MathJax>
-              )}
-            </Typography>
-          </Grid>
-          {/* Lq */}
-          <Grid size={{ xs: 12 }}>
-            <Typography variant="body1">
-              Average number of customers in the queue (Lq):{" "}
-              {isDecimalZeroAfterRounding(Lq) ? (
-                <MathJax
-                  inline
-                >{`\\(L_q = ${roundTo4Decimals(Lq)}\\)`}</MathJax>
-              ) : (
-                <MathJax
-                  inline
-                >{`\\(L_q = ${formatFraction(LqFraction)}\\) = ${roundTo4Decimals(Lq)}`}</MathJax>
-              )}
-            </Typography>
-          </Grid>
-          {/* W */}
-          <Grid size={{ xs: 12 }}>
-            <Typography variant="body1">
-              Average time a customer spends in the system (W):{" "}
-              {isDecimalZeroAfterRounding(W) ? (
-                <MathJax inline>{`\\(W = ${parseInt(W + "")}\\)`}</MathJax>
-              ) : (
-                <MathJax
-                  inline
-                >{`\\(W = ${formatFraction(WFraction)}\\) = ${roundTo4Decimals(W)}`}</MathJax>
-              )}
-            </Typography>
-          </Grid>
-          {/* Wq */}
-          <Grid size={{ xs: 12 }}>
-            <Typography variant="body1">
-              Average time a customer spends in the queue (Wq):{" "}
-              {isDecimalZeroAfterRounding(Wq) ? (
-                <MathJax
-                  inline
-                >{`\\(W_q = ${roundTo4Decimals(Wq)}\\)`}</MathJax>
-              ) : (
-                <MathJax
-                  inline
-                >{`\\(W_q = ${formatFraction(WqFraction)}\\) = ${roundTo4Decimals(Wq)}`}</MathJax>
-              )}
-            </Typography>
-          </Grid>
-        </Grid>
+        {/* L */}
+        <Tooltip title="Average number of customers in the system" followCursor>
+          <Typography variant="body1">
+            {isDecimalZeroAfterRounding(L) ? (
+              <MathJax inline>{`\\(L = ${roundTo4Decimals(L)}\\)`}</MathJax>
+            ) : (
+              <MathJax inline>
+                {`\\(L = ${formatFraction(LFraction)}\\) = ${roundTo4Decimals(L)}`}
+              </MathJax>
+            )}
+          </Typography>
+        </Tooltip>
+
+        {/* Lq */}
+        <Tooltip title="Average number of customers in the queue" followCursor>
+          <Typography variant="body1">
+            {isDecimalZeroAfterRounding(Lq) ? (
+              <MathJax inline>{`\\(L_q = ${roundTo4Decimals(Lq)}\\)`}</MathJax>
+            ) : (
+              <MathJax inline>
+                {`\\(L_q = ${formatFraction(LqFraction)}\\) = ${roundTo4Decimals(
+                  Lq
+                )}`}
+              </MathJax>
+            )}
+          </Typography>
+        </Tooltip>
+
+        {/* W */}
+        <Tooltip
+          title="Average time a customer spends in the system"
+          followCursor
+        >
+          <Typography variant="body1">
+            {isDecimalZeroAfterRounding(W) ? (
+              <MathJax inline>{`\\(W = ${parseInt(W + "")}\\)`}</MathJax>
+            ) : (
+              <MathJax inline>
+                {`\\(W = ${formatFraction(WFraction)}\\) = ${roundTo4Decimals(W)}`}
+              </MathJax>
+            )}
+          </Typography>
+        </Tooltip>
+
+        {/* Wq */}
+        <Tooltip
+          title="Average time a customer spends in the queue"
+          followCursor
+        >
+          <Typography variant="body1">
+            {isDecimalZeroAfterRounding(Wq) ? (
+              <MathJax inline>{`\\(W_q = ${roundTo4Decimals(Wq)}\\)`}</MathJax>
+            ) : (
+              <MathJax inline>
+                {`\\(W_q = ${formatFraction(WqFraction)}\\) = ${roundTo4Decimals(
+                  Wq
+                )}`}
+              </MathJax>
+            )}
+          </Typography>
+        </Tooltip>
       </Box>
     </MathJaxContext>
   );

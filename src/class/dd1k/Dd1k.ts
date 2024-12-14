@@ -42,7 +42,7 @@ import { timeLineData } from "@/types/timeLineData";
  * Step 3: Calculate the number of customers in the system (n(t))
  * 1. For t < 1/λ, n(t) = 0 (queue is empty).
  * 2. For 1/λ ≤ t < t_i, n(t) increases based on arrival and service rates typically calculated as:
- *                    n(t) = ⌊t/λ⌋ - ⌊t/μ - 1/μ⌋
+ *                    n(t) = ⌊t/λ⌋ - ⌊t/μ - λ/μ⌋
  * 3. For t ≥ t_i, n(t) stabilizes at k-1 or k-2 customers.
  *          [n(t) >= k, the queue is saturated, and new arrivals are rejected]
  *      Once n(t) ≥ k, the system transitions to a steady-state where the system remains full,
