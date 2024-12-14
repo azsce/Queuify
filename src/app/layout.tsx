@@ -9,7 +9,7 @@ import { DD1KProvider } from "@/contexts/DD1KContext";
 import { MMProvider } from "@/contexts/MMContext";
 import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics } from "@next/third-parties/google";
 import Script from "next/script";
 
 const geistSans = Geist({
@@ -136,7 +136,6 @@ export default function RootLayout({
           </AppRouterCacheProvider>
         </ThemeProvider>
       </body>
-
       {/* Google Analytics using next/script for better script handling */}
       <Script
         strategy="afterInteractive"

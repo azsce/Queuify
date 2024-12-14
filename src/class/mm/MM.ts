@@ -13,8 +13,6 @@ type MmStatistics = {
 class MM1QueueSimulator extends QueueSystem {
   numOfSimulations: number;
 
-  timelineData: TimeLineData[] = [];
-  customerLineData: CustomerTimeLineData[] = [];
   statistics: MmStatistics;
 
   constructor(lambda: number, mu: number, numOfSimulations: number) {
@@ -22,9 +20,13 @@ class MM1QueueSimulator extends QueueSystem {
     this.arrivalRate = lambda;
     this.serviceRate = mu;
     this.numOfSimulations = numOfSimulations;
+
+    this.timeLineData = [];
+    this.customerLineData = [];
+    this.generateSimulationData();
   }
 
-  simulate() {
+  generateSimulationData() {
     let numInSystem = 0;
     let numArrival = 0;
     let numDeparture = 0;
@@ -59,7 +61,7 @@ class MM1QueueSimulator extends QueueSystem {
         const interarrivalTime = exponential(this.arrivalRate);
         nextArrival += interarrivalTime;
 
-        this.timelineData.push({
+        this.timeLineData.push({
           time: clock,
           arrived: true,
           arrivals: numArrival,
@@ -76,8 +78,7 @@ class MM1QueueSimulator extends QueueSystem {
         numInSystem--;
         const customerIndex = queue.shift()!;
         waitInSystem =
-          nextDeparture -
-          this.customerLineData[customerIndex - 1].arrivalTime;
+          nextDeparture - this.customerLineData[customerIndex - 1].arrivalTime;
         totalWait += waitInSystem;
         this.customerLineData[customerIndex - 1].departureTime = clock;
 
@@ -87,11 +88,10 @@ class MM1QueueSimulator extends QueueSystem {
           const serviceTime = exponential(this.serviceRate);
           nextDeparture += serviceTime;
           const nextCustomerIndex = queue[0];
-          this.customerLineData[nextCustomerIndex - 1].serviceStartTime =
-            clock;
+          this.customerLineData[nextCustomerIndex - 1].serviceStartTime = clock;
         }
 
-        this.timelineData.push({
+        this.timeLineData.push({
           time: clock,
           arrived: false,
           arrivals: numArrival,
@@ -109,7 +109,8 @@ class MM1QueueSimulator extends QueueSystem {
       totalWaitingTime: totalWait,
       averageWaitingTime: totalWait / numDeparture,
       totalWaitingTimeInQueue: totalWait - numDeparture / this.serviceRate,
-      averageWaitingTimeInQueue: (totalWait - numDeparture / this.serviceRate) / numDeparture,
+      averageWaitingTimeInQueue:
+        (totalWait - numDeparture / this.serviceRate) / numDeparture,
       totalIdleServerTime: clock - totalWait,
       averageIdleServerTime: (clock - totalWait) / this.numOfSimulations,
     };

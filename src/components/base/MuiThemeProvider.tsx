@@ -2,7 +2,12 @@
 
 import nextJsDarkTheme from "@/theme/nextJsDarkTheme";
 import nextJsTheme from "@/theme/nextJsTheme";
-import { Box, ThemeProvider, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  ThemeProvider,
+  Typography,
+} from "@mui/material";
 import { useTheme } from "next-themes";
 import React, { useMemo } from "react";
 
@@ -25,9 +30,21 @@ const MuiThemeProvider: React.FC<MuiThemeProviderProps> = ({ children }) => {
     }
   }, [theme]);
 
-  // if (!theme || !muiTheme) {
-  //   return <Typography variant="caption">::...Loading</Typography>;
-  // }
+  if (!theme || !muiTheme) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-start",
+          justifyContent: "flex-start",
+        }}
+      >
+        <CircularProgress size={20} />
+        <Typography variant="caption">::...Loading</Typography>
+      </Box>
+    );
+  }
 
   return (
     <ThemeProvider theme={muiTheme}>

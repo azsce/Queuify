@@ -27,7 +27,7 @@ const Dd1kCalculator: React.FC = () => {
     setArrivalTime,
     serviceTime,
     setServiceTime,
-    isInitialCustomersRequired
+    isInitialCustomersRequired,
   } = useDD1K();
 
   const [error, setError] = useState("");

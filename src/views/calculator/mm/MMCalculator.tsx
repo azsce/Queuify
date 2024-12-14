@@ -15,6 +15,7 @@ import { isValidPositiveInteger, isValidPositiveNumber } from "@/lib/math";
 import { useMM } from "@/contexts/MMContext";
 import MM1QueueSimulator from "@/class/mm/MM";
 import MMGraphContainer from "./MMGraphContainer";
+import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 
 export default function QueuingTheoryCalculator() {
   const {
@@ -31,7 +32,7 @@ export default function QueuingTheoryCalculator() {
     serviceTime,
     setServiceTime,
     simulations,
-    // setSimulations
+    setSimulations,
   } = useMM();
 
   // mmxy
@@ -124,14 +125,18 @@ export default function QueuingTheoryCalculator() {
         evaluatedCapacity
       );
       if (characteristics.validSystem) {
-        const simulator = new MM1QueueSimulator(
-          evaluatedArrivalRate,
-          evaluatedServiceRate,
-          evaluatedSimulations
-        );
+        if (isValidPositiveInteger(evaluatedSimulations)) {
+          const simulator = new MM1QueueSimulator(
+            evaluatedArrivalRate,
+            evaluatedServiceRate,
+            evaluatedSimulations
+          );
+          setGraphContainer(<MMGraphContainer queueSystem={simulator} />);
+        } else {
+          setGraphContainer(null);
+        }
 
         setResults(<MMResults characteristics={characteristics} />);
-        setGraphContainer(<MMGraphContainer queueSystem={simulator} />);
       } else {
         setError(
           "The system is unstable. Please check the arrival and service rates."
@@ -186,22 +191,50 @@ export default function QueuingTheoryCalculator() {
           arrivalTime={arrivalTime}
           serviceTime={serviceTime}
         />
-        <Grid size={12} container spacing={0} alignItems="center">
-          {/* Empty Column */}
-          <Grid size={{ xs: 1, sm: 0.5 }} />
-          <Grid size={{ xs: 11, sm: 11.5 }} justifyContent={"start"}>
-            <Button
-              variant="outlined"
-              sx={{
-                fontWeight: "700",
-              }}
-              onClick={handleCalculate}
-              fullWidth
-            >
-              Analyze
-            </Button>
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, sm: 6 }} container>
+            <Grid size={1} />
+            <Grid size={11}>
+              <NoNumberArrowsTextField
+                value={simulations}
+                placeholder={"Initial Customers: M"}
+                label="Initial Customers: M"
+                fullWidth
+                autoComplete={"dd1k-initial-customers"}
+                onChange={(e) => {
+                  setSimulations(e.target.value);
+                }}
+              />
+            </Grid>
           </Grid>
         </Grid>
+        {/* New sticky container for the Analyze button */}
+        <Paper
+          elevation={3}
+          sx={{
+            position: "sticky",
+            top: 0,
+            zIndex: 1000,
+            padding: 2,
+            backgroundColor: "background.paper",
+          }}
+        >
+          <Grid container spacing={0} alignItems="center">
+            <Grid item xs={1} sm={0.5} />
+            <Grid item xs={11} sm={11.5}>
+              <Button
+                variant="outlined"
+                sx={{
+                  fontWeight: "700",
+                }}
+                onClick={handleCalculate}
+                fullWidth
+              >
+                Analyze
+              </Button>
+            </Grid>
+          </Grid>
+        </Paper>
       </Box>
 
       <Box
@@ -219,6 +252,8 @@ export default function QueuingTheoryCalculator() {
         )}
 
         {results}
+
+        {graphContainer}
       </Box>
     </Container>
   );

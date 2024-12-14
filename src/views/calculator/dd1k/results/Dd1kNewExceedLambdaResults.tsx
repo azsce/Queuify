@@ -52,7 +52,6 @@ const Dd1kNewExceedLambdaResults: React.FC<
     setWqOfNVar(dd1k.waitingTimeForNthCustomer(dd1k.lambdaTiFloored));
   }, [dd1k]);
 
-
   const handleTVarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const t = parseFloat(e.target.value);
     setTVar(t);
@@ -170,7 +169,7 @@ const Dd1kNewExceedLambdaResults: React.FC<
               justifyContent: "center",
               alignItems: "center",
               gap: 2,
-              pt:2
+              pt: 2,
             }}
           >
             <MathJax inline>{`\\( n(t)\\)`}</MathJax>
