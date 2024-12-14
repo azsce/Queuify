@@ -41,6 +41,14 @@ class MM1QueueSimulator extends QueueSystem {
     let nextDeparture = Infinity;
     const queue: number[] = [];
 
+    this.customerLineData.push({
+      customer: 0,
+      arrivalTime: undefined,
+      serviceStartTime: undefined,
+      departureTime: undefined,
+      waitingTime: undefined,
+    });
+
     while (numDeparture < this.numOfSimulations) {
       if (nextArrival <= nextDeparture) {
         clock = nextArrival;
@@ -51,46 +59,46 @@ class MM1QueueSimulator extends QueueSystem {
         this.customerLineData.push({
           customer: customerIndex,
           arrivalTime: clock,
-          serviceStartTime: 0,
+          serviceStartTime: numInSystem === 1 ? clock : 0,
           departureTime: 0,
           waitingTime: 0,
         });
 
         if (queue.length === 0) {
           const serviceTime = exponentialRandom(this.serviceRate);
-          nextDeparture = nextArrival + serviceTime;
-          this.customerLineData[customerIndex - 1].serviceStartTime = clock;
+          nextDeparture = clock + serviceTime;
         }
         queue.push(customerIndex);
-        const interarrivalTime = exponentialRandom(this.arrivalRate);
-        nextArrival += interarrivalTime;
+        nextArrival += exponentialRandom(this.arrivalRate);
 
         this.timeLineData.push({
           time: roundTo4Decimals(clock),
           arrived: true,
           arrivals: numArrival,
-          enteredService: queue.length === 1,
-          serviceEnterancs: queue.length === 1 ? 1 : 0,
+          enteredService: numInSystem === 1,
+          serviceEnterancs: numInSystem === 1 ? 1 : 0,
           departured: false,
           departures: numDeparture,
           numberOfCustomers: numInSystem,
           key: customerIndex,
         });
       } else {
+        // Departure event
         clock = nextDeparture;
         numDeparture++;
         numInSystem--;
         const customerIndex = queue.shift()!;
-        waitInSystem =
-          nextDeparture - this.customerLineData[customerIndex - 1].arrivalTime;
+        const customer = this.customerLineData[customerIndex - 1];
+        const waitInSystem = clock - customer.arrivalTime;
         totalWait += waitInSystem;
-        this.customerLineData[customerIndex - 1].departureTime = clock;
+        customer.departureTime = clock;
+        customer.waitingTime = waitInSystem;
 
         if (queue.length === 0) {
           nextDeparture = Infinity;
         } else {
           const serviceTime = exponentialRandom(this.serviceRate);
-          nextDeparture += serviceTime;
+          nextDeparture = clock + serviceTime;
           const nextCustomerIndex = queue[0];
           this.customerLineData[nextCustomerIndex - 1].serviceStartTime = clock;
         }
@@ -99,8 +107,8 @@ class MM1QueueSimulator extends QueueSystem {
           time: roundTo4Decimals(clock),
           arrived: false,
           arrivals: numArrival,
-          enteredService: false,
-          serviceEnterancs: 0,
+          enteredService: queue.length > 0,
+          serviceEnterancs: queue.length > 0 ? 1 : 0,
           departured: true,
           departures: numDeparture,
           numberOfCustomers: numInSystem,

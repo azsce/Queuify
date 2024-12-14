@@ -115,7 +115,7 @@ const NumberOfCustomersGraph: React.FC<NumberOfCustomersGraphProps> = ({
                 angle: -90,
                 position: "insideLeft",
                 dx: 20,
-                dy: isMobile ? 50 : 105,
+                dy: isMobile ? 50 : 90,
                 fontSize: isMobile ? 8 : 12,
                 fill: theme.palette.text.primary,
               }}

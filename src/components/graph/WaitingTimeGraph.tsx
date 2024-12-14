@@ -123,7 +123,7 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
                 fill: theme.palette.text.primary,
               }}
               stroke={theme.palette.text.primary}
-              allowDecimals={false}
+              allowDecimals={true}
               tick={{ fontSize: 8, fill: theme.palette.text.primary }}
             />
             <Tooltip content={<ThemedToolTip labelKey="Customer" />} />
