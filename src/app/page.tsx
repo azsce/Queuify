@@ -8,5 +8,5 @@ export default function Home() {
     redirect("/calc");
   });
 
-  return null; // Render nothing while redirecting.
+  return <></>
 }
