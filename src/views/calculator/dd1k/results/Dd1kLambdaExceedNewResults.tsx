@@ -104,16 +104,24 @@ const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
   let nGreaterThanOrEqualLambdaTi: JSX.Element = null;
   if (type === "λ > μ") {
     nGreaterThanOrEqualLambdaTi = (
-      <div>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          gap: 1,
+        }}
+      >
         <MathJax inline>
           {`\\(Wq(n) ${`
                   \\text{ alternates between }
-                  ${service_minus_arrival_time} \\cdot (${lambdaTi}- 2)`}\\)`}
+                  ${service_minus_arrival_time} \\cdot (${lambdaTi}- 2)`} \\text{,  } \\)`}
         </MathJax>
-        <MathJax inline>
-          {`\\( \\text{ }\\text{ }\\text{  and  }\\text{ }\\text{ } ${`${service_minus_arrival_time} \\cdot (${lambdaTi}- 3)`}\\)`}
-        </MathJax>
-      </div>
+        <Box sx={{ ml: { xs: 2, sm: 0 } }}>
+          <MathJax inline>
+            {`\\(${`${service_minus_arrival_time} \\cdot (${lambdaTi}- 3)`}\\)`}
+          </MathJax>
+        </Box>
+      </Box>
     );
   } else if (type === "(λ > μ) && λ%μ = 0") {
     nGreaterThanOrEqualLambdaTi = (
@@ -177,20 +185,27 @@ const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
 
   return (
     <MathJaxContext>
-      <div className="space-y-6 text-sm md:text-base">
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: { xs: 2, md: 4 },
+        }}
+      >
         {/* Main header with title */}
         <Box
           className="text-center mb-6"
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            alignItems: "center",
-            justifyContent: "center",
             gap: { xs: 2, md: 4 },
+            mb: 2,
+            mx: { xs: 1, sm: 0 },
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
           <Typography
-            variant="h1"
+            variant="subtitle2"
             sx={{
               fontSize: {
                 xs: "1rem",
@@ -210,69 +225,75 @@ const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
         <Divider />
 
         {/* Section for displaying λ, μ, and system capacity (K) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center gap-2">
-            <strong>Note:</strong>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography variant="body1">Note:</Typography>
             <MathJax inline>{`\\(${caseOutput}\\)`}</MathJax>
-          </div>
-          <div className="flex items-center gap-2">
-            <strong>Arrival Rate: </strong>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography variant="body1">Arrival Rate: </Typography>
             <MathJax
               inline
             >{`\\(\\lambda = ${formatFraction(arrivalRateFraction)}\\)`}</MathJax>
-          </div>
-          <div className="flex items-center gap-2">
-            <strong>Service Rate: </strong>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography variant="body1">Service Rate: </Typography>
             <MathJax
               inline
             >{`\\(\\mu = ${formatFraction(serviceRateFraction)}\\)`}</MathJax>
-          </div>
-          <div className="flex items-center gap-2">
-            <strong>Capacity: </strong>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography variant="body1">Capacity: </Typography>
             <MathJax inline>{`\\(K = ${capacity}\\)`}</MathJax>
-          </div>
-        </div>
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <strong>Time of First Balk:</strong>
+          </Box>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography variant="body1">Time of First Balk:</Typography>
             <MathJax inline>{`\\(t_i = ${t_i}\\)`}</MathJax>
-          </div>
-        </div>
+          </Box>
+        </Box>
 
         <Divider />
 
         {/* Section for displaying n(t) */}
-        <div className="space-y-8">
-          <strong>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Typography variant="body1">
             Number of Customers: <MathJax inline>{`\\(n(t)\\)`}</MathJax>
-          </strong>
-          <div className="ml-4 space-y-8">
+          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 4, ml: 4 }}>
             {/* n(t): t < 1/λ */}
-            <div>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <MathJax>{`\\( \\text{For }t < \\frac{1}{\\lambda}:\\)`}</MathJax>
-              <div className="ml-6 mt-4">
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 2, ml: 4 }}
+              >
                 <MathJax
                   inline
                 >{`\\(n(t) = ${n_t.t_lessThan_arrivalTime}\\)`}</MathJax>
-              </div>
-            </div>
+              </Box>
+            </Box>
 
             {/* n(t): 1/λ ≤ t < t_i */}
-            <div>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <MathJax>{`\\( \\text{For } 1/\\lambda \\leq t < t_i:\\)`}</MathJax>
-              <div className="ml-6 mt-4">
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 1, ml: 4 }}
+              >
                 <MathJax>{`\\(n(t) = ${n_t.t_between_arrivalTime_and_ti}\\)`}</MathJax>
-              </div>
-            </div>
+              </Box>
+            </Box>
 
             {/* n(t): t ≥ t_i */}
-            <div>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <MathJax>{`\\( \\text{For }t \\geq t_i:\\)`}</MathJax>
-              <div className="ml-6 mt-4">
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 2, ml: 4 }}
+              >
                 <MathJax>{`\\(n(t) ${n_t.t_greaterOrEqual_ti}\\)`}</MathJax>
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
 
           <Box
             sx={{
@@ -311,40 +332,52 @@ const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
               }}
             ></NoNumberArrowsTextField>
           </Box>
-        </div>
+        </Box>
 
         <Divider />
 
         {/* Section for displaying Wq(n) */}
-        <div className="space-y-4">
-          <strong>
-            Waiting Times: <MathJax inline>{`\\(Wq(n)\\)`}</MathJax>
-          </strong>
-          <div className="ml-4 space-y-8">
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Typography variant="body1">
+            Waiting Time: <MathJax inline>{`\\(Wq(n)\\)`}</MathJax>
+          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 4, ml: 4 }}>
             {/* Wq(n): n = 0 */}
-            <div>
+            <Box
+              sx={{ display: "flex", flexDirection: "column", gap: 2, ml: 4 }}
+            >
               <MathJax>{`\\( \\text{For }n = 0:\\)`}</MathJax>
-              <div className="ml-6 mt-4">
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 2, ml: 4 }}
+              >
                 <MathJax inline>{`\\(Wq(n) = ${wqOfN.n0}\\)`}</MathJax>
-              </div>
-            </div>
+              </Box>
+            </Box>
 
             {/* Wq(n): n < λt_i */}
-            <div>
+            <Box
+              sx={{ display: "flex", flexDirection: "column", gap: 2, ml: 4 }}
+            >
               <MathJax>{`\\( \\text{For }n < \\lambda t_i:\\)`}</MathJax>
-              <div className="ml-6 mt-4">
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 2, ml: 4 }}
+              >
                 <MathJax>{`\\(Wq(n) = ${wqOfN.n_LessThan_LambdaTi}\\)`}</MathJax>
-              </div>
-            </div>
+              </Box>
+            </Box>
 
             {/* Wq(n): n ≥ λt_i */}
-            <div>
+            <Box
+              sx={{ display: "flex", flexDirection: "column", gap: 2, ml: 4 }}
+            >
               <MathJax>{`\\( \\text{For }n \\geq \\lambda t_i:\\)`}</MathJax>
-              <div className="ml-6 mt-4 mb-4">
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 2, ml: 4 }}
+              >
                 {wqOfN.nGreaterThanOrEqualLambdaTi}
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
 
           <Box
             sx={{
@@ -354,7 +387,7 @@ const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
               alignItems: "center",
               gap: 2,
               pt: 2,
-              pb:3,
+              pb: 3,
             }}
           >
             <MathJax inline>{`\\(Wq(n) \\)`}</MathJax>
@@ -385,8 +418,8 @@ const Dd1kLambdaExceedNewResults: React.FC<Dd1kLambdaExceedNewResultsProps> = ({
               }}
             ></NoNumberArrowsTextField>
           </Box>
-        </div>
-      </div>
+        </Box>
+      </Box>
     </MathJaxContext>
   );
 };

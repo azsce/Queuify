@@ -11,11 +11,11 @@ type Dd1kResultsProps = {
 };
 
 const DD1KResults: React.FC<Dd1kResultsProps> = ({ dd1k }) => {
-  const { dd1kType: type } = dd1k;
+  const { dd1kType } = dd1k;
   let result: React.JSX.Element = null;
-  if (type === "λ = μ") {
+  if (dd1kType === "λ = μ") {
     result = <Dd1kLambdaEqualNewResults dd1k={dd1k} />;
-  } else if (type === "λ < μ") {
+  } else if (dd1kType === "λ < μ") {
     result = <Dd1kNewExceedLambdaResults dd1k={dd1k} />;
   } else {
     result = <Dd1kLambdaExceedNewResults dd1k={dd1k} />;
@@ -28,7 +28,6 @@ const DD1KResults: React.FC<Dd1kResultsProps> = ({ dd1k }) => {
 
       <DD1KGraphContainer queueSystem={dd1k} />
       <Box sx={{ height: "30vh" }} />
-
     </>
   );
 };

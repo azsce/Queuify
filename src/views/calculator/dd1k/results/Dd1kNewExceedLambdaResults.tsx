@@ -68,7 +68,15 @@ const Dd1kNewExceedLambdaResults: React.FC<
 
   return (
     <MathJaxContext>
-      <div className="space-y-6 text-sm md:text-base mb-4">
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: { xs: 2, md: 4 },
+          mb: 2,
+          mx: { xs: 1, sm: 0 },
+        }}
+      >
         <Box
           className="text-center mb-6"
           sx={{
@@ -99,68 +107,78 @@ const Dd1kNewExceedLambdaResults: React.FC<
 
         <Divider />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center gap-2">
-            <strong>Note:</strong>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography variant="body1">Note:</Typography>
             <MathJax inline>{`\\( \\lambda < \\mu \\)`}</MathJax>
-          </div>
-          <div className="flex items-center gap-2">
-            <strong>Arrival Rate: </strong>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography variant="body1">Arrival Rate: </Typography>
             <MathJax
               inline
             >{`\\(\\lambda = ${formatFraction(arrivalRateFraction)}\\)`}</MathJax>
-          </div>
-          <div className="flex items-center gap-2">
-            <strong>Service Rate: </strong>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography variant="body1">Service Rate: </Typography>
             <MathJax
               inline
             >{`\\(\\mu = ${formatFraction(serviceRateFraction)}\\)`}</MathJax>
-          </div>
-          <div className="flex items-center gap-2">
-            <strong>Capacity: </strong>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography variant="body1">Capacity: </Typography>
             <MathJax inline>{`\\(K = ${capacity}\\)`}</MathJax>
-          </div>
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <strong>Initial Customers: :</strong>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Typography variant="body1">Initial Customers: :</Typography>
               <MathJax inline>{`\\(M = ${initialCustomers}\\)`}</MathJax>
-            </div>
-          </div>
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <strong>Transient time:</strong>
+            </Box>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Typography variant="body1">Transient time:</Typography>
               <MathJax inline>{`\\(t_i = ${t_i}\\)`}</MathJax>
-            </div>
-          </div>
-        </div>
+            </Box>
+          </Box>
+        </Box>
 
         <Divider />
 
-        <div className="space-y-4">
-          <strong>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <Typography variant="body1">
             Number of Customers: <MathJax inline>{`\\(n(t)\\)`}</MathJax>
-          </strong>
-          <div className="ml-4 space-y-8">
-            <div>
-              <MathJax>{`\\( \\text{For all } t:\\)`}</MathJax>
-              <div className="ml-6 mt-4">
-                <MathJax
-                  inline
-                >{`\\(n(t) = M + \\lfloor \\lambda t \\rfloor - \\lfloor \\mu t \\rfloor\\)`}</MathJax>
-              </div>
-              <div className="ml-6 mt-4">
-                <MathJax inline>{`\\(n(t) = ${initialCustomers} + \\lfloor ${
-                  arrivalRate === 1
-                    ? ""
-                    : formatFraction(arrivalRateFraction) + "\\cdot"
-                } t \\rfloor - \\lfloor ${
-                  serviceRate === 1
-                    ? ""
-                    : formatFraction(serviceRateFraction) + "\\cdot"
-                } t \\rfloor\\)`}</MathJax>
-              </div>
-            </div>
-          </div>
+          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1, ml: 4 }}>
+            <MathJax>{`\\( \\text{For all } t:\\)`}</MathJax>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, ml: 4 }}>
+              <MathJax
+                inline
+              >{`\\(n(t) = M + \\lfloor \\lambda t \\rfloor - \\lfloor \\mu t \\rfloor\\)`}</MathJax>
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, ml: 4 }}>
+              <MathJax inline>{`\\(n(t) = ${initialCustomers} + \\lfloor ${
+                arrivalRate === 1
+                  ? ""
+                  : formatFraction(arrivalRateFraction) + "\\cdot"
+              } t \\rfloor - \\lfloor ${
+                serviceRate === 1
+                  ? ""
+                  : formatFraction(serviceRateFraction) + "\\cdot"
+              } t \\rfloor\\)`}</MathJax>
+            </Box>
+          </Box>
 
           <Box
             sx={{
@@ -199,20 +217,22 @@ const Dd1kNewExceedLambdaResults: React.FC<
               }}
             ></NoNumberArrowsTextField>
           </Box>
-        </div>
+        </Box>
 
         <Divider />
 
-        <div className="space-y-4">
-          <strong>
-            Waiting Times: <MathJax inline>{`\\(Wq(n)\\)`}</MathJax>
-          </strong>
-          <div className="ml-4 space-y-8">
-            <div>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Typography variant="body1">
+            Waiting Time: <MathJax inline>{`\\(Wq(n)\\)`}</MathJax>
+          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, ml: 4 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <Typography variant="body1">
                 Average Waiting Time for initial Customers:
               </Typography>
-              <div className="ml-6 mt-4">
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 2, ml: 4 }}
+              >
                 {isDecimalZeroAfterRounding(initialWq) ? (
                   <MathJax
                     inline
@@ -222,17 +242,21 @@ const Dd1kNewExceedLambdaResults: React.FC<
                     inline
                   >{`\\(W_q(0) = \\frac{M - 1}{2\\mu} = ${formatFraction(initialWqFraction)}\\) = ${roundTo4Decimals(initialWq)}`}</MathJax>
                 )}
-              </div>
-            </div>
+              </Box>
+            </Box>
 
-            <div>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <MathJax>{`\\( \\text{For } n < \\lfloor \\lambda t_i \\rfloor:\\)`}</MathJax>
-              <div className="ml-6 mt-4">
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 2, ml: 4 }}
+              >
                 <MathJax
                   inline
                 >{`\\(Wq(n) = (M - 1 + n) \\cdot \\frac{1}{\\mu} - n \\cdot \\frac{1}{\\lambda}\\)`}</MathJax>
-              </div>
-              <div className="ml-6 mt-4">
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 2, ml: 4 }}
+              >
                 <MathJax inline>{`\\(Wq(n) = (n + ${initialCustomers - 1})  ${
                   serviceRate === 1
                     ? ""
@@ -242,16 +266,18 @@ const Dd1kNewExceedLambdaResults: React.FC<
                     ? ""
                     : formatFraction(arrivalRateFraction) + "\\cdot"
                 } n  \\)`}</MathJax>
-              </div>
-            </div>
+              </Box>
+            </Box>
 
-            <div>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <MathJax>{`\\( \\text{For } n \\geq \\lfloor \\lambda t_i \\rfloor:\\)`}</MathJax>
-              <div className="ml-6 mt-4">
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 2, ml: 4 }}
+              >
                 <MathJax inline>{`\\(Wq(n) = 0\\)`}</MathJax>
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
 
           <Box
             sx={{
@@ -291,8 +317,8 @@ const Dd1kNewExceedLambdaResults: React.FC<
               }}
             ></NoNumberArrowsTextField>
           </Box>
-        </div>
-      </div>
+        </Box>
+      </Box>
     </MathJaxContext>
   );
 };

@@ -113,7 +113,6 @@ export default function RootLayout({
           }}
         />
       </Head>
-      ;
       <body
         className={`${geistSans.style.fontFamily} ${geistMono.style.fontFamily} antialiased`}
       >
