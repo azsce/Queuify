@@ -7,8 +7,8 @@ import ServiceTimeline from "@/components/graph/ServiceTimeline";
 import DepartureTimeline from "@/components/graph/DepartureTimeline";
 import NumberOfCustomersGraph from "@/components/graph/NumberOfCustomersGraph";
 import CustomerFlowDiagram from "@/components/graph/CustomerFlowDiagram";
-import WaitingTimeGraph from "@/components/graph/WaitingTimeGraph";
 import { QueueSystem } from "@/class/QueueSystem";
+import CustomerTimeGraph from "@/components/graph/CustomerGraph";
 
 type DD1KGraphContainerProps = {
   queueSystem: QueueSystem;
@@ -16,7 +16,9 @@ type DD1KGraphContainerProps = {
 
 const GRAPH_HEIGHT = 300; // Height for each sub-graph
 
-const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({  queueSystem }) => {
+const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({
+  queueSystem,
+}) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <Box
@@ -62,7 +64,7 @@ const DD1KGraphContainer: React.FC<DD1KGraphContainerProps> = ({  queueSystem })
         showTopAxis={false}
         showBottomAxis={true}
       />
-      <WaitingTimeGraph
+      <CustomerTimeGraph
         queueSystem={queueSystem}
         height={GRAPH_HEIGHT}
         subGraph={true}

@@ -28,5 +28,6 @@ export type CustomerTimeLineData = {
   arrivalTime?: number;
   serviceStartTime?: number;
   departureTime?: number;
-  waitingTime: number;
+  waitingInSystemTime?: number;
+  waitingInQueueTime?: number;
 };

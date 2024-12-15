@@ -30,9 +30,7 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
   showTopAxis,
   showBottomAxis,
 }) => {
-  console.log("ArrivalTimeline queueSystem:", queueSystem);
   const data = queueSystem.timeLineData;
-  console.log("ArrivalTimeline data:", data);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));

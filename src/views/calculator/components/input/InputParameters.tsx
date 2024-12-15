@@ -37,7 +37,6 @@ const InputParameters: React.FC<InputParametersProps> = ({
     try {
       setServiceRate(value);
       const evaluatedValue = evaluate(value);
-      console.log(evaluatedValue);
       if (isValidPositiveNumber(evaluatedValue)) {
         const serviceTime = 1 / evaluatedValue;
         if (Number.isInteger(serviceTime)) {

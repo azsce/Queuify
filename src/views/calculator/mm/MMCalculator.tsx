@@ -16,6 +16,7 @@ import { useMM } from "@/contexts/MMContext";
 import MM1QueueSimulator from "@/class/mm/MM";
 import MMGraphContainer from "./MMGraphContainer";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
+import CustomerTimeLineTable from "./CustomerTimeLineTable";
 
 export default function QueuingTheoryCalculator() {
   const {
@@ -41,6 +42,7 @@ export default function QueuingTheoryCalculator() {
   const [graphContainer, setGraphContainer] = useState<JSX.Element | null>(
     null
   );
+  const [table, setTable] = useState<JSX.Element | null>(null);
 
   const handleCalculate = () => {
     let evaluatedServers;
@@ -132,8 +134,15 @@ export default function QueuingTheoryCalculator() {
             evaluatedSimulations
           );
           setGraphContainer(<MMGraphContainer queueSystem={simulator} />);
+          setTable(
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <CustomerTimeLineTable simulator={simulator} />
+              <Box sx={{ height: "60vh" }} />
+            </Box>
+          );
         } else {
           setGraphContainer(<Box sx={{ height: "30vh" }} />);
+          setTable(null);
         }
         setResults(<MMResults characteristics={characteristics} />);
       } else {
@@ -241,6 +250,8 @@ export default function QueuingTheoryCalculator() {
         {results}
 
         {graphContainer}
+
+        {table}
       </Box>
     </Container>
   );

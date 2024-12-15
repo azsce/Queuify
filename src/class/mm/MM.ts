@@ -22,7 +22,6 @@ class MM1QueueSimulator extends QueueSystem {
     let arrivals = 0; // Total number of arrivals
     let departures = 0; // Total number of departures
     let serviceEnterancs = 0; // Total number of customers entered the service
-    let totalWait = 0; // Total waiting time for all customers
     let clock = 0; // Simulation clock
     let nextArrival = 0; // Time of the next arrival
     let nextDeparture = Infinity; // Time of the next departure
@@ -34,10 +33,6 @@ class MM1QueueSimulator extends QueueSystem {
     // Initialize the first customer data
     this.customerLineData.push({
       customer: 0,
-      arrivalTime: undefined,
-      serviceStartTime: undefined,
-      departureTime: undefined,
-      waitingTime: undefined,
     });
 
     // Run the simulation until the desired number of departures is reached
@@ -50,15 +45,6 @@ class MM1QueueSimulator extends QueueSystem {
         numInSystem++; // Increment the number of customers in the system
         const customerIndex = arrivals;
 
-        // Record the arrival of the customer
-        this.customerLineData[customerIndex] = {
-          customer: customerIndex,
-          arrivalTime: clock,
-          serviceStartTime: numInSystem === 1 ? clock : undefined,
-          departureTime: undefined,
-          waitingTime: 0,
-        };
-
         if (customersInSystemList.length === 0) {
           // If the queue is empty, schedule the next departure
           const serviceTime = exponentialRandom(this.serviceRate);
@@ -66,6 +52,13 @@ class MM1QueueSimulator extends QueueSystem {
           serviceEnterancs++;
           nextDeparture = clock + serviceTime;
         }
+
+        // Record the arrival of the customer
+        this.customerLineData[customerIndex] = {
+          customer: customerIndex,
+          arrivalTime: clock,
+          serviceStartTime: enteredService ? clock : undefined,
+        };
 
         customersInSystemList.push(customerIndex); // Add the customer to the queue
         nextArrival += exponentialRandom(this.arrivalRate); // Schedule the next arrival
@@ -84,15 +77,13 @@ class MM1QueueSimulator extends QueueSystem {
         });
       } else {
         // Departure event
-        clock = nextDeparture; // Update the clock to the time of the next departure
-        departures++; // Increment the number of departures
-        numInSystem--; // Decrement the number of customers in the system
-        const customerIndex = customersInSystemList.shift()!; // Remove the customer from the queue
+        clock = nextDeparture;
+        departures++;
+        numInSystem--;
+        // Pull and Remove the customer from the queue
+        const customerIndex = customersInSystemList.shift()!;
         const customer = this.customerLineData[customerIndex];
-        const waitInSystem = clock - customer.arrivalTime!; // Calculate the waiting time in the system
-        totalWait += waitInSystem; // Add to the total waiting time
         customer.departureTime = clock; // Record the departure time
-        customer.waitingTime = waitInSystem; // Record the waiting time
 
         if (customersInSystemList.length === 0) {
           nextDeparture = Infinity; // If the queue is empty, set the next departure to infinity
@@ -102,7 +93,7 @@ class MM1QueueSimulator extends QueueSystem {
           serviceEnterancs++;
           nextDeparture = clock + serviceTime;
           const nextCustomerIndex = customersInSystemList[0];
-          this.customerLineData[nextCustomerIndex].serviceStartTime = clock; // Record the service start time for the next customer
+          this.customerLineData[nextCustomerIndex].serviceStartTime = clock;
         }
 
         // Record the event in the timeline
@@ -120,28 +111,45 @@ class MM1QueueSimulator extends QueueSystem {
       }
     }
 
-    this.customerLineData.push({
-      customer: this.numOfSimulations + 2,
-      arrivalTime: undefined,
-      serviceStartTime: undefined,
-      departureTime: undefined,
-      waitingTime: undefined,
-    });
-
     // Convert timelineMap to timeLineData array and sort by time
     this.timeLineData = Array.from(timelineMap.values()).sort(
       (a, b) => a.time - b.time
     );
 
+    //calculate cusomter.waintingInQueue for each customer
+    let totalWaitingInSystemTime = 0; // Total waiting time for all customers
+    let totalWaitingInQueueTime = 0; // Total waiting time in queue for all customers
+    this.customerLineData.forEach((customer) => {
+      const { arrivalTime, serviceStartTime, departureTime } = customer;
+
+      // Validate times to ensure they are numbers
+      if (
+        typeof arrivalTime === "number" &&
+        typeof serviceStartTime === "number" &&
+        typeof departureTime === "number"
+      ) {
+        const wq = serviceStartTime - arrivalTime;
+        customer.waitingInQueueTime = wq;
+        totalWaitingInQueueTime += wq;
+
+        const w = departureTime - arrivalTime;
+        customer.waitingInSystemTime = w;
+        totalWaitingInSystemTime += w;
+      } else {
+        console.error("Invalid data for customer:", customer);
+      }
+    });
+    console.log("Total waiting time in system:", totalWaitingInSystemTime);
+
     // Calculate statistics for the simulation
     this.statistics = {
-      totalWaitingTime: totalWait,
-      averageWaitingTime: totalWait / departures,
-      totalWaitingTimeInQueue: totalWait - departures / this.serviceRate,
-      averageWaitingTimeInQueue:
-        (totalWait - departures / this.serviceRate) / departures,
-      totalIdleServerTime: clock - totalWait,
-      averageIdleServerTime: (clock - totalWait) / this.numOfSimulations,
+      totalWaitingTime: totalWaitingInSystemTime,
+      averageWaitingTime: totalWaitingInSystemTime / departures,
+      totalWaitingTimeInQueue: totalWaitingInQueueTime,
+      averageWaitingTimeInQueue: totalWaitingInQueueTime / departures,
+      totalIdleServerTime: clock - totalWaitingInSystemTime,
+      averageIdleServerTime:
+        (clock - totalWaitingInSystemTime) / this.numOfSimulations,
     };
   }
 }

@@ -12,10 +12,10 @@ import {
   ReferenceLine,
 } from "recharts";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import ThemedToolTip from "./ThemedToolTip";
 import { QueueSystem } from "@/class/QueueSystem";
+import CustomerToolTip from "./CustomerToolTip";
 
-interface WaitingTimeGraphProps {
+interface CustomerTimeGraphProps {
   queueSystem: QueueSystem;
   height?: number;
   subGraph?: boolean;
@@ -23,7 +23,7 @@ interface WaitingTimeGraphProps {
   showBottomAxis?: boolean;
 }
 
-const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
+const CustomerTimeGraph: React.FC<CustomerTimeGraphProps> = ({
   queueSystem,
   height,
   subGraph,
@@ -126,12 +126,56 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
               allowDecimals={true}
               tick={{ fontSize: 8, fill: theme.palette.text.primary }}
             />
-            <Tooltip content={<ThemedToolTip labelKey="Customer" />} />
+            <Tooltip content={<CustomerToolTip />} />
+            {/* <Line
+              type="stepAfter"
+              dataKey="arrivalTime"
+              stroke={theme.palette.mode === "dark" ? "#1ccee6" : "#0da1b5"}
+              name="Arrival Time"
+              dot={false}
+              strokeWidth={2}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
+            /> */}
+            {/* <Line
+              type="stepAfter"
+              dataKey="serviceStartTime"
+              stroke={theme.palette.mode === "dark" ? "#4be61c" : "#2aa505"}
+              name="Service Start"
+              dot={false}
+              strokeWidth={2}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
+            /> */}
+            {/* <Line
+              type="stepAfter"
+              dataKey="departureTime"
+              stroke={theme.palette.mode === "dark" ? "#e61c66" : "#9b0b40"}
+              name="Departure"
+              dot={false}
+              strokeWidth={2}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
+            /> */}
             <Line
               type="stepAfter"
-              dataKey="waitingTime"
+              dataKey="waitingInQueueTime"
               stroke={theme.palette.mode === "dark" ? "#e6591c" : "#db581f"}
-              name="Waiting Time"
+              name="WQ"
+              dot={false}
+              strokeWidth={2}
+              xAxisId={
+                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
+              }
+            />
+            <Line
+              type="stepAfter"
+              dataKey="waitingInSystemTime"
+              stroke={theme.palette.mode === "dark" ? "#e61c9f" : "#920761"}
+              name="W"
               dot={false}
               strokeWidth={2}
               xAxisId={
@@ -158,4 +202,4 @@ const WaitingTimeGraph: React.FC<WaitingTimeGraphProps> = ({
   );
 };
 
-export default WaitingTimeGraph;
+export default CustomerTimeGraph;

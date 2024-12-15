@@ -25,7 +25,6 @@ const InputWithInfinity: React.FC<InputWithInfinityProps> = ({
   autoComplete,
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("InputWithInfinity", event.target.value);
     onChange(event.target.value);
   };
 

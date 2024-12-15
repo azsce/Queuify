@@ -248,10 +248,10 @@ abstract class Dd1k extends QueueSystem {
     }
 
     for (let n = 0; n <= maxCustomers; n++) {
-      const waitingTime = this.waitingTimeForNthCustomer(n);
+      const timeInQueue = this.waitingTimeForNthCustomer(n);
       const d: CustomerTimeLineData = {
         customer: n,
-        waitingTime: waitingTime,
+        waitingInQueueTime: timeInQueue,
         arrivalTime: undefined,
         serviceStartTime: undefined,
         departureTime: undefined,

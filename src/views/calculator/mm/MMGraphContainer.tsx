@@ -7,8 +7,8 @@ import ServiceTimeline from "@/components/graph/ServiceTimeline";
 import DepartureTimeline from "@/components/graph/DepartureTimeline";
 import NumberOfCustomersGraph from "@/components/graph/NumberOfCustomersGraph";
 import CustomerFlowDiagram from "@/components/graph/CustomerFlowDiagram";
-import WaitingTimeGraph from "@/components/graph/WaitingTimeGraph";
 import { QueueSystem } from "@/class/QueueSystem";
+import CustomerTimeGraph from "@/components/graph/CustomerGraph";
 
 type MMGraphContainerProps = {
   queueSystem: QueueSystem;
@@ -62,7 +62,7 @@ const MMGraphContainer: React.FC<MMGraphContainerProps> = ({ queueSystem }) => {
         showTopAxis={false}
         showBottomAxis={true}
       />
-      <WaitingTimeGraph
+      <CustomerTimeGraph
         queueSystem={queueSystem}
         height={GRAPH_HEIGHT}
         subGraph={true}
