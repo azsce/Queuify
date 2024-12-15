@@ -133,6 +133,16 @@ export default function QueuingTheoryCalculator() {
             evaluatedServiceRate,
             evaluatedSimulations
           );
+
+          if (evaluatedServers !== 1 || isValidPositiveNumber(evaluatedCapacity) ){
+            setGraphContainer(null);
+          setTable(
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Box sx={{ height: "60vh" }} />
+            </Box>
+          ); 
+
+          } else{
           setGraphContainer(<MMGraphContainer queueSystem={simulator} />);
           setTable(
             <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -140,6 +150,7 @@ export default function QueuingTheoryCalculator() {
               <Box sx={{ height: "60vh" }} />
             </Box>
           );
+          }
         } else {
           setGraphContainer(<Box sx={{ height: "30vh" }} />);
           setTable(null);
