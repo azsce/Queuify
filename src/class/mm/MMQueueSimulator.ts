@@ -2,7 +2,9 @@ import { exponentialRandom, roundTo4Decimals } from "@/lib/math";
 import { QueueSystem } from "../QueueSystem";
 import { TimeLineData } from "@/types/Simulation";
 import { MmStatistics } from "@/types/mm";
-
+import Customer from "./Customer";
+import Server from "./Server";
+import EventQueue, { Event } from "./EventQueue";
 
 export type MmSimulatorParams = {
   servers: number;

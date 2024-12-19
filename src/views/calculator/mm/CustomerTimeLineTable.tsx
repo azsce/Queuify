@@ -13,11 +13,11 @@ import {
   Divider,
   useTheme,
 } from "@mui/material";
-import MM1QueueSimulator from "@/class/mm/MM1";
 import { roundTo4Decimals } from "@/lib/math";
+import MMQueueSimulator from "@/class/mm/MM";
 
 interface CustomerTimeLineTableProps {
-  simulator: MM1QueueSimulator;
+  simulator: MMQueueSimulator;
 }
 
 const CustomerTimeLineTable: React.FC<CustomerTimeLineTableProps> = ({

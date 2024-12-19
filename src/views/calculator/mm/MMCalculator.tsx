@@ -128,11 +128,13 @@ export default function QueuingTheoryCalculator() {
       );
       if (characteristics.validSystem) {
         if (isValidPositiveInteger(evaluatedSimulations)) {
-          const simulator = new MMQueueSimulator(
-            evaluatedArrivalRate,
-            evaluatedServiceRate,
-            evaluatedSimulations
-          );
+          const simulator = new MMQueueSimulator({
+            servers: evaluatedServers,
+            capacity: evaluatedCapacity,
+            arrivalRate: evaluatedArrivalRate,
+            serviceRate: evaluatedServiceRate,
+            numOfSimulations: evaluatedSimulations,
+          });
 
           setGraphContainer(<MMGraphContainer queueSystem={simulator} />);
           setTable(
