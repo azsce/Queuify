@@ -10,6 +10,6 @@
             }
         }
     },
-    "postCreateCommand": "source ~/.zshrc",
+    "postCreateCommand": "./post-create.sh",
     "remoteUser": "vscode"
 }
