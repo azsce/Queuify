@@ -1,0 +1,15 @@
+{
+    "name": "Queuify Dev Container",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/usr/bin/zsh"
+            }
+        }
+    },
+    "postCreateCommand": "source ~/.zshrc",
+    "remoteUser": "vscode"
+}
