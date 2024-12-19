@@ -13,7 +13,7 @@ import {
   Divider,
   useTheme,
 } from "@mui/material";
-import MM1QueueSimulator from "@/class/mm/MM";
+import MM1QueueSimulator from "@/class/mm/MM1";
 import { roundTo4Decimals } from "@/lib/math";
 
 interface CustomerTimeLineTableProps {

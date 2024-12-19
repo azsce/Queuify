@@ -3,19 +3,17 @@ import { QueueSystem } from "../QueueSystem";
 import { TimeLineData } from "@/types/Simulation";
 import { MmStatistics } from "@/types/mm";
 
-class MMQueueSimulator extends QueueSystem {
+class MMCQueueSimulator extends QueueSystem {
   numOfSimulations: number;
   numOfServers: number;
-  capacity: number;
   statistics: MmStatistics;
 
-  constructor(lambda: number, mu: number, numOfSimulations: number, numOfServers: number, capacity: number) {
+  constructor(lambda: number, mu: number, numOfSimulations: number, numOfServers: number) {
     super();
     this.arrivalRate = lambda; // Average rate of customer arrivals
     this.serviceRate = mu; // Average rate of service completions
     this.numOfSimulations = numOfSimulations; // Total number of customers to simulate
     this.numOfServers = numOfServers; // Number of servers
-    this.capacity = capacity; // Capacity of the system
     this.timeLineData = []; // Stores timeline events for the simulation
     this.customerLineData = []; // Stores data for each customer
     this.generateSimulationData(); // Initiates the simulation
@@ -26,7 +24,6 @@ class MMQueueSimulator extends QueueSystem {
     let arrivals = 0; // Total number of arrivals
     let departures = 0; // Total number of departures
     let serviceEnterancs = 0; // Total number of customers entered the service
-    let blocked = 0; // Total number of blocked customers
     let clock = 0; // Simulation clock
     let nextArrival = 0; // Time of the next arrival
     let nextDepartures: number[] = Array(this.numOfServers).fill(Infinity); // Times of the next departures for each server
@@ -48,32 +45,26 @@ class MMQueueSimulator extends QueueSystem {
         // Arrival event
         clock = nextArrival; // Update the clock to the time of the next arrival
         arrivals++; // Increment the number of arrivals
+        numInSystem++; // Increment the number of customers in the system
+        const customerIndex = arrivals;
 
-        if (numInSystem < this.capacity) {
-          numInSystem++; // Increment the number of customers in the system
-          const customerIndex = arrivals;
-
-          const availableServerIndex = nextDepartures.findIndex(time => time === Infinity);
-          if (availableServerIndex !== -1) {
-            // If there is an available server, schedule the next departure
-            const serviceTime = exponentialRandom(this.serviceRate);
-            enteredService = true;
-            serviceEnterancs++;
-            nextDepartures[availableServerIndex] = clock + serviceTime;
-          }
-
-          // Record the arrival of the customer
-          this.customerLineData[customerIndex] = {
-            customer: customerIndex,
-            arrivalTime: clock,
-            serviceStartTime: enteredService ? clock : undefined,
-          };
-
-          customersInSystemList.push(customerIndex); // Add the customer to the queue
-        } else {
-          blocked++; // Increment the number of blocked customers
+        const availableServerIndex = nextDepartures.findIndex(time => time === Infinity);
+        if (availableServerIndex !== -1) {
+          // If there is an available server, schedule the next departure
+          const serviceTime = exponentialRandom(this.serviceRate);
+          enteredService = true;
+          serviceEnterancs++;
+          nextDepartures[availableServerIndex] = clock + serviceTime;
         }
 
+        // Record the arrival of the customer
+        this.customerLineData[customerIndex] = {
+          customer: customerIndex,
+          arrivalTime: clock,
+          serviceStartTime: enteredService ? clock : undefined,
+        };
+
+        customersInSystemList.push(customerIndex); // Add the customer to the queue
         nextArrival += exponentialRandom(this.arrivalRate); // Schedule the next arrival
 
         // Record the event in the timeline
@@ -86,8 +77,6 @@ class MMQueueSimulator extends QueueSystem {
           departured: false,
           departures: departures,
           numberOfCustomers: numInSystem,
-          blocked: numInSystem >= this.capacity,
-          blocks: blocked,
           key: key++,
         });
       } else {
@@ -122,8 +111,6 @@ class MMQueueSimulator extends QueueSystem {
           departured: true,
           departures: departures,
           numberOfCustomers: numInSystem,
-          blocked: false,
-          blocks: blocked,
           key: key++,
         });
       }
@@ -167,10 +154,8 @@ class MMQueueSimulator extends QueueSystem {
       totalIdleServerTime: clock - totalWaitingInSystemTime,
       averageIdleServerTime:
         (clock - totalWaitingInSystemTime) / (this.numOfSimulations * this.numOfServers),
-      totalBlockedCustomers: blocked,
-      blockingProbability: blocked / arrivals,
     };
   }
 }
 
-export default MMQueueSimulator;
+export default MMCQueueSimulator;

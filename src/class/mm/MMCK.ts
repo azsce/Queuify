@@ -3,7 +3,7 @@ import { QueueSystem } from "../QueueSystem";
 import { TimeLineData } from "@/types/Simulation";
 import { MmStatistics } from "@/types/mm";
 
-class MMQueueSimulator extends QueueSystem {
+class MMCKQueueSimulator extends QueueSystem {
   numOfSimulations: number;
   numOfServers: number;
   capacity: number;
@@ -173,4 +173,4 @@ class MMQueueSimulator extends QueueSystem {
   }
 }
 
-export default MMQueueSimulator;
+export default MMCKQueueSimulator;

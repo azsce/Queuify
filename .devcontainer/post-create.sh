@@ -1,3 +1,5 @@
+# chmod +x .devcontainer/post-create.sh
+# sudo ./.devcontainer/post-create.sh
 #!/bin/bash
 
 # Install bun
@@ -17,7 +19,7 @@ git clone --depth 1 https://github.com/marlonrichert/zsh-autocomplete.git $ZSH_C
 echo 'plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)' >> ~/.zshrc
 
 # Activate Oh My Zsh
-zsh -c 'source ~/.zshrc'
+source ~/.zshrc
 
 # Set zsh as the default shell
 chsh -s $(which zsh)
