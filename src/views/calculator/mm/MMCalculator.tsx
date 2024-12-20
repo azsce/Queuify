@@ -16,7 +16,7 @@ import { useMM } from "@/contexts/MMContext";
 import MMGraphContainer from "./MMGraphContainer";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 import CustomerTimeLineTable from "./CustomerTimeLineTable";
-import MMQueueSimulator from "@/class/mm/MM";
+import MMQueueSimulator from "@/class/mm/MMQueueSimulator";
 
 export default function QueuingTheoryCalculator() {
   const {
@@ -136,13 +136,15 @@ export default function QueuingTheoryCalculator() {
             numOfSimulations: evaluatedSimulations,
           });
 
-          setGraphContainer(<MMGraphContainer queueSystem={simulator} />);
-          setTable(
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <CustomerTimeLineTable simulator={simulator} />
-              <Box sx={{ height: "60vh" }} />
-            </Box>
-          );
+          simulator.simulate().then(() => {
+            setGraphContainer(<MMGraphContainer queueSystem={simulator} />);
+            setTable(
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <CustomerTimeLineTable simulator={simulator} />
+                <Box sx={{ height: "60vh" }} />
+              </Box>
+            );
+          });
         } else {
           setGraphContainer(<Box sx={{ height: "30vh" }} />);
           setTable(null);

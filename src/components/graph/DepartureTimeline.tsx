@@ -105,7 +105,7 @@ const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
                     if (d.initialDepartured) {
                       return `M${data.find((entry) => entry.time === value)?.initialDepartures}`;
                     } else {
-                      return `C${data.find((entry) => entry.time === value)?.departures}`;
+                      return `C${data.find((entry) => entry.time === value)?.departureCount}`;
                     }
                   }
                   return "";
@@ -154,7 +154,7 @@ const DepartureTimeline: React.FC<DepartureTimelineProps> = ({
                   entry.departured && entry.initialDepartured
                     ? theme.palette.text.primary
                     : entry.departured
-                      ? colors[entry.departures % colors.length]
+                      ? colors[entry.departureCount % colors.length]
                       : "transparent"
                 }
                 strokeWidth={2}

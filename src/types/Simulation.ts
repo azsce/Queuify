@@ -2,21 +2,21 @@ export type TimeLineData = {
   time: number;
 
   arrived: boolean;
-  arrivals: number;
+  arrivalCount: number;
   arrivalCustomers: Set<number>;
 
   blocked?: boolean | null;
-  blocks?: number;
+  blockCount?: number;
 
   enteredService: boolean;
-  serviceEnterancs: number;
+  serviceCount: number;
   serviceCustomers: Set<number>;
 
   initialEnteredService?: boolean;
   initialServiceEnterances?: number;
 
   departured: boolean;
-  departures: number;
+  departureCount: number;
   departureCustomers: Set<number>;
 
   initialDepartured?: boolean;
@@ -26,9 +26,10 @@ export type TimeLineData = {
   key: number;
 };
 
-export type CustomerTimeLineData = {
-  customer: number;
+export type Customer = {
+  customerId: number;
   arrivalTime?: number;
+  blocked: boolean;
   serviceStartTime?: number;
   departureTime?: number;
   waitingInSystemTime?: number;

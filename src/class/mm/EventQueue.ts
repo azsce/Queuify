@@ -1,10 +1,11 @@
 import Customer from "./Customer";
+import QueueServer from "./Server";
 
 type Event = {
   time: number;
   type: "arrival" | "departure";
   customer?: Customer;
-  server?: Server;
+  server?: QueueServer;
 };
 
 class EventQueue {

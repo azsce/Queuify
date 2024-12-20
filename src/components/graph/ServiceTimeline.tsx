@@ -111,7 +111,7 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
                     if (d.initialEnteredService) {
                       return `M${data.find((entry) => entry.time === value)?.initialServiceEnterances}`;
                     } else {
-                      return `C${data.find((entry) => entry.time === value)?.serviceEnterancs}`;
+                      return `C${data.find((entry) => entry.time === value)?.serviceCount}`;
                     }
                   }
                   return "";
@@ -157,7 +157,7 @@ const ServiceTimeline: React.FC<ServiceTimelineProps> = ({
                   entry.enteredService && entry.initialEnteredService
                     ? theme.palette.text.primary
                     : entry.enteredService
-                      ? colors[entry.serviceEnterancs % colors.length]
+                      ? colors[entry.serviceCount % colors.length]
                       : "transparent"
                 }
                 strokeWidth={2}
