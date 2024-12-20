@@ -234,10 +234,7 @@ abstract class Dd1k extends QueueSystem {
     return timelineData;
   }
 
-  generateCustomerGraphData(): Array<{
-    customer: number;
-    waitingTime: number;
-  }> {
+  generateCustomerGraphData(): Customer[] {
     const data = [];
     let maxCustomers = 10;
     if (this.timeSpecialValue) {
@@ -251,8 +248,9 @@ abstract class Dd1k extends QueueSystem {
       const timeInQueue = this.waitingTimeForNthCustomer(n);
       const d: Customer = {
         customerId: n,
-        waitingInQueueTime: timeInQueue,
         arrivalTime: undefined,
+        blocked: undefined,
+        waitingInQueueTime: timeInQueue,
         serviceStartTime: undefined,
         departureTime: undefined,
       };

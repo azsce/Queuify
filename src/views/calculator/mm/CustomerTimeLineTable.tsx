@@ -26,7 +26,6 @@ const CustomerTimeLineTable: React.FC<CustomerTimeLineTableProps> = ({
   const theme = useTheme();
   const data = simulator.customers;
   const statistics = simulator.statistics;
-  console.log("statistics", statistics);
   const numberOfSumulations = simulator.numOfSimulations;
   const isDarkMode = theme.palette.mode === "dark";
 

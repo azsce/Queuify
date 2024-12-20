@@ -5,6 +5,8 @@ import { MmStatistics } from "@/types/mm";
 import QueueServer from "./Server";
 import EventQueue, { Event } from "./EventQueue";
 
+const logEnabled = false;
+
 export type MmSimulatorParams = {
   servers: number;
   capacity: number;
@@ -122,7 +124,7 @@ class MMQueueSimulator extends QueueSystem {
       if (event.type === "arrival") {
         timelineData.arrived = true;
         timelineData.arrivalCount = this.arrivalCount;
-        timelineData.arrivalCustomers.add(event.customer!.id);
+        timelineData.arrivalCustomers.add(event.customer!.customerId);
         if (event.customer!.blocked) {
           timelineData.blocked = true;
         }
@@ -163,9 +165,11 @@ class MMQueueSimulator extends QueueSystem {
   handleArrival(customer: Customer) {
     this.arrivalCount++; // Increment the number of arrivals
     customer.arrivalTime = roundTo4Decimals(customer.arrivalTime);
-    console.log(
-      `Customer ${customer.customerId} arrived at ${customer.arrivalTime}`
-    );
+    if(logEnabled) {
+      console.log(
+        `Customer ${customer.customerId} arrived at ${customer.arrivalTime}`
+      );
+    }
     this.customers.push(customer);
 
     if (this.customersInQueue.length < this.capacity) {
@@ -176,9 +180,11 @@ class MMQueueSimulator extends QueueSystem {
       // Customer is blocked
       customer.blocked = true;
       this.BlockCount++; // Increment the number of blocked customers
-      console.log(
-        `Customer ${customer.customerId} is blocked at ${customer.arrivalTime}`
-      );
+      if(logEnabled) {
+        console.log(
+          `Customer ${customer.customerId} is blocked at ${customer.arrivalTime}`
+        );
+      }
     }
 
     this.scheduleNextArrival(customer.arrivalTime);
@@ -197,9 +203,11 @@ class MMQueueSimulator extends QueueSystem {
         (c) => c.customerId !== customer.customerId
       );
       this.departureCount++; // Increment the number of departures
-      console.log(
-        `Customer ${customer.customerId} departed at ${finishTime} from server ${server.id}`
-      );
+      if(logEnabled){
+        console.log(
+          `Customer ${customer.customerId} departed at ${finishTime} from server ${server.id}`
+        );
+      }
       server.finishService();
       if (isFinite(finishTime)) {
         // Use captured finishTime
@@ -228,9 +236,11 @@ class MMQueueSimulator extends QueueSystem {
         ); // Schedule the next departure
         if (isFinite(serviceTime) && serviceTime > 0) {
           this.serviceCount++; // Increment the number of customers entered the service
-          console.log(
-            `Customer ${customer.customerId} started service at ${this.clock} on server ${availableServer.id} for ${serviceTime} time units`
-          );
+          if(logEnabled) {
+            console.log(
+              `Customer ${customer.customerId} started service at ${this.clock} on server ${availableServer.id} for ${serviceTime} time units`
+            );
+          }
           const finishTime = roundTo4Decimals(this.clock + serviceTime);
           if (isFinite(finishTime) && finishTime > this.clock) {
             this.eventQueue.addEvent({
@@ -396,10 +406,10 @@ class MMQueueSimulator extends QueueSystem {
     }
 
     // Assert that the calculated statistics are valid
-    // console.assert(this.statistics.averageWaitingTime >= 0, "Average waiting time should be non-negative");
-    // console.assert(this.statistics.averageWaitingTimeInQueue >= 0, "Average waiting time in queue should be non-negative");
-    // console.assert(this.statistics.averageIdleServerTime >= 0, "Average idle server time should be non-negative");
-    // console.assert(this.statistics.blockingProbability >= 0 && this.statistics.blockingProbability <= 1, "Blocking probability should be between 0 and 1");
+    console.assert(this.statistics.averageWaitingTime >= 0, "Average waiting time should be non-negative");
+    console.assert(this.statistics.averageWaitingTimeInQueue >= 0, "Average waiting time in queue should be non-negative");
+    console.assert(this.statistics.averageIdleServerTime >= 0, "Average idle server time should be non-negative");
+    console.assert(this.statistics.blockingProbability >= 0 && this.statistics.blockingProbability <= 1, "Blocking probability should be between 0 and 1");
   }
 }
 

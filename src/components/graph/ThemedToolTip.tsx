@@ -56,7 +56,7 @@ const ThemedToolTip: React.FC<ThemedToolTipProps> = ({
                   mr: 1 
                 }} 
               />
-              {entry.name}: {roundTo4Decimals(entry.value)}
+              {entry.name}: {roundTo4Decimals(entry.value as number)}
             </Typography>
           ))}
         </Box>
