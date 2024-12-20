@@ -13,10 +13,10 @@ import MmSystemParameters from "./MmSystemParameters";
 import { evaluate } from "mathjs";
 import { isValidPositiveInteger, isValidPositiveNumber } from "@/lib/math";
 import { useMM } from "@/contexts/MMContext";
-import MM1QueueSimulator from "@/class/mm/MM";
 import MMGraphContainer from "./MMGraphContainer";
 import { NoNumberArrowsTextField } from "@/components/base/NoNumberArrowsTextField";
 import CustomerTimeLineTable from "./CustomerTimeLineTable";
+import MMQueueSimulator from "@/class/mm/MMQueueSimulator";
 
 export default function QueuingTheoryCalculator() {
   const {
@@ -128,29 +128,23 @@ export default function QueuingTheoryCalculator() {
       );
       if (characteristics.validSystem) {
         if (isValidPositiveInteger(evaluatedSimulations)) {
-          const simulator = new MM1QueueSimulator(
-            evaluatedArrivalRate,
-            evaluatedServiceRate,
-            evaluatedSimulations
-          );
+          const simulator = new MMQueueSimulator({
+            servers: evaluatedServers,
+            capacity: evaluatedCapacity,
+            arrivalRate: evaluatedArrivalRate,
+            serviceRate: evaluatedServiceRate,
+            numOfSimulations: evaluatedSimulations,
+          });
 
-          if (evaluatedServers !== 1 || isValidPositiveNumber(evaluatedCapacity) ){
-            setGraphContainer(null);
-          setTable(
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Box sx={{ height: "60vh" }} />
-            </Box>
-          ); 
-
-          } else{
-          setGraphContainer(<MMGraphContainer queueSystem={simulator} />);
-          setTable(
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <CustomerTimeLineTable simulator={simulator} />
-              <Box sx={{ height: "60vh" }} />
-            </Box>
-          );
-          }
+          simulator.simulate().then(() => {
+            setGraphContainer(<MMGraphContainer queueSystem={simulator} />);
+            setTable(
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <CustomerTimeLineTable simulator={simulator} />
+                <Box sx={{ height: "60vh" }} />
+              </Box>
+            );
+          });
         } else {
           setGraphContainer(<Box sx={{ height: "30vh" }} />);
           setTable(null);

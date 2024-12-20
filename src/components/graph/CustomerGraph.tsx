@@ -30,7 +30,7 @@ const CustomerTimeGraph: React.FC<CustomerTimeGraphProps> = ({
   showTopAxis,
   showBottomAxis,
 }) => {
-  const data = queueSystem.customerLineData;
+  const data = queueSystem.customers;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -78,7 +78,7 @@ const CustomerTimeGraph: React.FC<CustomerTimeGraphProps> = ({
             )}
             {showTopAxis && (
               <XAxis
-                dataKey="customer"
+                dataKey="customerId"
                 xAxisId="top"
                 orientation="top"
                 label={{
@@ -92,7 +92,7 @@ const CustomerTimeGraph: React.FC<CustomerTimeGraphProps> = ({
             )}
             {showBottomAxis && (
               <XAxis
-                dataKey="customer"
+                dataKey="customerId"
                 xAxisId="bottom"
                 orientation="bottom"
                 label={{
@@ -127,39 +127,6 @@ const CustomerTimeGraph: React.FC<CustomerTimeGraphProps> = ({
               tick={{ fontSize: 8, fill: theme.palette.text.primary }}
             />
             <Tooltip content={<CustomerToolTip />} />
-            {/* <Line
-              type="stepAfter"
-              dataKey="arrivalTime"
-              stroke={theme.palette.mode === "dark" ? "#1ccee6" : "#0da1b5"}
-              name="Arrival Time"
-              dot={false}
-              strokeWidth={2}
-              xAxisId={
-                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
-              }
-            /> */}
-            {/* <Line
-              type="stepAfter"
-              dataKey="serviceStartTime"
-              stroke={theme.palette.mode === "dark" ? "#4be61c" : "#2aa505"}
-              name="Service Start"
-              dot={false}
-              strokeWidth={2}
-              xAxisId={
-                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
-              }
-            /> */}
-            {/* <Line
-              type="stepAfter"
-              dataKey="departureTime"
-              stroke={theme.palette.mode === "dark" ? "#e61c66" : "#9b0b40"}
-              name="Departure"
-              dot={false}
-              strokeWidth={2}
-              xAxisId={
-                showTopAxis ? "top" : showBottomAxis ? "bottom" : "default"
-              }
-            /> */}
             <Line
               type="stepAfter"
               dataKey="waitingInQueueTime"

@@ -134,7 +134,7 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
             <Tooltip content={<ThemedToolTip labelKey="Time" />} />
             <Line
               type="monotone"
-              dataKey="arrivals"
+              dataKey="arrivalCount"
               stroke="#ffc800"
               name="Arrivals"
               dot={false}
@@ -145,7 +145,7 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
             />
             <Line
               type="monotone"
-              dataKey="departures"
+              dataKey="departureCount"
               stroke="#00a941"
               name="Departures"
               dot={false}
@@ -156,9 +156,9 @@ const CustomerFlowDiagram: React.FC<CustomerFlowDiagramProps> = ({
             />
             <Line
               type="monotone"
-              dataKey="blocks"
+              dataKey="blockCount"
               stroke="#ff0000"
-              name="Blocked"
+              name="blockCount"
               dot={false}
               strokeWidth={2}
               xAxisId={

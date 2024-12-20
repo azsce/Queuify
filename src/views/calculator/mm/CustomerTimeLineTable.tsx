@@ -13,24 +13,24 @@ import {
   Divider,
   useTheme,
 } from "@mui/material";
-import MM1QueueSimulator from "@/class/mm/MM";
 import { roundTo4Decimals } from "@/lib/math";
+import MMQueueSimulator from "@/class/mm/MMQueueSimulator";
 
 interface CustomerTimeLineTableProps {
-  simulator: MM1QueueSimulator;
+  simulator: MMQueueSimulator;
 }
 
 const CustomerTimeLineTable: React.FC<CustomerTimeLineTableProps> = ({
   simulator,
 }) => {
   const theme = useTheme();
-  const data = simulator.customerLineData;
+  const data = simulator.customers;
   const statistics = simulator.statistics;
   const numberOfSumulations = simulator.numOfSimulations;
   const isDarkMode = theme.palette.mode === "dark";
 
   const filteredData = data.filter(
-    (row) => row.customer > 0 && row.customer <= numberOfSumulations
+    (row) => row.customerId > 0 && row.customerId <= numberOfSumulations
   );
 
   const isMobile = useMediaQuery("(max-width: 600px)");
@@ -73,6 +73,7 @@ const CustomerTimeLineTable: React.FC<CustomerTimeLineTableProps> = ({
         >
           <TableRow>
             <TableCell>Customer</TableCell>
+            <TableCell>Blocked</TableCell>
             <TableCell>Arrival</TableCell>
             <TableCell>{isMobile ? "Service" : "Service Start"}</TableCell>
             <TableCell>{isMobile ? "WQ" : "Waiting In Queue"}</TableCell>
@@ -83,7 +84,7 @@ const CustomerTimeLineTable: React.FC<CustomerTimeLineTableProps> = ({
         <TableBody>
           <TableRow>
             <TableCell
-              colSpan={6}
+              colSpan={7}
               sx={{
                 padding: 0,
                 borderBottom: `1px solid ${
@@ -105,7 +106,7 @@ const CustomerTimeLineTable: React.FC<CustomerTimeLineTableProps> = ({
           </TableRow>
           {filteredData.map((row, index) => (
             <TableRow
-              key={row.customer}
+              key={row.customerId}
               sx={{
                 backgroundColor: isDarkMode
                   ? index % 2
@@ -117,18 +118,19 @@ const CustomerTimeLineTable: React.FC<CustomerTimeLineTableProps> = ({
               }}
             >
               {[
-                row.customer,
-                roundTo4Decimals(row.arrivalTime) ?? "N/A",
-                roundTo4Decimals(row.serviceStartTime) ?? "N/A",
-                roundTo4Decimals(row.waitingInQueueTime) ?? "N/A",
-                roundTo4Decimals(row.departureTime) ?? "N/A",
-                roundTo4Decimals(row.waitingInSystemTime) ?? "N/A",
+                row.customerId,
+                row.blocked ? "Yes" : "No",
+                row.blocked ? "" : roundTo4Decimals(row.arrivalTime) ?? "",
+                row.blocked ? "" : roundTo4Decimals(row.serviceStartTime) ?? "",
+                row.blocked ? "" : roundTo4Decimals(row.waitingInQueueTime) ?? "",
+                row.blocked ? "" : roundTo4Decimals(row.departureTime) ?? "",
+                row.blocked ? "" : roundTo4Decimals(row.waitingInSystemTime) ?? "",
               ].map((cellContent, cellIndex) => (
                 <TableCell
                   key={cellIndex}
                   sx={{
                     ...columnDividerStyle,
-                    color: isDarkMode ? theme.palette.text.primary : undefined,
+                    color: row.blocked && cellIndex === 1 ? "red" : isDarkMode ? theme.palette.text.primary : undefined,
                   }}
                 >
                   {cellContent}
@@ -138,7 +140,7 @@ const CustomerTimeLineTable: React.FC<CustomerTimeLineTableProps> = ({
           ))}
           <TableRow>
             <TableCell
-              colSpan={6}
+              colSpan={7}
               sx={{
                 padding: 0,
                 borderBottom: `1px solid ${
@@ -172,6 +174,7 @@ const CustomerTimeLineTable: React.FC<CustomerTimeLineTableProps> = ({
             <TableCell sx={columnDividerStyle}>
               {roundTo4Decimals(statistics.totalWaitingTimeInQueue)}
             </TableCell>
+            <TableCell sx={columnDividerStyle}></TableCell>
           </TableRow>
           {/* avarage */}
           <TableRow
@@ -191,6 +194,7 @@ const CustomerTimeLineTable: React.FC<CustomerTimeLineTableProps> = ({
             <TableCell sx={columnDividerStyle}>
               {roundTo4Decimals(statistics.averageWaitingTimeInQueue)}
             </TableCell>
+            <TableCell sx={columnDividerStyle}></TableCell>
           </TableRow>
         </TableBody>
       </Table>

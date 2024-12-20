@@ -70,7 +70,7 @@ class Dd1kLambdaExceedNew extends Dd1k {
     this.muTiFloored = Math.floor(this.muTi);
 
     this.timeLineData = this.generateTimeGraphData();
-    this.customerLineData = this.generateCustomerGraphData();
+    this.customers = this.generateCustomerGraphData();
   }
 
   /**

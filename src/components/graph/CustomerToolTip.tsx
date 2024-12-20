@@ -39,7 +39,7 @@ const Info: React.FC<InfoProps> = ({ key, color, name, value }) => {
           mr: 1,
         }}
       />
-      {name}: {roundTo4Decimals(value)}
+      {name}: {roundTo4Decimals(value as number)}
     </Typography>
   );
 };

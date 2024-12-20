@@ -45,7 +45,7 @@ export function isDecimalZeroAfterRounding(num) {
   return roundedNum % 1 === 0;
 }
 
-export function roundTo4Decimals(num) {
+export function roundTo4Decimals(num: number): number {
   // Round to 4 decimal places without adding trailing zeros
   return Math.round(num * 10000) / 10000;
 }
@@ -64,5 +64,8 @@ export const isValidPositiveInteger = (value: any): boolean => {
 };
 
 export function exponentialRandom(rate: number): number {
+  if (rate <= 0) {
+    throw new Error("Rate must be positive and non-zero");
+  }
   return -Math.log(1.0 - Math.random()) / rate;
 }

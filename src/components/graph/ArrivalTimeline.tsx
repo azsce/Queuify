@@ -109,7 +109,7 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
                 orientation="bottom"
                 tickFormatter={(value) => {
                   const r = data.find((entry) => entry.time === value)?.arrived
-                    ? `C${data.find((entry) => entry.time === value)?.arrivals}`
+                    ? `C${data.find((entry) => entry.time === value)?.arrivalCount}`
                     : "";
 
                   return r;
@@ -155,7 +155,7 @@ const ArrivalTimeline: React.FC<ArrivalTimelineProps> = ({
                   entry.arrived
                     ? entry.blocked
                       ? "red"
-                      : colors[entry.arrivals % colors.length]
+                      : colors[entry.arrivalCount % colors.length]
                     : "transparent"
                 }
                 strokeWidth={2}

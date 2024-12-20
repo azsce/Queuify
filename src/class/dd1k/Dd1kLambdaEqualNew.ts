@@ -33,7 +33,7 @@ class Dd1kLambdaEqualNew extends Dd1k {
       this.initialCustomers * this.serviceTime;
 
     this.timeLineData = this.generateTimeGraphData();
-    this.customerLineData = this.generateCustomerGraphData();
+    this.customers = this.generateCustomerGraphData();
   }
 
   computeNOfT(t: number) {

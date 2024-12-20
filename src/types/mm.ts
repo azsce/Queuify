@@ -19,4 +19,6 @@ export type MmStatistics = {
   averageWaitingTimeInQueue: number;
   totalIdleServerTime: number;
   averageIdleServerTime: number;
+  totalBlockedCustomers: number;
+  blockingProbability: number;
 };

@@ -1,5 +1,5 @@
 import { DD1KType } from "@/types/dd1k";
-import { CustomerTimeLineData, TimeLineData } from "@/types/Simulation";
+import { Customer, TimeLineData } from "@/types/Simulation";
 import { QueueSystem } from "../QueueSystem";
 
 /**
@@ -129,10 +129,10 @@ abstract class Dd1k extends QueueSystem {
 
     let key = 0;
 
-    let arrivals = 0;
-    let serviceEnterancs = 0;
-    let departures = 0;
-    let blocks = 0;
+    let arrivalCount = 0;
+    let serviceCount = 0;
+    let departureCount = 0;
+    let blockCount = 0;
 
     let initialServiceEnterances = 0; //how many till now (initial customers)
     let initialDepartures = 0; // how many till now (initial customers)
@@ -168,7 +168,7 @@ abstract class Dd1k extends QueueSystem {
             initialCustomersRemaining--;
             initialDepartures++;
           } else {
-            departures++;
+            departureCount++;
             numberOfNewCustomers--;
           }
         }
@@ -178,10 +178,10 @@ abstract class Dd1k extends QueueSystem {
       if (t === nextArrivalTime) {
         arrived = true;
         blocked = numberOfNewCustomers >= this.capacity - 1;
-        arrivals++;
+        arrivalCount++;
         nextArrivalTime += this.arrivalTime;
         if (blocked) {
-          blocks++;
+          blockCount++;
         } else {
           numberOfNewCustomers++;
         }
@@ -195,7 +195,7 @@ abstract class Dd1k extends QueueSystem {
             initialEnteredService = true;
             initialServiceEnterances++;
           } else {
-            serviceEnterancs++;
+            serviceCount++;
           }
         }
         nextServiceEnteranceTime += this.serviceTime;
@@ -204,22 +204,22 @@ abstract class Dd1k extends QueueSystem {
       const numberOfCustomers =
         numberOfNewCustomers + initialCustomersRemaining;
 
-      const d = {
+      const d: TimeLineData = {
         time: time,
 
         arrived: arrived,
-        arrivals: arrivals,
+        arrivalCount: arrivalCount,
 
         blocked: blocked,
-        blocks: blocks,
+        blockCount: blockCount,
 
         enteredService: enteredService,
-        serviceEnterancs: serviceEnterancs,
+        serviceCount: serviceCount,
         initialEnteredService: initialEnteredService,
         initialServiceEnterances: initialServiceEnterances,
 
         departured: departured,
-        departures: departures,
+        departureCount: departureCount,
         initialDepartured: initialDepartured,
         initialDepartures: initialDepartures,
 
@@ -234,10 +234,7 @@ abstract class Dd1k extends QueueSystem {
     return timelineData;
   }
 
-  generateCustomerGraphData(): Array<{
-    customer: number;
-    waitingTime: number;
-  }> {
+  generateCustomerGraphData(): Customer[] {
     const data = [];
     let maxCustomers = 10;
     if (this.timeSpecialValue) {
@@ -249,10 +246,11 @@ abstract class Dd1k extends QueueSystem {
 
     for (let n = 0; n <= maxCustomers; n++) {
       const timeInQueue = this.waitingTimeForNthCustomer(n);
-      const d: CustomerTimeLineData = {
-        customer: n,
-        waitingInQueueTime: timeInQueue,
+      const d: Customer = {
+        customerId: n,
         arrivalTime: undefined,
+        blocked: undefined,
+        waitingInQueueTime: timeInQueue,
         serviceStartTime: undefined,
         departureTime: undefined,
       };
